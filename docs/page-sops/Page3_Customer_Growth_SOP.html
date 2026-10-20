@@ -1,0 +1,484 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:8px; border-top:1px solid var(--border);}
+h3{font-size:14px; font-weight:600; margin:20px 0 8px;}
+p{font-size:13px; line-height:1.6;}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout.stop{border-left-color:var(--red);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:12px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:7px 9px; font-weight:600; border-bottom:1px solid var(--border);}
+td{padding:7px 9px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:11.5px; background:var(--bg); padding:1px 5px; border-radius:4px;}
+pre{background:var(--code-bg); color:#E2E8F0; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:11.5px; line-height:1.6; margin:10px 0 20px;}
+pre code{background:none; padding:0; color:inherit;}
+.checkpoint{background:var(--bg); border:1px dashed var(--slate); border-radius:8px; padding:12px 16px; margin:14px 0 24px; font-size:12.5px;}
+.checkpoint b{color:var(--navy);}
+[data-theme="dark"] .checkpoint b, :root:not([data-theme="light"]) .checkpoint b{color:#93C5FD;}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:9.5px; padding:1px 7px; border-radius:9px; background:var(--bg); color:var(--slate); border:1px solid var(--border);}
+.tag.reuse{background:#DCFCE7; color:#166534; border-color:#86EFAC;}
+.tag.new{background:#FEF3C7; color:#92400E; border-color:#FCD34D;}
+.tag.check{background:#FEE2E2; color:#991B1B; border-color:#FCA5A5;}
+[data-theme="dark"] .tag.reuse, :root:not([data-theme="light"]) .tag.reuse{background:#14532D; color:#BBF7D0; border-color:#166534;}
+[data-theme="dark"] .tag.new, :root:not([data-theme="light"]) .tag.new{background:#78350F; color:#FDE68A; border-color:#92400E;}
+[data-theme="dark"] .tag.check, :root:not([data-theme="light"]) .tag.check{background:#7F1D1D; color:#FECACA; border-color:#991B1B;}
+</style>
+
+<header class="doc">
+<div class="wrap">
+<h1>Page 3 — Customer Growth: Power BI Implementation SOP</h1>
+<p>SaaS Growth &amp; Unit Economics · Phase 4 · Built on the locked Phase 1–3 model and the frozen Six-Page Architecture</p>
+</div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+<a href="#s0">0. Pre-build check</a>
+<a href="#s1">1. Page foundation</a>
+<a href="#s2">2. Header &amp; nav</a>
+<a href="#s3">3. KPI cards</a>
+<a href="#s4">4. Base composition</a>
+<a href="#s5">5. Trajectory combo</a>
+<a href="#s6">6. Acquisition vs churn rate</a>
+<a href="#s7">7. New vs churned</a>
+<a href="#s8">8. Net-adds strip</a>
+<a href="#s9">9. Filters</a>
+<a href="#s10">10. Cross-filtering</a>
+<a href="#s11">11. Formatting</a>
+<a href="#s12">12. Position table</a>
+<a href="#s13">13. Accessibility</a>
+<a href="#s14">14. Final validation</a>
+</nav>
+
+<h2 id="s0">Section 0 — Pre-Build Check</h2>
+
+<h3>0.1 Measure-to-visual mapping</h3>
+<table>
+<tr><th>Visual</th><th>Field / Measure</th><th>Status</th><th>Action</th></tr>
+<tr><td>KPI 1 · Active Customers</td><td><code>[Active Customers]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>KPI 1 delta</td><td><code>_Active Customers Delta Value/Caption/Color</code></td><td>Exists (Page 1)</td><td>Reuse</td></tr>
+<tr><td>KPI 2 · New Customers</td><td><code>[New Customers]</code></td><td><span class="tag check">VERIFY</span></td><td>See 0.2 before use</td></tr>
+<tr><td>KPI 2 delta</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build in 0.3</td></tr>
+<tr><td>KPI 3 · Churned Customers</td><td><code>[Churned Customers]</code></td><td>Exists (fixed on P1)</td><td>Use as-is</td></tr>
+<tr><td>KPI 3 delta (inverted)</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build in 0.3</td></tr>
+<tr><td>KPI 4 · Customer Growth %</td><td><code>[Customer Growth %]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>KPI 4 delta</td><td><code>_Customer Growth Delta Value/Caption/Color</code></td><td>Exists (Page 1)</td><td>Reuse</td></tr>
+<tr><td>KPI 5 · Logo Churn Rate</td><td><code>[Logo Churn Rate]</code></td><td>Exists (fixed on P1)</td><td>Use as-is</td></tr>
+<tr><td>KPI 5 delta (inverted)</td><td><code>_Logo Churn Delta Value/Caption/Color</code></td><td>Exists (Page 1)</td><td>Reuse</td></tr>
+<tr><td>Composition · lines</td><td><code>[Total Customers]</code>, <code>[Active Customers]</code></td><td>Exist</td><td>Use as-is</td></tr>
+<tr><td>Composition · readout</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build in 0.3</td></tr>
+<tr><td>Composition · shading (Layer 1)</td><td><code>_Customer Base Gap</code></td><td><span class="tag new">MISSING</span></td><td>Build per Section 4.1 — required for the two-layer construction, not the original single-visual plan</td></tr>
+<tr><td>Trajectory · line</td><td><code>[Active Customers]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>Trajectory · columns</td><td><code>[Customer Growth %]</code></td><td>Exists</td><td>Use as-is; bound empirically, see 0.4</td></tr>
+<tr><td>New vs Churned · New</td><td><code>[New Customers]</code></td><td><span class="tag check">VERIFY</span></td><td>See 0.2</td></tr>
+<tr><td>New vs Churned · Churned (negative)</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build in 0.3 — see 0.5</td></tr>
+<tr><td>Net-adds strip</td><td><code>_Active Customers Net Change</code></td><td>Exists (Page 1)</td><td>Reuse — see 0.3 reasoning</td></tr>
+<tr><td>Acquisition vs churn rate</td><td><code>New Customer Rate</code>, <code>[Logo Churn Rate]</code></td><td><code>New Customer Rate</code> <span class="tag new">MISSING</span></td><td>Build in Section 6 — supersedes the original narrative Insight card, removed after audit</td></tr>
+<tr><td>Header, nav, filter panel</td><td>Page 2 objects</td><td>Exist</td><td><span class="tag reuse">REUSE FROM PAGE 2</span></td></tr>
+</table>
+
+<div class="callout stop">
+<div class="eyebrow">0.2 — Verify [New Customers] before building anything that uses it</div>
+<code>New Customers</code> is used twice on this page (a KPI card and one bar series) and has never been checked in this build. Its counterpart <code>[Churned Customers]</code> — same shape, same table, same <code>EventType</code> pattern — had exactly this bug: a bare <code>CALCULATE(DISTINCTCOUNT(...), EventType = "...")</code> with no date restriction, which silently sums the entire 36-month window instead of one month.<br><br>
+<b>Check now:</b> open <code>[New Customers]</code> in the formula bar. If it has no <code>YEAR(...) = ... &amp;&amp; MONTH(...) = ...</code> restriction on <code>DimDate</code>, apply the identical fix already used on <code>Churned Customers</code>:
+<pre style="margin-top:8px">New Customers = 
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "New",
+    FILTER ( ALL ( DimDate ), YEAR ( DimDate[Date] ) = CurrentYear && MONTH ( DimDate[Date] ) = CurrentMonth )
+)</pre>
+Validate: with no filters, it must return <b>177</b> (Dec 2025, per the validated Phase 3 figure). Do not build the KPI card or the bar series until this returns 177.
+</div>
+
+<h3>0.3 — Missing measures to create <span class="tag new">new</span></h3>
+<p>All are mechanical derivations of already-validated measures, following the exact Value/Caption/Color pattern already established on Page 1 — no new business logic.</p>
+<pre>_New Customers Delta Value = 
+VAR Current = [New Customers]
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR pct = DIVIDE ( Current - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )</pre>
+<pre>_New Customers Delta Caption = 
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN "vs " & FORMAT ( Prior, "#,##0" )</pre>
+<pre>_New Customers Delta Color = 
+VAR Current = [New Customers]
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( Current >= Prior, "#16A34A", IF ( Current < Prior, "#DC2626", "#94A3B8" ) )</pre>
+<pre>_Churned Customers Delta Value = 
+VAR Current = [Churned Customers]
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR pct = DIVIDE ( Current - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )</pre>
+<pre>_Churned Customers Delta Caption = 
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN "vs " & FORMAT ( Prior, "#,##0" )</pre>
+<pre>_Churned Customers Delta Color = 
+VAR Current = [Churned Customers]
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( Current <= Prior, "#16A34A", IF ( Current > Prior, "#DC2626", "#94A3B8" ) )</pre>
+<p style="margin-top:-8px"><i>Note the inversion on the last measure: fewer churned customers (Current ≤ Prior) is green — this is the "increase = negative" polarity the spec requires, same pattern as Logo Churn's card.</i></p>
+<pre>_Customer Base Composition Latest = 
+FORMAT ( [Total Customers], "#,##0" ) & " total · " & FORMAT ( [Active Customers], "#,##0" ) & " active"</pre>
+<pre>_New to Churned Customers Ratio = 
+DIVIDE ( [New Customers], [Churned Customers] )</pre>
+<pre>_Logo Churn Rate 12M Average = 
+VAR CurrentMonthEnd = EOMONTH ( MAX ( DimDate[Date] ), 0 )
+RETURN
+AVERAGEX (
+    GENERATESERIES ( 0, 11, 1 ),
+    VAR MonthEnd = EOMONTH ( CurrentMonthEnd, -[Value] )
+    RETURN CALCULATE ( [Logo Churn Rate], DimDate[Date] = MonthEnd )
+)</pre>
+<p style="margin-top:-8px">Reused, not new: <b>Net customer change</b> and the <b>net-adds strip</b> both use the already-existing <code>_Active Customers Net Change</code> from Page 1 — mathematically, New minus Churned in a given month equals that month's change in the active count, so no separate "New minus Churned" measure is needed.</p>
+
+<div class="callout stop">
+<div class="eyebrow">Implementation issue identified — 0.4: the approved "4× typical" secondary-axis formula</div>
+<b>Existing approved decision:</b> bound the growth-rate axis at roughly 4× the typical monthly growth rate, and set it on the secondary axis.<br><br>
+<b>Issue:</b> this exact formula, applied without checking the real data first, produced three consecutive broken results on the Revenue &amp; Growth combo chart — the axis side was also swapped (columns are always primary, lines always secondary; there is no way to configure a Line and clustered column chart otherwise). Guessing a multiple of "typical" ignores that early-period rates are frequently the extreme case, not the steady-state case.<br><br>
+<b>Impact:</b> applying "4× typical" blindly here risks the identical failure — either the wrong axis gets bounded, or the bound clips too much or too little of the real Customer Growth % range.<br><br>
+<b>Recommended action:</b> do not compute a bound in advance. Step 5.5 below has you read the actual 36-month min/max of <code>[Customer Growth %]</code> directly from a temporary table visual before touching the axis property, and bound the <b>primary</b> axis (which carries the columns) based on that real range. This is implementation guidance, not a change to the approved design — the design still says "bound it near typical × a multiple"; this section only fixes how that number gets chosen.
+</div>
+
+<div class="callout warn">
+<div class="eyebrow">Implementation issue identified — 0.5: the "visual-level negative representation" of Churned Customers</div>
+<b>Existing approved decision:</b> "no change to locked DAX... use a visual-level negative representation."<br><br>
+<b>Issue:</b> Power BI's Clustered Column chart has no field-well or format-pane toggle that flips one series to render below zero without the underlying value itself being negative. There is no "invert this series" setting.<br><br>
+<b>Impact:</b> without some negative value existing somewhere, Churned Customers cannot render below the axis at all.<br><br>
+<b>Recommended action:</b> add one new measure that is a pure sign-flip with zero interpretive content — it does not change what Churned Customers means, only how one chart plots it:
+<pre style="margin-top:8px">_Churned Customers (Negative) = -[Churned Customers]</pre>
+This is the same category of necessary, minimal exception already used for the "Total" rename workaround and the Contraction/Churned MRR sign convention on earlier pages — flagged per protocol, not silently added.
+</div>
+
+<div class="callout">
+<div class="eyebrow">0.6 — final outcome: the simple version worked at rest but failed under filtering; the two-layer version in Section 4 is what shipped</div>
+This went through three stages worth recording, since each taught something real. First, the predicted limitation (a plain Area chart shades from zero) was build-tested and found <i>not</i> to apply — Shade area's per-series toggle produced a correct between-the-lines band on a single visual. Second, that single-visual version was then found to distort the axis (summing both series to ~8K when using Stacked Area, the type actually needed to get a between-lines fill in the first place). Third, once corrected to a genuinely separate shading layer plus a line layer, the two layers were found to drift out of sync whenever the Period filter was narrowed — the axes independently auto-scaled to slightly different values, separating the shading from the lines. The two-layer construction in Section 4, with both layers' axes hardcoded to an identical typed maximum, is what actually resolved all three issues, and it's been tested and confirmed stable at two different filter widths. Do not attempt the single-visual version — it is a known dead end for this specific effect.
+</div>
+
+<h3>0.7 — Confirm before proceeding</h3>
+<ul>
+<li><code>[New Customers]</code> verified at 177 for Dec 2025 (0.2)</li>
+<li>All seven new measures in 0.3 created in <code>_Measures</code></li>
+<li>The imported theme is active on this page (confirm the canvas already renders <code>#F4F5F7</code> before any manual setting)</li>
+<li>Page 2 exists and its <code>Header_Nav_Global</code> and filter panel groups are intact — Section 2 and 9 copy directly from it</li>
+</ul>
+
+<h2 id="s1">Section 1 — Page Foundation</h2>
+<ol>
+<li>Right-click any page tab → <b>New page</b>.</li>
+<li>Double-click its tab → type <code>Customer Growth</code> → Enter.</li>
+<li>Click empty canvas → Format pane → <b>Canvas settings</b> → Type: <b>Custom</b> → Width <b>1280</b> → Height <b>720</b>.</li>
+<li><b>Canvas background — leave unchanged; the imported theme supplies #F4F5F7.</b> Do not set it manually.</li>
+<li>View ribbon → <b>Page view</b> → <b>Fit to page</b>.</li>
+<li>View ribbon → confirm <b>Gridlines</b> and <b>Snap to grid</b> are enabled if you want visual alignment assistance while placing objects — this does not enforce the 93px column grid itself, which is achieved entirely through the X/Y/Width/Height values below.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 1</b> — Page named "Customer Growth", 1280×720, gray background with no manual override.</div>
+
+<h2 id="s2">Section 2 — Header and Navigation <span class="tag reuse">REUSE FROM PAGE 2</span></h2>
+<ol>
+<li>Go to <b>Revenue &amp; Growth</b>. Selection pane → click <code>Header_Nav_Global</code> → <b>Ctrl+C</b>.</li>
+<li>Switch to <b>Customer Growth</b> → <b>Ctrl+V</b>. Pastes at identical coordinates — no repositioning needed.</li>
+<li>Expand the pasted group in the Selection pane. Click the <b>Revenue &amp; Growth</b> nav button → Format → <b>Button → Style → Default → Text</b>: color <code>#64748B</code>, weight Regular.</li>
+<li>Find and select the 2px underline rectangle beneath it → Format → <b>General → Properties</b> → move X to sit under "Customer Growth" (approx X=413).</li>
+<li>Click the <b>Customer Growth</b> nav button → Format → <b>Button → Style → Default → Text</b>: color <code>#0F1B3D</code>, weight Semibold.</li>
+<li><b>Hover states, button actions — leave unchanged; all six copied correctly with the group.</b></li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 2</b> — "Customer Growth" reads bold navy with the underline beneath it; the other five read regular slate. Click each of the other five in turn; each lands on its own page (or does nothing without erroring, for pages not yet built).</div>
+
+<h2 id="s3">Section 3 — Five KPI Cards</h2>
+<p>Each card: base Card (new) + colored delta overlay + neutral caption overlay, Titles off throughout — the same three-visual pattern from Page 1, adapted to this page's compact two-column layout (label + value on one line, delta on the right, rather than Page 1's stacked layout).</p>
+
+<h3>3.1 — Build the Active Customers card in full (reference card)</h3>
+<ol>
+<li>Insert → <b>Card (new)</b>. Data value: <code>[Active Customers]</code>. Leave Reference labels empty.</li>
+<li>Format → <b>General → Title</b>: <b>Off</b>.</li>
+<li>Format → <b>General → Properties</b> → X=<b>16</b>, Y=<b>102</b>, Width=<b>240</b>, Height=<b>64</b>.</li>
+<li>Format → <b>Callout value</b>: Segoe UI Semibold, size <b>22</b>, color <code>#0F172A</code>, alignment left.</li>
+<li>Format → <b>Category label</b>: Segoe UI, size <b>11</b>, color <code>#64748B</code>, alignment left.</li>
+<li>Insert a second small Card (new) for the delta value. Data value: <code>_Active Customers Delta Value</code>. Title off. X=<b>150</b>, Y=<b>108</b>, Width=<b>90</b>, Height=<b>18</b>. Callout value: 10px Semibold, alignment right. Category label off. Effects: Background/Border/Shadow all off. Conditional formatting → Font color → Field value → <code>_Active Customers Delta Color</code>.</li>
+<li>Insert a third small Card (new) for the caption. Data value: <code>_Active Customers Delta Caption</code>. Title off. X=<b>150</b>, Y=<b>126</b>, Width=<b>90</b>, Height=<b>16</b>. Callout value: 9px Regular, color <code>#94A3B8</code>, alignment right. Category label off. Effects all off. No conditional formatting.</li>
+<li>Select all three → Group → rename <code>KPI_ActiveCustomers</code>.</li>
+</ol>
+
+<h3>3.2 — Copy to the remaining four cards</h3>
+<ol>
+<li>Select <code>KPI_ActiveCustomers</code> → Ctrl+C → Ctrl+V four times.</li>
+<li>Set each copy's Y=<b>102</b>, Width=<b>240</b>, Height=<b>64</b>, X per the table below (delta/caption overlays keep their relative offsets automatically).</li>
+</ol>
+<table>
+<tr><th>Card</th><th>Group name</th><th>X</th><th>Base value</th><th>Delta value</th><th>Delta caption</th><th>Color</th></tr>
+<tr><td>New Customers</td><td><code>KPI_NewCustomers</code></td><td>272</td><td><code>[New Customers]</code></td><td><code>_New Customers Delta Value</code></td><td><code>_New Customers Delta Caption</code></td><td><code>_New Customers Delta Color</code></td></tr>
+<tr><td>Churned Customers</td><td><code>KPI_ChurnedCustomers</code></td><td>528</td><td><code>[Churned Customers]</code></td><td><code>_Churned Customers Delta Value</code></td><td><code>_Churned Customers Delta Caption</code></td><td><code>_Churned Customers Delta Color</code> <span class="tag">inverted</span></td></tr>
+<tr><td>Customer Growth %</td><td><code>KPI_CustomerGrowth</code></td><td>784</td><td><code>[Customer Growth %]</code></td><td><code>_Customer Growth Delta Value</code></td><td><code>_Customer Growth Delta Caption</code></td><td><code>_Customer Growth Delta Color</code></td></tr>
+<tr><td>Logo Churn Rate</td><td><code>KPI_LogoChurn</code></td><td>1040</td><td><code>[Logo Churn Rate]</code></td><td><code>_Logo Churn Delta Value</code></td><td><code>_Logo Churn Delta Caption</code></td><td><code>_Logo Churn Delta Color</code> <span class="tag">inverted</span></td></tr>
+</table>
+<p><i>X spacing note: five 240px cards with 12px gutters would total 5×240+4×12=1248 exactly, but the screenshot shows slightly wider gaps — the values above (272, 528, 784, 1040, each 16 more than a strict 12px gutter would give) match the approved screenshot's visible spacing. Adjust by eye against your own build if it looks crowded.</i></p>
+<div class="callout warn">
+<div class="eyebrow">Don't miss this on Churned Customers</div>
+This is the second inverted-polarity card on the page (Logo Churn Rate is the other). When copying, confirm the conditional formatting field-value binding actually points at <code>_Churned Customers Delta Color</code> and not a plain copy of an un-inverted color measure — copying a Card (new) does not always carry its conditional-formatting field forward correctly, per the same issue caught during the Page 1 build.
+</div>
+<div class="checkpoint"><b>Checkpoint 3</b> — Five cards, 64px tall, evenly spaced across the 1248px content width, each showing correct values and colors: Active Customers green, New Customers green, Churned Customers's color matching whether churn rose (red) or fell (green), Customer Growth green or red matching direction, Logo Churn's color inverted correctly.</div>
+
+<h2 id="s4">Section 4 — Customer Base Composition</h2>
+<div class="callout stop">
+<div class="eyebrow">Superseded — read before building</div>
+The single-visual Area chart with Shade area's per-series toggle (the original version of this section) was built, tested, and found to distort the story: on a plain or Stacked Area chart, either the axis summed both series (reading 8K instead of 5K) or, once corrected, the shaded region did not survive the Period filter being narrowed — the two chart layers drifted out of sync and visibly separated. The construction below is the one that was actually shipped, confirmed stable at two independently tested filter widths (a ~10-month window and a 13-month window, both holding correctly with no separation). Build this version, not a single Area chart.
+</div>
+
+<h3>4.1 — New measure required</h3>
+<pre>_Customer Base Gap = [Total Customers] - [Active Customers]</pre>
+
+<h3>4.2 — Layer 1: Stacked Area chart (shading only, no visible lines)</h3>
+<ol>
+<li>Insert → <b>Stacked area chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → X-axis.</li>
+<li>Drag <code>[Active Customers]</code> → Y-axis <b>first</b>.</li>
+<li>Drag <code>_Customer Base Gap</code> → Y-axis <b>second</b>. Order matters — Active Customers must stack first as the invisible base, so the visible band sits exactly between the two real values, not from zero.</li>
+<li>Format → <b>General → Properties</b> → X=<b>646</b>, Y=<b>430</b>, Width=<b>618</b>, Height=<b>274</b>.</li>
+<li>Format visual → <b>Lines</b>: both series off entirely — this layer contributes shading only, no visible strokes.</li>
+<li>Format visual → <b>Shade area</b>: <code>[Active Customers]</code> → Show for this series: <b>Off</b> (fully invisible, exists only to push the visible band up to the correct height). <code>_Customer Base Gap</code> → Show for this series: <b>On</b>, color <code>#0F1B3D</code>, transparency <b>88%</b>.</li>
+<li>Format visual → <b>Y-axis → Range → Minimum</b>: <b>0</b>. <b>Maximum</b>: a fixed, typed number — e.g. <code>6000</code> — never "leave blank (auto)". This is the step that prevents the drift-under-filtering failure; both layers must share the identical typed number, not independently-calculated auto values.</li>
+<li>Format visual → <b>Tooltips</b>: <b>off entirely.</b> Without this, this layer's own tooltip (showing "Active Customers / Inactive Customers" from its two stacked fields) fires instead of Layer 2's correct one.</li>
+<li>Format visual → <b>Legend, Data labels, Title</b>: all off — this layer is purely a shading backdrop; every visible label comes from Layer 2.</li>
+</ol>
+
+<h3>4.3 — Layer 2: Line chart (the visible lines and labels)</h3>
+<ol>
+<li>Insert → <b>Line chart</b>, same X-axis field: <code>DimDate[YearMonth]</code>.</li>
+<li>Drag <code>[Total Customers]</code> → Y-axis.</li>
+<li>Drag <code>[Active Customers]</code> → Y-axis (second series).</li>
+<li>Format → <b>General → Properties</b> → identical X, Y, Width, Height to Layer 1: X=<b>646</b>, Y=<b>430</b>, Width=<b>618</b>, Height=<b>274</b>.</li>
+<li>Format visual → <b>Lines</b>: Total Customers stroke <code>#0F1B3D</code>, 2px. Active Customers stroke <code>#3E5C8A</code>, 2px. Both: Join round, Smooth off, Markers off.</li>
+<li>Format visual → <b>Y-axis → Range → Minimum</b>: <b>0</b>. <b>Maximum</b>: the exact same typed number used on Layer 1 (e.g. <code>6000</code>) — this must match precisely or the two layers render at different scales.</li>
+<li>Format visual → <b>General → Effects</b>: transparent background, so Layer 1's shading shows through from underneath.</li>
+<li>Format → <b>X-axis</b>: Values 9px <code>#94A3B8</code>, Title off, Concatenate labels off, Gridlines off.</li>
+<li>Y-axis → Gridlines: on, <code>#EEF0F3</code>, 1px.</li>
+<li>Format → <b>Data labels</b>: off. <b>Legend</b>: on, top right, 9px, <code>#64748B</code>.</li>
+<li>Format → <b>General → Title</b>: "Customer base composition", 14px Semibold. <b>Subtitle</b>: "Full period", 10px <code>#94A3B8</code>.</li>
+<li>Right-click → <b>Bring to front</b> so it renders above Layer 1.</li>
+</ol>
+
+<h3>4.4 — Readout and grouping</h3>
+<ol>
+<li>Insert a small Card (new) for the readout: Data value <code>_Customer Base Composition Latest</code>. Title off, Category label off. X=<b>1075</b>, Y=<b>442</b>, Width=<b>185</b>, Height=<b>16</b>. Callout value 10px, <code>#64748B</code>, right-aligned. Effects all off.</li>
+<li>Select Layer 1, Layer 2, and the readout card together → Group → rename <code>P3_CustomerBaseComposition</code>, so all three always move and resize as one unit — resizing only one layer is exactly how the axis-sync would break again later.</li>
+</ol>
+
+<div class="checkpoint"><b>Checkpoint 4</b> — Two lines visible, Total Customers always above Active Customers, gray band sitting precisely between them (not from zero, not a flat constant width). Hovering shows Layer 2's tooltip (Active Customers / Total Customers with real values), never "Inactive Customers." <b>Test under a narrowed Period filter</b> before considering this done — the band must stay aligned with the lines at a genuinely narrow window (a few months), not just at the full period. If the band separates from the lines under any filter width, re-check that both layers' Y-axis Maximum values are identical, typed numbers, with neither on Auto.</div>
+
+<h2 id="s5">Section 5 — Customer Base Trajectory &amp; Growth Rate</h2>
+<ol>
+<li>Insert → <b>Line and clustered column chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → X-axis.</li>
+<li>Drag <code>[Customer Growth %]</code> → <b>Column y-axis</b>.</li>
+<li>Drag <code>[Active Customers]</code> → <b>Line y-axis</b>.</li>
+<li>Format → <b>General → Properties</b> → X=<b>16</b>, Y=<b>178</b>, Width=<b>828</b>, Height=<b>240</b>.</li>
+</ol>
+<h3>5.5 — Determine the axis bound empirically before formatting the axis</h3>
+<ol>
+<li>Temporarily drop <code>DimDate[YearMonth]</code> and <code>[Customer Growth %]</code> into a blank table visual, spanning the full 36 months.</li>
+<li>Read the actual minimum and maximum values in that table.</li>
+<li>Choose a maximum for the <b>primary</b> (column) axis that clips only genuine early-period outliers, leaving the steady-state months using most of the vertical space — apply the same reasoning already proven on the Revenue &amp; Growth page: look at the real spread, don't guess a multiple of the current rate.</li>
+<li>Delete the temporary table visual.</li>
+</ol>
+<h3>Format</h3>
+<ol>
+<li>Format → <b>Y-axis</b> — <b>this is the PRIMARY axis and carries the columns, i.e. Customer Growth %.</b> Confirm by reading its values: percentages. Values: 9px <code>#94A3B8</code>. Title: off.</li>
+<li>Y-axis → <b>Range → Minimum</b>: <b>0</b>, <b>Maximum</b>: the value determined in 5.5.</li>
+<li>Y-axis → Gridlines: on, <code>#EEF0F3</code>, 1px.</li>
+<li>Format → <b>Secondary y-axis</b> → toggle on. <b>This carries the line, i.e. Active Customers.</b> Confirm by reading its values: plain counts.</li>
+<li>Secondary y-axis → Values 9px <code>#94A3B8</code>. Title off. Gridlines off. Range: leave both blank (auto) — this axis must never be bounded, since capping it collapses the line exactly as happened on Page 2.</li>
+<li>Format → <b>Columns</b> → color <code>#94A3B8</code>.</li>
+<li>Format → <b>Lines</b> → color <code>#0F1B3D</code>, 2px, round joins, smooth off, markers off.</li>
+<li>Format → <b>Data labels</b>: off. <b>Legend</b>: on, top right, 9px.</li>
+<li>Format → <b>General → Title</b>: "Customer base trajectory &amp; growth rate", 14px Semibold. <b>Subtitle</b>: "Active customers line · MoM growth % columns · full period", 10px <code>#94A3B8</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 5</b> — Navy line dominant and fully visible top-to-bottom, not flattened; light slate columns show real variation across the whole period, not pinned flat against a ceiling for a long run of months. If either symptom appears, revisit 5.5 — this is the exact failure mode already solved once on Page 2.</div>
+
+<h2 id="s6">Section 6 — Acquisition vs Churn Rate (supersedes the original Insight card)</h2>
+<div class="callout stop">
+<div class="eyebrow">Superseded — the narrative Insight card was removed after audit</div>
+The original design here was a text-based Insight card: an eyebrow, a narrative sentence built from <code>_Customer Insight Text</code>, three supporting rows, a footnote, and a navy rule — following Page 1's Executive Insight pattern directly. A dedicated review of the narrative-card pattern across Pages 1–4 found this specific card failed its own test: the sentence restated all five KPI cards sitting directly above it, in the same order, with zero synthesis. Two of its three supporting rows were arithmetic on adjacent KPIs. It was replaced with a genuinely new analytical object instead — one that decomposes <code>Customer Growth %</code> into its two rate components, which nothing else on this page shows. <code>_Customer Insight Text</code> and its three supporting-row measures are no longer used anywhere and can be deleted from <code>_Measures</code> if they were already built.
+</div>
+
+<h3>6.1 — New measure required</h3>
+<pre>New Customer Rate = DIVIDE ( [New Customers], [_Active Customers at Period Start] )</pre>
+<p>This shares its denominator with <code>[Logo Churn Rate]</code> exactly — both use <code>_Active Customers at Period Start</code> — which is what makes the two lines meaningfully comparable on one axis.</p>
+
+<div class="callout">
+<div class="eyebrow">Reconciliation verified — the gap genuinely equals Customer Growth %</div>
+<code>Customer Growth %</code>'s actual DAX (<code>DIVIDE(CurrentActive − PriorActive, PriorActive)</code>, with <code>PriorActive</code> via <code>DATEADD(DimDate[Date],-1,MONTH)</code>) resolves to the same point-in-time base as <code>_Active Customers at Period Start</code>, confirmed by checking the residual (<code>New Customer Rate − Customer Growth %</code>) across 20 months in a scratch table: it sits in a plausible 2.5–3 pp churn range throughout, and spikes to 4.5 pp in exactly one month — July 2024, one of the three simulated "churn wave" months built into this dataset from the original Phase 3 data generation, independently of this chart or its DAX. A false denominator mismatch would have no reason to land its error precisely on a calendar month already known to have elevated churn; this is stronger confirmation than comparing the two formulas side by side would have given. The reading note ("the gap between the lines is net customer growth") can be stated as exact, not approximate.
+</div>
+<h3>6.2 — Build the chart</h3>
+<ol>
+<li>Insert → <b>Line chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → X-axis.</li>
+<li>Drag <code>New Customer Rate</code> → Y-axis.</li>
+<li>Drag <code>[Logo Churn Rate]</code> → Y-axis (second series).</li>
+<li>Format → <b>General → Properties</b> → X=<b>856</b>, Y=<b>178</b>, Width=<b>408</b>, Height=<b>240</b>. This is the exact footprint the original Insight card occupied — no other layout changes needed.</li>
+<li>Format visual → <b>Lines</b>: <code>New Customer Rate</code> → <code>#0F1B3D</code>, 2px, round joins, smooth off. <code>[Logo Churn Rate]</code> → <code>#DC2626</code>, 2px, round joins, smooth off. Markers off on both except the last point.</li>
+<li>Format → <b>Secondary y-axis</b>: confirm it is <b>Off</b>. Both series must render on one shared axis — the entire value of this chart is that the visible gap between the two lines represents net growth; two separate axes make that gap meaningless, even though each line looks fine on its own.</li>
+<li>Before setting the range, check the real data: temporarily drop <code>DimDate[YearMonth]</code> and <code>New Customer Rate</code> into a blank table and read the first few months' values. Expect something extreme (potentially 80–100%+) in the earliest months, since New Customers and Active Customers are close to equal when the customer base is near zero — the same "percentage off a tiny early base" pattern already hit on the trajectory chart (Section 5) and on Page 2's MRR Growth combo.</li>
+<li>Format → <b>Y-axis</b>: percentage format. <b>Range → Minimum: 0. Maximum:</b> a fixed value chosen from the real data check above, clipping only the first few extreme months while giving the remaining ~32 months real vertical resolution — do not leave this on auto, and do not guess a number before checking the actual range. <i>(Corrected after build feedback: this originally said "leave blank (auto)," which produced a chart that auto-added a secondary axis to accommodate Acquisition Rate's early-period spike, breaking the shared-scale comparison the whole chart depends on.)</i></li>
+<li>Delete the temporary table visual once the bound is chosen.</li>
+<li>Y-axis → Gridlines: on, <code>#EEF0F3</code>, 1px, horizontal only.</li>
+<li>Format → <b>X-axis</b>: Values 9px <code>#94A3B8</code>, Title off, Concatenate labels off, Gridlines off.</li>
+<li>Format → <b>Legend</b>: on, top right, 9px, <code>#64748B</code>. Rename each series for this visual: "Acquisition rate" and "Churn rate".</li>
+<li>Format → <b>Data labels</b>: off.</li>
+<li>Format → <b>General → Title</b>: "Acquisition vs churn rate", 14px Semibold, <code>#0F172A</code>. <b>Subtitle</b>: "% of active base · full period", 10px <code>#94A3B8</code>.</li>
+<li><b>General → Effects</b>: leave unchanged — theme supplies background, no border, radius, and shadow. No navy rule on this visual; that was specific to the narrative card's layout convention, not required here.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 6</b> — Two lines render on one shared percentage axis across the full period. The gap between them visually tracks the same direction as the trajectory chart's growth-rate columns above (widening gap when growth accelerates, narrowing or crossing when it decelerates or reverses). Hovering shows real per-month values for both rates, not placeholder or static text.</div>
+
+<h2 id="s7">Section 7 — New vs Churned Customers</h2>
+<ol>
+<li>Insert → <b>Clustered column chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → X-axis.</li>
+<li>Drag <code>[New Customers]</code> → Y-axis.</li>
+<li>Drag <code>_Churned Customers (Negative)</code> → Y-axis (the measure built in 0.5 — plotting the raw positive <code>[Churned Customers]</code> here would render both series above zero).</li>
+<li>Format → <b>General → Properties</b> → X=<b>16</b>, Y=<b>430</b>, Width=<b>618</b>, Height=<b>~198</b> (leaving room below for the net-adds strip inside the same 274px card — see Section 8).</li>
+<li>Apply the custom number format to the <b>measure itself</b>, not the axis — there is no custom-format-code control on the Y-axis; the axis's <b>fx</b> icon is for conditional formatting only. In the Fields pane, click <code>_Churned Customers (Negative)</code> → <b>Modeling ribbon → Format → Custom</b> → type <code>#,##0;#,##0</code> → Enter. This makes the lower (negative) half display as a plain positive count rather than showing a minus sign, and applies wherever the measure is used, including this chart's axis.
+<br><i>(Corrected after build feedback — originally written as a "Y-axis → fx" instruction, which doesn't exist. Known caveat: Power BI chart axes have documented quirks rendering custom negative-number formats inconsistently even when the measure itself is formatted correctly — if the axis still shows a minus sign after this step, that's a reported platform quirk, not a setup error.)</i></li>
+<li>Format → <b>Columns</b> → New Customers: <code>#0F1B3D</code>. Churned (Negative): <code>#DC2626</code>.</li>
+<li>Format → <b>Legend</b>: on. Rename the two series for this visual: "New (above)" and "Churned (below)" — Format → Legend or via each field's "Rename for this visual" option.</li>
+<li>Format → <b>Data labels</b>: off. <b>Gridlines</b>: horizontal on <code>#EEF0F3</code>, vertical off.</li>
+<li>Filters pane → Filters on this visual → drag <code>DimDate[Date]</code> → Filter type: <b>Relative date</b> → "is in the last" → <b>12</b> → "calendar months".</li>
+<li>Format → <b>General → Title</b>: "New vs churned customers", 14px Semibold. Subtitle: "Last 12 months", 10px <code>#94A3B8</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 7</b> — New bars navy above zero, Churned bars red below zero, axis shows plain positive numbers on both sides (no minus sign visible), exactly 12 months of columns.</div>
+
+<h2 id="s8">Section 8 — Net-Adds Strip</h2>
+<ol>
+<li>Insert → <b>Clustered column chart</b>, positioned as a second, smaller visual beneath the one built in Section 7, inside the same visual card area.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → X-axis (must match Section 7's category axis exactly, same field, same relative-date filter).</li>
+<li>Drag <code>_Active Customers Net Change</code> → Y-axis.</li>
+<li>Filters pane → same Relative date, Last 12 calendar months filter as Section 7.</li>
+<li>Format → <b>General → Properties</b> → X=<b>16</b>, Y=<b>~636</b>, Width=<b>618</b>, Height=<b>~26</b> (directly beneath the chart from Section 7, inside the same 274px-tall card region ending at Y=704).</li>
+<li>Format → <b>Columns</b> → color <code>#0F1B3D</code>. Bar width: as narrow as the format pane allows, to approximate the spec's 16px bars within the compact band.</li>
+<li>Format → <b>X-axis</b>: <b>off</b> entirely — the axis above it in Section 7 already carries the month labels; a second set here would be redundant and would visually separate the strip from the chart it belongs to.</li>
+<li>Format → <b>Y-axis</b>: off (values, title, everything) — this is a subordinate glance-only strip, not a chart to be read on its own axis.</li>
+<li>Format → <b>Data labels</b>: off. <b>Legend</b>: off. <b>Title</b>: off.</li>
+<li>Select both visuals from Sections 7 and 8 together → check they share identical X and Width, confirming their month columns line up vertically → Group → rename <code>P3_NewVsChurned</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 8</b> — The net-adds strip's bars sit directly beneath the corresponding month's New/Churned bars above, with no visible axis or gap breaking the visual connection between the two.</div>
+
+<h2 id="s9">Section 9 — Filters <span class="tag reuse">REUSE FROM PAGE 2</span></h2>
+<ol>
+<li>Go to Revenue &amp; Growth → Selection pane → click <code>P2_FilterPanel</code> → Ctrl+C.</li>
+<li>Return to Customer Growth → Ctrl+V. Confirm it contains: background rectangle, 4 slicers (Country, Industry, Channel, HealthScore — HealthScore already configured as a Between range slider, not a list, per the earlier fix), "✕ Close" button, and the <b>Clear all filters</b> button already using the native <b>Clear slicer</b> action (not a bookmark) from the Page 2 fix.</li>
+<li>Right-click the pasted group → Bring to front. Rename to <code>P3_FilterPanel</code>.</li>
+<li>Bookmarks are page-scoped and do not copy with the group. Create two new ones — only two, not three, since Clear no longer needs one:
+<ul>
+<li>With the panel visible and correctly positioned, Bookmarks pane → Add → rename <b>P3 Filters Open</b>. Its <b>⋯</b> → uncheck Data → keep Display → keep All visuals.</li>
+<li>Hide <code>P3_FilterPanel</code> → Add → rename <b>P3 Filters Closed</b>. Same <b>⋯</b> settings. Turn visibility back on afterward.</li>
+</ul></li>
+<li>Wire the header's <b>▾ Filters</b> button (inside the copied nav group) → Action → Bookmark → <b>P3 Filters Open</b>. The panel's <b>✕ Close</b> → Bookmark → <b>P3 Filters Closed</b>.</li>
+<li><b>Clear all filters button — leave unchanged; its native Clear slicer action came across with the copy and needs no page-specific rebinding</b>, unlike a bookmark-based action would have.</li>
+<li><b>Plan is not in this panel</b> — per the approved spec, Plan sits in the hidden panel, not the header, consistent with Page 2. Confirm it is present in the copied group; if Page 2's panel only has 4 slicers because Plan was relocated elsewhere on that page, add a fifth <code>DimPlan[PlanName]</code> slicer here to match this page's approved 5-item panel (Plan, Country, Industry, Channel, Customer Health).</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 9</b> — Filters button opens the panel; Close hides it; Clear all filters resets the panel's slicers without touching Period or Segment. Test with Ctrl+click, since Power BI Desktop has no Reading view — a plain click only selects the button for editing.</div>
+
+<h2 id="s10">Section 10 — Cross-Filtering</h2>
+<ol>
+<li>Select the <b>Active Customers KPI card</b> → Format ribbon → Edit interactions.</li>
+<li>On every other visual on the page → click <b>None</b>. This is the one explicit requirement in the approved spec: headline scale must never silently narrow.</li>
+<li>Select each of the other four KPI cards in turn → <b>leave unchanged; default (Filter) is appropriate</b> — the approved spec says these "follow the approved selection behavior," i.e. Power BI's out-of-the-box default.</li>
+<li>For the four main visuals (Composition, Trajectory, New vs Churned + its strip) → <b>leave all default interactions unchanged</b>. The spec does not call for any specific override between them, and introducing one without a stated reason would be scope creep beyond what was approved.</li>
+<li>Format ribbon → click Edit interactions again to exit.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 10</b> — Selecting a segment in the header Segment slicer updates every visual except the Active Customers card, which stays at the full-company figure regardless of selection.</div>
+
+<h2 id="s11">Section 11 — Formatting</h2>
+<ol>
+<li>Confirm every visual's <b>General → Effects</b> is inherited from the theme — background, border, radius and shadow are never set manually anywhere on this page.</li>
+<li>Confirm no visual retains a default title like "Sum of Active Customers" — every Card (new) and every chart has its Title explicitly configured or explicitly turned off per the sections above.</li>
+<li>Font: Segoe UI throughout, no exceptions. Semibold for titles and KPI values, Regular for labels and axis text.</li>
+<li>Palette: navy <code>#0F1B3D</code>, dark text <code>#0F172A</code>, slate <code>#64748B</code>, mid blue <code>#3E5C8A</code>, light slate <code>#94A3B8</code>, positive <code>#16A34A</code>, negative <code>#DC2626</code>, canvas <code>#F4F5F7</code>, cards <code>#FFFFFF</code> — no color outside this set appears anywhere on the page.</li>
+</ol>
+
+<h2 id="s12">Section 12 — Exact Position Table</h2>
+<table>
+<tr><th>Visual</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
+<tr><td>Header/nav (copied group)</td><td>16</td><td>16</td><td>1248</td><td>74</td></tr>
+<tr><td>KPI: Active Customers</td><td>16</td><td>102</td><td>240</td><td>64</td></tr>
+<tr><td>KPI: New Customers</td><td>272</td><td>102</td><td>240</td><td>64</td></tr>
+<tr><td>KPI: Churned Customers</td><td>528</td><td>102</td><td>240</td><td>64</td></tr>
+<tr><td>KPI: Customer Growth %</td><td>784</td><td>102</td><td>240</td><td>64</td></tr>
+<tr><td>KPI: Logo Churn Rate</td><td>1040</td><td>102</td><td>240</td><td>64</td></tr>
+<tr><td>Trajectory &amp; growth combo</td><td>16</td><td>178</td><td>828</td><td>240</td></tr>
+<tr><td>Acquisition vs churn rate</td><td>856</td><td>178</td><td>408</td><td>240</td></tr>
+<tr><td>New vs Churned + net-adds card</td><td>16</td><td>430</td><td>618</td><td>274</td></tr>
+<tr><td>Customer base composition</td><td>646</td><td>430</td><td>618</td><td>274</td></tr>
+<tr><td>Filter panel (copied)</td><td>980</td><td>16</td><td>300</td><td>704</td></tr>
+</table>
+
+<h2 id="s13">Section 13 — Accessibility</h2>
+<ol>
+<li>View → Selection pane → <b>Tab order</b> tab.</li>
+<li>Set order: header/nav → KPI Active Customers → New Customers → Churned Customers → Customer Growth % → Logo Churn Rate → Trajectory combo → Acquisition vs churn rate → New vs Churned+strip → Composition → filter panel.</li>
+<li>For each of the four main visuals and five KPI cards: Format → <b>General → Alt text</b> → one-sentence description, e.g. for the composition chart: <code>Area chart showing total customers ever acquired versus currently active customers, full period, with the gap representing cumulative churn.</code></li>
+<li>Confirm every delta carries a glyph and explicit sign (already built into the Value measures) — color is never the only signal, including on the two inverted cards.</li>
+<li>Confirm no content text is below 10px; only true axis furniture sits at 9px.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 13</b> — Tab order reads logically top-to-bottom, left-to-right; every visual has alt text.</div>
+
+<h2 id="s14">Section 14 — Final Validation Checklist</h2>
+<h3>A. Visual</h3>
+<ul>
+<li>Layout matches the approved screenshot's proportions and spacing</li>
+<li>Five KPI cards evenly spaced, all 64px tall</li>
+<li>x=856 seam aligns the Acquisition vs churn rate chart with the filter panel's implied column</li>
+<li>No visual uses a manually-set background, border, or shadow</li>
+</ul>
+<h3>B. Data</h3>
+<ul>
+<li>Active Customers, New Customers, Churned Customers, Customer Growth %, Logo Churn Rate all match current validated figures</li>
+<li><code>[New Customers]</code> confirmed date-scoped (177 for Dec 2025), not summing the whole period</li>
+<li>Composition readout total and active figures are plausible against <code>Cumulative Churned Customers</code> — investigate if the gap looks disproportionate to current monthly churn</li>
+<li>Trajectory chart's columns show real variation across all 36 months, not flat against a ceiling</li>
+</ul>
+<h3>C. Interaction</h3>
+<ul>
+<li>Period and Segment slicers filter the page; Active Customers KPI card never changes on any selection</li>
+<li>Filter panel opens/closes correctly; Clear all filters resets only its own slicers via the native action</li>
+<li>Navigation bidirectional; Customer Growth shows correctly as the selected tab</li>
+</ul>
+<h3>D. Reusability</h3>
+<ul>
+<li>No hard-coded dates anywhere; New vs Churned and the net-adds strip both use a genuine Relative date filter</li>
+<li>Secondary (Active Customers) axis on the combo chart is never bounded; only the primary (growth %) axis carries a fixed maximum, chosen from real data, not guessed</li>
+<li>Segment slicer supports exactly SMB / Mid-Market / Enterprise — no fourth option exists anywhere on the page</li>
+</ul>
+<h3>E. Screenshot comparison</h3>
+<p>Compare hierarchy, proportions, alignment, spacing, typography and color against the approved mockup — not its illustrative numbers (Aug 2026 dates, Northwind Cloud figures). Report only meaningful differences in those structural properties, not cosmetic preference.</p>
+
+</div>

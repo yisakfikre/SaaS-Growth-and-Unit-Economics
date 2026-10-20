@@ -1,0 +1,462 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:980px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+nav.toc a:hover{text-decoration:underline;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:8px; border-top:1px solid var(--border);}
+h2 .stepnum{color:var(--slate); font-weight:400;}
+h3{font-size:14px; font-weight:600; margin:20px 0 8px;}
+p{font-size:13px; line-height:1.6; color:var(--text1);}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:12.5px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:8px 10px; font-weight:600; color:var(--text1); border-bottom:1px solid var(--border);}
+td{padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text1);}
+tr:last-child td{border-bottom:none;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:12px; background:var(--bg); padding:1px 5px; border-radius:4px;}
+pre{background:var(--code-bg); color:#E2E8F0; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:12px; line-height:1.6; margin:10px 0 20px;}
+pre code{background:none; padding:0; color:inherit;}
+.checkpoint{background:var(--bg); border:1px dashed var(--slate); border-radius:8px; padding:12px 16px; margin:14px 0 24px; font-size:12.5px;}
+.checkpoint b{color:var(--navy);}
+[data-theme="dark"] .checkpoint b, :root:not([data-theme="light"]) .checkpoint b{color:#93C5FD;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0 20px;}
+.stepbox{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px 16px; font-size:12.5px;}
+.stepbox b{display:block; margin-bottom:4px; color:var(--text1);}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:10px; padding:2px 8px; border-radius:10px; background:var(--bg); color:var(--slate); border:1px solid var(--border); margin-left:6px;}
+.tag.new{background:#FEF3C7; color:#92400E; border-color:#FCD34D;}
+[data-theme="dark"] .tag.new, :root:not([data-theme="light"]) .tag.new{background:#78350F; color:#FDE68A; border-color:#92400E;}
+</style>
+
+<header class="doc">
+<div class="wrap">
+<h1>Page 1 — Executive Overview: Power BI Implementation SOP</h1>
+<p>SaaS Growth &amp; Unit Economics · Phase 4, Dashboard &amp; UX · Builds on the frozen Phase 1–3 model and DAX, plus the approved design in Section D2</p>
+</div>
+</header>
+
+<div class="wrap">
+
+<div class="callout warn">
+<div class="eyebrow">Read before starting</div>
+The approved screenshot uses illustrative placeholder data — a fictional company name, a future date, and numbers that don't match the real model. That's expected: every field below binds to a real measure, so your build will correctly show the real Dec 2025 figures ($1,002,731 MRR, 3,587 active customers, etc.), not the screenshot's numbers. Keep the company name text as a placeholder — reasonable for a reusable template.<br><br>
+The design also requires delta and color-coded comparison measures on every KPI card that don't exist in the frozen Phase 3 measure set. <b>Step 0 below adds them</b> — all mechanically derived from already-validated measures, no new business logic, consistent with the design's own Section F instructions.
+</div>
+
+<nav class="toc">
+<a href="#step0">0. New measures</a>
+<a href="#step1">1. Canvas &amp; grid</a>
+<a href="#step2">2. Header &amp; nav shell</a>
+<a href="#step3">3. Tier 1 KPIs</a>
+<a href="#step4">4. Tier 2 KPIs</a>
+<a href="#step5">5. MRR Trend</a>
+<a href="#step6">6. MRR Movement</a>
+<a href="#step7">7. Customer Trend</a>
+<a href="#step8">8. MRR by Plan</a>
+<a href="#step9">9. Executive Insight</a>
+<a href="#step10">10. Header slicers</a>
+<a href="#step11">11. Filter panel + bookmarks</a>
+<a href="#step12">12. Cross-filter interactions</a>
+<a href="#step13">13. Tooltip page</a>
+<a href="#step14">14. Drill-through</a>
+<a href="#step15">15. Navigation buttons</a>
+<a href="#step16">16. Final validation</a>
+</nav>
+
+<h2 id="step0"><span class="stepnum">Step 0 —</span> New supporting measures <span class="tag new">required by design</span></h2>
+<p>Every KPI card in the approved design shows a comparison line ("vs prior month"), and Section F calls for a color measure driving that comparison's font color. None of this exists yet — it's all new, all one or two lines of DAX, all built only from already-validated Phase 3 measures. Add these to <code>_Measures</code> before touching any visual.</p>
+
+<h3>0.1 — Base delta measures (raw values, reused by the text/color measures below)</h3>
+<table>
+<tr><th>Measure</th><th>DAX</th><th>Used for</th></tr>
+<tr><td><code>_MRR Growth PP Delta</code></td><td><pre style="margin:0">_MRR Growth PP Delta =
+VAR CurrentGrowth = [MRR Growth %]
+VAR PriorGrowth =
+    CALCULATE([MRR Growth %], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+CurrentGrowth - PriorGrowth</pre></td><td>MRR Growth (MoM) card delta</td></tr>
+<tr><td><code>_Active Customers Net Change</code></td><td><pre style="margin:0">_Active Customers Net Change =
+VAR Current = [Active Customers]
+VAR Prior =
+    CALCULATE([Active Customers], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+Current - Prior</pre></td><td>Active Customers card "+38 net"</td></tr>
+<tr><td><code>_ARPA Growth %</code></td><td><pre style="margin:0">_ARPA Growth % =
+VAR Current = [ARPA]
+VAR Prior = CALCULATE([ARPA], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+DIVIDE(Current - Prior, Prior)</pre></td><td>ARPA card delta</td></tr>
+<tr><td><code>_Customer Growth % PP Delta</code></td><td><pre style="margin:0">_Customer Growth % PP Delta =
+VAR Current = [Customer Growth %]
+VAR Prior =
+    CALCULATE([Customer Growth %], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+Current - Prior</pre></td><td>Customer Growth (MoM) card delta</td></tr>
+<tr><td><code>_Logo Churn Rate PP Delta</code></td><td><pre style="margin:0">_Logo Churn Rate PP Delta =
+VAR Current = [Logo Churn Rate]
+VAR Prior =
+    CALCULATE([Logo Churn Rate], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+Current - Prior</pre></td><td>Logo Churn card delta (color inverted, Step 0.3)</td></tr>
+<tr><td><code>_NRR PP Delta</code></td><td><pre style="margin:0">_NRR PP Delta =
+VAR Current = [NRR]
+VAR Prior = CALCULATE([NRR], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+Current - Prior</pre></td><td>NRR card delta</td></tr>
+<tr><td><code>_Expansion to Churned MRR Ratio</code></td><td><pre style="margin:0">_Expansion to Churned MRR Ratio =
+DIVIDE([Expansion MRR], ABS([Churned MRR]))</pre></td><td>Executive Insight supporting row</td></tr>
+</table>
+
+<h3>0.2 — Delta value measures (the colored glyph + sign + number only)</h3>
+<div class="callout warn"><div class="eyebrow">Corrected after build feedback</div>The original version of this step combined the colored number and the neutral caption into one string. Card (new)'s reference-label area colors its entire text run as one unit, so that combined string came out fully green instead of just the number. Split into two measures below — one colored, one not — and built as two separate overlay elements in Step 3, not a single reference label.</div>
+<table>
+<tr><th>Measure</th><th>DAX</th></tr>
+<tr><td><code>_MRR Delta Value</code></td><td><pre style="margin:0">_MRR Delta Value =
+VAR d = [MRR Growth %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")</pre></td></tr>
+<tr><td><code>_ARR Delta Value</code></td><td><pre style="margin:0">_ARR Delta Value =
+VAR d = [MRR YoY %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")</pre></td></tr>
+<tr><td><code>_MRR Growth Delta Value</code></td><td><pre style="margin:0">_MRR Growth Delta Value =
+VAR d = [_MRR Growth PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"</pre></td></tr>
+<tr><td><code>_Active Customers Delta Value</code></td><td><pre style="margin:0">_Active Customers Delta Value =
+VAR pct = [Customer Growth %]
+RETURN IF(pct >= 0, "▲ +", "▼ ") & FORMAT(pct, "0.0%")</pre></td></tr>
+<tr><td><code>_ARPA Delta Value</code></td><td><pre style="margin:0">_ARPA Delta Value =
+VAR d = [_ARPA Growth %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")</pre></td></tr>
+<tr><td><code>_Customer Growth Delta Value</code></td><td><pre style="margin:0">_Customer Growth Delta Value =
+VAR d = [_Customer Growth % PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"</pre></td></tr>
+<tr><td><code>_Logo Churn Delta Value</code></td><td><pre style="margin:0">_Logo Churn Delta Value =
+VAR d = [_Logo Churn Rate PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"</pre></td></tr>
+<tr><td><code>_NRR Delta Value</code></td><td><pre style="margin:0">_NRR Delta Value =
+VAR d = [_NRR PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"</pre></td></tr>
+</table>
+
+<h3>0.2b — Delta caption measures (neutral text, never colored)</h3>
+<p>Kept as measures rather than typed labels because two of them carry dynamic content (MRR Growth's prior-month value in parentheses, Active Customers' net count) that must stay correct as the data changes.</p>
+<table>
+<tr><th>Measure</th><th>DAX</th></tr>
+<tr><td><code>_MRR Delta Caption</code></td><td><code>_MRR Delta Caption = "vs prior month"</code></td></tr>
+<tr><td><code>_ARR Delta Caption</code></td><td><code>_ARR Delta Caption = "vs same month LY"</code></td></tr>
+<tr><td><code>_MRR Growth Delta Caption</code></td><td><pre style="margin:0">_MRR Growth Delta Caption =
+VAR Prior = [MRR Growth %] - [_MRR Growth PP Delta]
+RETURN "vs prior month (" & FORMAT(Prior, "0.0%") & ")"</pre></td></tr>
+<tr><td><code>_Active Customers Delta Caption</code></td><td><pre style="margin:0">_Active Customers Delta Caption =
+VAR net = [_Active Customers Net Change]
+RETURN IF(net >= 0, "+", "") & FORMAT(net, "#,##0") & " net vs prior month"</pre></td></tr>
+<tr><td><code>_ARPA Delta Caption</code></td><td><code>_ARPA Delta Caption = "vs prior month"</code></td></tr>
+<tr><td><code>_Customer Growth Delta Caption</code></td><td><code>_Customer Growth Delta Caption = "vs prior month"</code></td></tr>
+<tr><td><code>_Logo Churn Delta Caption</code></td><td><code>_Logo Churn Delta Caption = "vs prior month"</code></td></tr>
+<tr><td><code>_NRR Delta Caption</code></td><td><code>_NRR Delta Caption = "vs prior month"</code></td></tr>
+</table>
+
+<h3>0.3 — Color measures (hex string output, per Section F's "field-value color measure")</h3>
+<p>Up = good for every KPI except Logo Churn, where up = bad — flagged explicitly below and in Step 3, since a reused template that forgets this inverts the wrong direction.</p>
+<table>
+<tr><th>Measure</th><th>DAX</th></tr>
+<tr><td><code>_MRR Delta Color</code></td><td><code>IF([MRR Growth %]>=0,"#16A34A",IF([MRR Growth %]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_ARR Delta Color</code></td><td><code>IF([MRR YoY %]>=0,"#16A34A",IF([MRR YoY %]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_MRR Growth Delta Color</code></td><td><code>IF([_MRR Growth PP Delta]>=0,"#16A34A",IF([_MRR Growth PP Delta]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_Active Customers Delta Color</code></td><td><code>IF([Customer Growth %]>=0,"#16A34A",IF([Customer Growth %]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_ARPA Delta Color</code></td><td><code>IF([_ARPA Growth %]>=0,"#16A34A",IF([_ARPA Growth %]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_Customer Growth Delta Color</code></td><td><code>IF([_Customer Growth % PP Delta]>=0,"#16A34A",IF([_Customer Growth % PP Delta]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_Logo Churn Delta Color</code> <span class="tag">inverted</span></td><td><code>IF([_Logo Churn Rate PP Delta]&lt;=0,"#16A34A",IF([_Logo Churn Rate PP Delta]&gt;0,"#DC2626","#94A3B8"))</code></td></tr>
+<tr><td><code>_NRR Delta Color</code></td><td><code>IF([_NRR PP Delta]>=0,"#16A34A",IF([_NRR PP Delta]&lt;0,"#DC2626","#94A3B8"))</code></td></tr>
+</table>
+
+<div class="checkpoint">
+<b>Checkpoint 0</b> — In a blank table visual, drop <code>DimDate[YearMonth]</code>, <code>[MRR Growth %]</code>, and <code>_MRR Growth PP Delta</code> side by side for the last 3 months. Confirm the pp delta for the latest month equals (this month's growth% − last month's growth%) by manual subtraction. Then check <code>_Logo Churn Delta Color</code> returns <code>#DC2626</code> for any month where churn rose — if it returns green instead, the inversion is backwards. Delete the table visual once confirmed; it was scratch work, not part of the page.
+</div>
+
+<h2 id="step1"><span class="stepnum">Step 1 —</span> Canvas &amp; grid setup</h2>
+<ol>
+<li>Open the existing Phase 1–3 .pbix file. Go to the Executive Overview page (create it if it doesn't exist yet: right-click the page tab area → New page → rename to <code>Executive Overview</code>).</li>
+<li>Format page → Canvas settings → Type: <b>Custom</b>, Width <b>1280</b>, Height <b>720</b>.</li>
+<li>Confirm the canvas already renders at <code>#F4F5F7</code> — this comes from the frozen theme's page-level background, not a manual setting. Do not add a manual canvas background color; if you do, it'll silently override the theme and any future theme swap won't reach this page.</li>
+</ol>
+<p>Grid reference used throughout this SOP — 12 columns × 93px, 12px gutters, 16px outer margin, content area 1248px wide (x=16 to x=1264):</p>
+<table>
+<tr><th>Col</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr>
+<tr><td>x</td><td>16</td><td>121</td><td>226</td><td>331</td><td>436</td><td>541</td><td>646</td><td>751</td><td>856</td><td>961</td><td>1066</td><td>1171</td></tr>
+</table>
+<table>
+<tr><th>Band</th><th>y range</th><th>Height</th></tr>
+<tr><td>Header</td><td>16–56</td><td>40</td></tr>
+<tr><td>Nav</td><td>60–90</td><td>30</td></tr>
+<tr><td>Tier 1 KPI</td><td>102–206</td><td>104</td></tr>
+<tr><td>Tier 2 KPI</td><td>218–290</td><td>72</td></tr>
+<tr><td>Main row</td><td>302–522</td><td>220</td></tr>
+<tr><td>Bottom row</td><td>534–704</td><td>170</td></tr>
+</table>
+<div class="checkpoint"><b>Checkpoint 1</b> — Canvas is 1280×720, background reads gray without any manual formatting applied. If it's white, the theme didn't apply to this page — re-import <code>SaaS_Dashboard_Theme.json</code> before continuing.</div>
+
+<h2 id="step2"><span class="stepnum">Step 2 —</span> Header &amp; nav shell (static elements)</h2>
+<p>Build the static pieces now; the slicers (Step 10) and working nav buttons (Step 15) get added later, but the shapes and text go in now so the whole header can be grouped and copied onto Pages 2–6 as-is.</p>
+<div class="grid2">
+<div class="stepbox"><b>Title text box</b>
+Insert → Text box, x=16, y=16, w=500, h=40. Text: "Northwind Cloud" (Segoe UI Semibold, 15px, #0F172A) then "  |  SaaS Growth &amp; Unit Economics" (Segoe UI Regular, 13px, #64748B) on the same line.</div>
+<div class="stepbox"><b>"Data through" label</b>
+Text box, x=1066, y=60, w=198, h=30, right-aligned. Dynamic text isn't supported in a plain text box — use a Card (new) visual instead bound to a measure <code>_Data Through Label</code> = <code>"Data through " & FORMAT(MAX(DimDate[Date]), "MMM YYYY")</code> (new, trivial, needed for the reusability the design calls for). Style: 10px #94A3B8, no label, right-aligned.</div>
+</div>
+<p>Leave placeholders at x=1280−(slicer/button widths) for Period, Segment, and the Filters button — built in Step 10. Leave 6 placeholder text labels in the nav band at y=60, spaced evenly across x=16–700 for the page names — wired in Step 15.</p>
+<div class="checkpoint"><b>Checkpoint 2</b> — Title reads correctly at 15px/13px in navy/slate. The "Data through" card shows "Data through Dec 2025" (the real max date in the model) — not Aug 2026. If it shows Aug 2025 or blank, check the measure references <code>DimDate[Date]</code>, not a text-typed date column.</div>
+
+<h2 id="step3"><span class="stepnum">Step 3 —</span> Tier 1 KPI cards</h2>
+<p>Build the MRR card completely first, then copy-paste it three times and swap only the two measure references — this guarantees pixel-identical 303×104 sizing and formatting across all four without repeating every format step by hand.</p>
+<h3>3.1 — Build the MRR card (reference card)</h3>
+<div class="callout warn"><div class="eyebrow">Corrected after build feedback</div>Every Card (new) visual has its own "Title" bar, separate from "Category label," and it's on by default. Left on, it eats vertical space this compact 104px card doesn't have to spare and causes the value to clip. Turn Title off on all three visuals below — this step was missing from the original instructions.</div>
+<p>The delta line is built as two small independent visuals layered onto the base card, not as one "reference label" field. Card (new)'s reference-label area renders as a single grouped block — shared background, shared divider — and a field-value conditional color applied there colors that whole block's text as one unit. Splitting the colored glyph+number from the neutral caption into two separate visuals is what makes independent coloring possible, and it also removes the unwanted divider/box, since neither overlay visual uses that reference-label rendering at all.</p>
+<ol>
+<li>Insert → <b>Card (new)</b> (not "Card", not "Multi-row card" — the older Card visuals don't support this layout, and Multi-row card is built for scrolling record lists, which breaks the fixed 303px grid per Section F). This is the base layer: label + value only.</li>
+<li>Data values: add <code>[MRR]</code>. Leave Reference labels empty on this visual — nothing goes there.</li>
+<li>Format → General → <b>Title: toggle off.</b></li>
+<li>Format → General → Properties: X=16, Y=102, Width=303, Height=104.</li>
+<li>Format → Callout value: font Segoe UI Semibold, size 32px, color #0F172A.</li>
+<li>Format → Category label (the "MRR" label): Segoe UI Regular, 11px, #64748B.</li>
+<li>Confirm General → Effects: background/shadow/border are inherited from the theme — don't set them manually here.</li>
+<li>Insert a second, small <b>Card (new)</b> for the colored delta value. Data value: <code>_MRR Delta Value</code>. <b>Title off.</b> Properties: X=34, Y=178, Width=90, Height=24. Callout value: Segoe UI Semibold, 11px. Turn Category label off. Effects: Background off, Border off, Shadow off — it needs to read as plain text sitting on the base card, not a second card. Right-click → Conditional formatting → Font color (on the callout value) → Format by: Field value → <code>_MRR Delta Color</code>.</li>
+<li>Insert a third, small <b>Card (new)</b> for the neutral caption. Data value: <code>_MRR Delta Caption</code>. <b>Title off.</b> Properties: X=126, Y=178, Width=160, Height=24. Callout value: Segoe UI Regular, 11px, fixed color #94A3B8 — no conditional formatting here. Category label off. Effects all off.</li>
+<li>Select all three visuals → right-click → Group → name it <code>KPI_MRR</code>, so the whole card copies as one unit in Step 3.2.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 3.1</b> — Card shows "$1.00M" (Callout value → Display units: Auto) at 32px navy, fully uncropped, with the "MRR" category label visible above it. Directly beneath: "▲ +3.0%" in green, "vs prior month" beside it in fixed gray — not green. No visible divider line, shaded box, or default title text anywhere in the card. If any part of "vs prior month" is colored, the conditional formatting landed on the caption card instead of the value card — check which callout value the field-value binding is actually attached to.</div>
+
+<h3>3.2 — Copy to the remaining three Tier 1 cards</h3>
+<p>Copy the whole <code>KPI_MRR</code> group (Ctrl+C/Ctrl+V) three times rather than rebuilding — this keeps the three-visual overlay pixel-identical. For each copy, ungroup only long enough to swap the three data-value bindings, then re-group under its own name.</p>
+<table>
+<tr><th>Card</th><th>X</th><th>Main value</th><th>Delta value measure</th><th>Delta caption measure</th><th>Conditional font color</th></tr>
+<tr><td>ARR</td><td>331</td><td><code>[ARR]</code></td><td><code>_ARR Delta Value</code></td><td><code>_ARR Delta Caption</code></td><td><code>_ARR Delta Color</code></td></tr>
+<tr><td>MRR Growth (MoM)</td><td>646</td><td><code>[MRR Growth %]</code></td><td><code>_MRR Growth Delta Value</code></td><td><code>_MRR Growth Delta Caption</code></td><td><code>_MRR Growth Delta Color</code></td></tr>
+<tr><td>Active Customers</td><td>961</td><td><code>[Active Customers]</code></td><td><code>_Active Customers Delta Value</code></td><td><code>_Active Customers Delta Caption</code></td><td><code>_Active Customers Delta Color</code></td></tr>
+</table>
+<p>Y=102, Width=303, Height=104 for the base card in all three; the two overlay elements keep their relative offsets automatically since they move with the group.</p>
+<div class="checkpoint"><b>Checkpoint 3.2</b> — All four Tier 1 cards sit flush in one row spanning x=16 to x=1264, identical height, identical type treatment, with only the glyph+number portion of each delta in color. Values read $1.00M / $12.03M / 3.0% / 3,587.</div>
+
+<h2 id="step4"><span class="stepnum">Step 4 —</span> Tier 2 KPI cards</h2>
+<p>Same two-overlay-visual approach as Step 3 and the same reason (independent coloring, no divider block) — but arranged two-column here (label+value left, delta right) instead of stacked, per the design's own change-control note on readability at the smaller 72px height.</p>
+<ol>
+<li>Build ARPA first: base <b>Card (new)</b>, Data value <code>[ARPA]</code>, Reference labels left empty. <b>Title off.</b> Properties: X=16, Y=218, Width=303, Height=72. Callout value 22px Semibold #0F172A, Category label 11px #64748B.</li>
+<li>Small overlay Card for the colored delta value: Data value <code>_ARPA Delta Value</code>. <b>Title off.</b> Properties: X=200, Y=234, Width=60, Height=20 (sitting to the right of the base card's value, vertically centered in the 72px card). Callout value 11px Semibold. Category label off. Effects all off. Conditional formatting → Font color → Field value → <code>_ARPA Delta Color</code>.</li>
+<li>Small overlay Card for the caption: Data value <code>_ARPA Delta Caption</code>. <b>Title off.</b> Properties: X=262, Y=234, Width=45, Height=20. Callout value 10px Regular, fixed #94A3B8 — no conditional formatting. Category label off. Effects all off.</li>
+<li>Select all three → Group → name it <code>KPI_ARPA</code>.</li>
+</ol>
+<table>
+<tr><th>Card</th><th>X</th><th>Main value</th><th>Delta value measure</th><th>Delta caption measure</th><th>Conditional font color</th></tr>
+<tr><td>ARPA</td><td>16</td><td><code>[ARPA]</code></td><td><code>_ARPA Delta Value</code></td><td><code>_ARPA Delta Caption</code></td><td><code>_ARPA Delta Color</code></td></tr>
+<tr><td>Customer Growth (MoM)</td><td>331</td><td><code>[Customer Growth %]</code></td><td><code>_Customer Growth Delta Value</code></td><td><code>_Customer Growth Delta Caption</code></td><td><code>_Customer Growth Delta Color</code></td></tr>
+<tr><td>Logo Churn Rate</td><td>646</td><td><code>[Logo Churn Rate]</code></td><td><code>_Logo Churn Delta Value</code></td><td><code>_Logo Churn Delta Caption</code></td><td><code>_Logo Churn Delta Color</code> <span class="tag">inverted</span></td></tr>
+<tr><td>NRR</td><td>961</td><td><code>[NRR]</code></td><td><code>_NRR Delta Value</code></td><td><code>_NRR Delta Caption</code></td><td><code>_NRR Delta Color</code></td></tr>
+</table>
+<p>Y=218, Width=303, Height=72 for the base card in all four; overlay elements copy with the same relative offsets as ARPA's since they move with the group.</p>
+<div class="callout warn"><div class="eyebrow">Don't miss this</div>The Logo Churn card is the one place in the whole report where "up" is colored red, not green. If you build it by copying another Tier 2 card's group, double-check you swapped in <code>_Logo Churn Delta Color</code> (inverted) on the delta-value overlay and not a plain copy of another card's color measure — that would show rising churn in green, which is exactly the mistake the design flagged.</div>
+<div class="checkpoint"><b>Checkpoint 4</b> — All four Tier 2 cards sit flush below Tier 1, visibly smaller (22px vs 32px values, 72px vs 104px height), each delta showing only its glyph+number in color and its caption in fixed gray beside it. Logo Churn's delta value is red when churn rose, green when it fell — its caption stays gray either way.</div>
+
+<h2 id="step5"><span class="stepnum">Step 5 —</span> MRR Trend</h2>
+<ol>
+<li>Insert → Line chart. Format → General → Properties: X=16, Y=302, Width=828, Height=220.</li>
+<li>X-axis: <code>DimDate[YearMonth]</code> (or a proper sorted date-hierarchy field already set up in Phase 2 — do not use the raw text-typed <code>EventDate</code> column from FactSubscriptionEvent, which was the Phase 3 grain bug).</li>
+<li>Y-axis / Values: <code>[MRR]</code>.</li>
+<li>Filter this visual (or the page) to the last 36 calendar months — this gets wired properly via the Period slicer in Step 10; for now, confirm the chart shows the full validated range Jan 2023–Dec 2025.</li>
+<li>Format → Line: stroke width 2px, round joins, no markers except "Show marker" on last point only if your version supports per-point markers — otherwise skip and rely on the card title's latest-value readout instead.</li>
+<li>Format → Y-axis gridlines: color #EEF0F3, 1px. X-axis gridlines: off. X-axis line: #E2E5EA.</li>
+<li>Format → X-axis labels: 9px #94A3B8, Concatenate labels = Off, interval = 6 months (so 36 monthly points never collide). With a 6-month interval counted from Jan 2023, the last labeled tick lands on Jul 2025 — the December 2025 point still plots as the end of the line with its dot marker, it just won't carry its own text label, since 36 months doesn't divide evenly into 6-month steps from the start. Expected, not a bug: the design deliberately assigns "show me the current value" to the title-row readout below, not to axis labels.</li>
+<li>Turn data labels off — the latest value belongs in the title zone, not on the chart.</li>
+<li>Format → General → Title: "MRR Trend", 14px Semibold. Subtitle text box or a second title line: "Monthly recurring revenue · 36 months", 10px #94A3B8.</li>
+<li>Add a right-aligned "Latest" readout: either a second small Card (new) overlapping the title zone bound to <code>[MRR]</code>, or a text box with a measure-driven tooltip — simplest is a small Card (new) at the top-right of this visual's title zone showing <code>[MRR]</code> at 10px. This is what actually carries the current-month value — the axis isn't meant to.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 5</b> — Line rises from ~$18.9K (Jan 2023) to ~$1.00M (Dec 2025) with no flat spots or gaps. X-axis shows 6 labels (Jan 2023, Jul 2023, Jan 2024, Jul 2024, Jan 2025, Jul 2025) without overlapping — December 2025 plots as the line's endpoint but won't carry its own label, and that's correct, not missing data.</div>
+
+<h2 id="step6"><span class="stepnum">Step 6 —</span> MRR Movement (waterfall)</h2>
+<ol>
+<li>Insert → Waterfall chart. Format → General → Properties: X=856, Y=302, Width=408, Height=220.</li>
+<li>Category: a small disconnected table or the four category labels "New", "Expansion", "Contraction", "Churned" — build via a category column if not already present from Phase 3, or use Breakdown with <code>Subscription_Events[EventType]</code> filtered to those four values only (already validated no other event types exist).</li>
+<li>The category axis defaults to alphabetical order — "Churn" sorts before "Contraction," breaking the intended New → Expansion → Contraction → Churned narrative flow. Add a small sort-order column: <pre style="margin:8px 0 0">EventTypeSortOrder = SWITCH ( FactSubscriptionEvent[EventType], "New", 1, "Expansion", 2, "Contraction", 3, "Churn", 4, 99 )</pre>Then Modeling ribbon → select <code>EventType</code> → Sort by column → <code>EventTypeSortOrder</code>. This is a calculated column — a bigger category of change than the measures elsewhere in this SOP — but a static 4-value mapping with no interpretive judgment involved, unlike the Customer Health banding decision flagged in Step 11.</li>
+<li>Y-axis / Values: add this new measure, not a raw column and not <code>[New MRR]</code>/<code>[Expansion MRR]</code>/<code>[Contraction MRR]</code>/<code>[Churned MRR]</code> individually. A plain "Sum of MRRChange" has no date-scoping and will sum across whatever the Period slicer's whole window is, not one month. The four named category measures won't work either, for a different reason: each hard-codes its own <code>EventType</code> filter internally, which overrides the ambient category context this visual relies on — every bar would end up showing the same one category's figure. This measure restricts the date only, deliberately leaving <code>EventType</code> untouched so the waterfall's own category breakdown flows through correctly: <pre style="margin:8px 0 0">_MRR Change (Current Month) = 
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)</pre></li>
+<li>Format → Sentiment colors: Increase <code>#16A34A</code>, Decrease <code>#DC2626</code>, Total <code>#0F1B3D</code>.</li>
+<li>Turn on the waterfall's built-in "Show total" option — its value should match <code>[Net MRR Change]</code> exactly. Its label, however, will render as "Total" and can't be renamed through the Format pane — this is a confirmed, long-standing Power BI limitation (open on Microsoft's own ideas forum for years), not a setting you're missing. Cover it with a text box: insert a text box reading "Net change", solid white fill (not transparent — you're occluding the native text, not replacing it), styled to match the other four category labels, positioned directly over where "Total" renders. Group it with the waterfall so it moves as one unit.</li>
+<li>Bar width ~56px (Format → Layout → gap width, adjust to approximate). Labels above bars on. No gridlines. Add a "$ thousands" note as a small text box under the axis instead of per-label units, per the number-format hierarchy rule.</li>
+<li>Title "MRR Movement", subtitle showing the current month (e.g. "Dec 2025"), 14px/10px per the same title-zone treatment as Step 5.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 6</b> — Bars read New +$38.5K, Expansion +$44.1K, Contraction −$40.6K, Churned −$12.7K, Net +$29.3K for December 2025 — matching the already-validated Phase 3 figures exactly, not the screenshot's illustrative $38.2/$12.6/−$4.1/−$11.2/$35.5.</div>
+
+<h2 id="step7"><span class="stepnum">Step 7 —</span> Active Customers trend</h2>
+<ol>
+<li>Insert → Line chart. X=16, Y=534, W=408, H=170.</li>
+<li>X-axis <code>DimDate[YearMonth]</code>, Values <code>[Active Customers]</code>.</li>
+<li>Same line/axis formatting as Step 5, scaled to the smaller card: 2px navy stroke, gridlines #EEF0F3, x-axis labels 9px, 6-month interval acceptable at this width too — check for label collision at 408px and increase the interval if needed.</li>
+<li>Title "Active Customers", subtitle "36 months", 14px/10px.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 7</b> — Line rises from the initial cohort toward 3,587 by Dec 2025, visually similar shape to the MRR trend but not identical (customer count and MRR grow at different rates given rising ARPA).</div>
+
+<h2 id="step8"><span class="stepnum">Step 8 —</span> MRR by Plan</h2>
+<div class="callout warn"><div class="eyebrow">Corrected after build feedback</div>Two fixes to the original version of this step: (1) <code>[MRR]</code> is built from <code>FactSubscriptionEvent</code>, which has no relationship path to <code>DimPlan</code> — it can't be filtered by plan at all and will show the same grand-total on every bar. Use <code>_MRR by Plan</code> instead (built on <code>FactSubscription</code>, which does relate to <code>DimPlan</code>). (2) "Show value as → Percent of grand total" only works cleanly on a table/matrix; on a Clustered Bar Chart, a second field in Values creates a second clustered bar per category, not a combined label. Use an explicit percentage measure instead.</div>
+<ol>
+<li>Add the measure, if not already built from the earlier relationship fix: <pre style="margin:8px 0 0">_MRR by Plan = 
+VAR CurrentDate = MAX ( DimDate[Date] )
+RETURN
+CALCULATE (
+    SUM ( FactSubscription[MonthlyPrice] ),
+    FactSubscription[StartDate] &lt;= CurrentDate,
+    FactSubscription[EndDate] &gt; CurrentDate || ISBLANK ( FactSubscription[EndDate] )
+)</pre></li>
+<li>Add the percentage measure: <pre style="margin:8px 0 0">_MRR by Plan % of Total = 
+DIVIDE ( [_MRR by Plan], CALCULATE ( [_MRR by Plan], ALL ( DimPlan ) ) )</pre></li>
+<li>Insert → Bar chart (horizontal). X=436, Y=534, W=408, H=170.</li>
+<li>Axis: <code>DimPlan[PlanName]</code>. Values: <code>_MRR by Plan</code> only — a single field, so the chart stays one bar per plan with no clustering.</li>
+<li>Sort descending by <code>_MRR by Plan</code>.</li>
+<li>Format → Bars: 14px thickness, track color #F4F5F7 behind each bar (Format → Bar background if your version supports it, or approximate with a light gridline-only backdrop).</li>
+<li>Remove the x-axis. For the data label, check whether Format → Data labels in your version lets you point the displayed text at a different field than the one plotted — if so, build <code>_MRR by Plan Label = FORMAT([_MRR by Plan],"$#,##0,K") & " · " & FORMAT([_MRR by Plan % of Total],"0%")</code> and use that as the label source, giving a single combined "$186K · 38%" style label per bar. If your version doesn't expose that option, the reliable fallback is: leave the data label as the plain dollar value, and add <code>_MRR by Plan % of Total</code> to the Tooltips well instead, so it shows on hover rather than persistently — a small, deliberate deviation from "value + % printed at row end" worth confirming is acceptable before settling on it.</li>
+<li>Top N filter: Filters pane → Filter type "Top N" → 5 by <code>_MRR by Plan</code>, with "Include Other group" on if your version supports it. With exactly 5 plans in the model, Top 5 shows all of them and "Other" will simply never appear — that's expected, not a bug; the filter exists so this template still works if a future deployment has more plan tiers.</li>
+<li>Category label width: Format → Category axis → set a fixed width close to 62px with ellipsis truncation on.</li>
+<li>Title "MRR by Plan", subtitle "<i>[latest month]</i> · % of total", 14px/10px.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 8</b> — All 5 plans show (Starter through Enterprise), sorted descending by MRR, each bar a genuinely different length (not identical), summing to $1,002,731.47 with no plan filter applied. No "(Blank)" row. No "Other" bar. Percentages across the 5 rows sum to 100%, wherever they're displayed.</div>
+
+<h2 id="step9"><span class="stepnum">Step 9 —</span> Executive Insight</h2>
+<h3>9.1 — The insight text measure</h3>
+<p>This was flagged as pending back when Page 1 was first planned — building it now with the real DAX text-measure convention.</p>
+<pre>_Executive Insight Text =
+VAR MRRNow = [MRR]
+VAR GrowthPct = [MRR Growth %]
+VAR ChurnPct = [Logo Churn Rate]
+VAR ExpMRR = [Expansion MRR]
+VAR ChurnedMRR = [Churned MRR]
+VAR MonthLabel = FORMAT(MAX(DimDate[Date]), "MMM YYYY")
+RETURN
+"MRR increased " & FORMAT(GrowthPct, "0.0%") & " to " &
+FORMAT(MRRNow, "$#,##0,K") & " in " & MonthLabel & ". Expansion MRR of " &
+FORMAT(ExpMRR, "$#,##0,K") & " exceeded churned MRR of " &
+FORMAT(ABS(ChurnedMRR), "$#,##0,K") & "; logo churn was " &
+FORMAT(ChurnPct, "0.0%") & "."</pre>
+<p>Keep this wording neutral and unit-bearing per Section F — no "healthy"/"low" judgment words, since there's no benchmark table in this build to justify them.</p>
+<h3>9.2 — Build the card</h3>
+<ol>
+<li>Insert → Card (new) or a Text box + Card combo if you need exact control over the multi-row layout. X=856, Y=534, W=408, H=170.</li>
+<li>Main value: <code>_Executive Insight Text</code> (13px, #0F172A, wrapped).</li>
+<li>Eyebrow label above it: "EXECUTIVE INSIGHT", 10px uppercase, letter-spaced, #64748B.</li>
+<li>Three supporting rows below, each a small Card (new) or text measure: "Net MRR change" → <code>[Net MRR Change]</code> — double-check this specific binding once built; it's an easy one to get wrong since a copied card can silently retain the wrong Data value (one build of this ended up bound to <code>[MRR]</code> instead, showing "1.00M" rather than the correct ~$29.3K); "Expansion ÷ churned MRR" → <code>_Expansion to Churned MRR Ratio</code> formatted as <code>0.00"×"</code>; "NRR · GRR" → concatenation of <code>[NRR]</code> and <code>[GRR]</code> (build a tiny display-only measure <code>_NRR GRR Text</code> = <code>FORMAT([NRR],"0.0%") & " · " & FORMAT([GRR],"0.0%")</code> if Card (new) can't show two measures on one row natively).</li>
+<li>Footnote: text box, "Generated from measures. No benchmark applied.", 9px #94A3B8.</li>
+<li>The 3px navy left rule: this is the one bordered element in the report. Insert → Shapes → Rectangle, X=856, Y=534, Width=3, Height=170, fill <code>#0F1B3D</code>, no border, no shadow, no radius. Send it to front (right-click → Bring to front) so it sits visibly over the card's left edge rather than being covered by it.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 9</b> — Card reads a real sentence with real numbers ("MRR increased 3.0% to $1.0M in Dec 2025. Expansion MRR of $44.1K exceeded churned MRR of $12.7K; logo churn was 2.4%."), a visible 3px navy bar down the left edge, and no benchmark language anywhere in the text.</div>
+
+<h2 id="step10"><span class="stepnum">Step 10 —</span> Header slicers: Period + Segment</h2>
+<div class="callout warn"><div class="eyebrow">Corrected twice after build feedback — settled here</div>The plain "Relative Date" style anchors to the real system clock: today's real date is well past this dataset's Dec 2025 end, so "Last 36 Months" on that style currently shows a shrunk window missing Jan–Aug 2023. The "Date picker" style was expected to fix this via an anchor-to-last-date option, per Microsoft's documentation — but in this build, Date picker's actual UI exposes only manual <b>Start date</b> / <b>End date</b> fields, no relative configuration and no anchor option, confirmed by checking both the Format pane and the on-visual corner dropdown. Since this dataset is a fixed 3-year snapshot that will never extend past Dec 2025, a manually fixed range is the correct, permanent answer here — not a workaround.</div>
+<p><b>Prerequisite — Date picker is a preview feature, off by default:</b> File → Options and settings → Options → Preview features (left-hand list, Global section) → check <b>Date picker slicer</b> → OK → restart Power BI Desktop and reopen this file. If Date picker never appears in the Style dropdown below, this is almost always why.</p>
+<ol>
+<li>Insert → Slicer. Drag <code>DimDate[Date]</code> into its field well (not a Date Hierarchy — click the field's chevron and select the plain date column if a hierarchy gets added automatically).</li>
+<li>Format → Slicer settings → Options → Style: select <b>Date picker</b>. Set <b>Start date = January 1, 2023</b> and <b>End date = December 31, 2025</b> — a fixed range matching the dataset's actual full span exactly. No relative or anchor configuration needed for this dataset.</li>
+<li>Format → General → Properties: X=1066, Y=20, Width=180, Height=28, in the header band's right side.</li>
+<li>Insert a second Slicer. Drag <code>DimCustomer[CustomerSegment]</code> into its field well. Format → Slicer settings → Options → Style: <b>Dropdown</b>. Leave no pre-selected value so it defaults to showing "All."</li>
+<li>Position immediately right of the Period slicer, height 28px, sized to fit comfortably without overlapping the Filters button area built in Step 11.</li>
+<li>Style both slicers: Format → Slicer settings → Background off, Border off — so they sit directly on the header rather than showing their own box. Text formatting: 11px, #64748B.</li>
+</ol>
+<div class="callout warn"><div class="eyebrow">Flag for Phase 5 template documentation</div>This fixed range won't automatically follow a different, live-refreshing dataset if this template is ever reused elsewhere — whoever reuses it needs to manually update these two dates to match their source's actual range. Note this explicitly in the Phase 5 data-contract documentation; don't leave it to be rediscovered.</div>
+<div class="checkpoint"><b>Checkpoint 10</b> — Changing the Segment slicer to a single segment updates the Tier 2 cards, MRR Trend, and MRR by Plan bar, but does <i>not</i> change the Tier 1 KPI numbers yet — that's expected until Step 12 sets interactions; don't debug this now. Separately: the MRR Trend chart should show its full validated range starting Jan 2023 through Dec 2025 — with a fixed Start/End range, this is now permanent and won't drift regardless of when the file is opened.</div>
+
+<h2 id="step11"><span class="stepnum">Step 11 —</span> Filter panel overlay + bookmarks</h2>
+<ol>
+<li>Draw a rectangle shape as the panel background: X≈980, Y=16, Width=300, Height=704 (right-hand overlay covering most of the page height), fill white, subtle shadow, sitting above all other visuals in z-order.</li>
+<li>Inside it, add 5 slicers: <code>DimPlan[PlanName]</code>, <code>DimCustomer[Country]</code>, <code>DimCustomer[Industry]</code>, <code>DimAcquisitionChannel[AcquisitionChannel]</code>, and Customer Health. No banded tier column exists from Phase 2/3, and building one is optional, not required: <code>FactCustomerHealth[HealthScore]</code> can be used directly — set the slicer's Style to <b>Between</b> (Format → Slicer settings → Options → Style) rather than List, since a plain list would show every distinct score as its own row. This trades away the more executive-friendly "Healthy / At Risk / Critical" categorical read a banded tier would give, and it'll behave differently from the other four dropdown slicers in this panel (a range slider, not a category list) — acceptable to ship as-is, or build a small `SWITCH(TRUE(), ...)` calculated column on `FactCustomerHealth` later for a categorical version if that trade-off stops being acceptable.</li>
+<li>Group the rectangle + 5 slicers + a "✕ Close" text/button + a "Clear all filters" text/button into one object: select all, right-click → Group, name it <code>FilterPanel</code>.</li>
+<li>Create a header button "▾ Filters" (Insert → Buttons → Blank, or a styled text box with an action) near the Period/Segment slicers.</li>
+<li>Set page state with the panel visible: View → Bookmarks pane → Add → name it <b>Filters Open</b>. In the bookmark's options, turn <b>Data = Off</b> so it only affects visibility/position, not filter selections.</li>
+<li>Move/hide the <code>FilterPanel</code> group off-canvas or set its visibility off, then Add a second bookmark <b>Filters Closed</b>, again Data = Off.</li>
+<li>Select the panel's 5 slicers only (not the whole page), reset them to default, then Add a third bookmark <b>Clear all filters</b> — in this bookmark's options, set <b>Selected visuals</b> to just those 5 slicers so it can't silently reset the Period/Segment header slicers or anything else.</li>
+<li>Assign actions: header "▾ Filters" button → Action = Bookmark → Filters Open. The panel's "✕ Close" → Bookmark → Filters Closed. The panel's "Clear all filters" → Bookmark → Clear all filters.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 11</b> — Clicking "▾ Filters" reveals the panel without moving or resetting anything else on the page. Clicking "Clear all filters" resets only the panel's 5 slicers, leaving Period/Segment and any current Tier 1 values untouched. Clicking "✕ Close" hides the panel and returns to the calm executive view.</div>
+
+<h2 id="step12"><span class="stepnum">Step 12 —</span> Cross-filter interactions</h2>
+<div class="callout warn"><div class="eyebrow">Corrected after build feedback</div>Two of the interactions below turned out not to be available the way the original design assumed, for reasons specific to this model, not bugs: <code>DimPlan</code> has an active relationship only to <code>FactSubscription</code>, so MRR by Plan has no path to filter anything built from <code>FactSubscriptionEvent</code> (which is everything else on this page) — cross-filtering it broadly would require rebuilding several measures to route through <code>FactSubscription</code>, decided against for now. Separately, <code>[Active Customers]</code> hard-codes an <code>EventType</code> filter internally (via its two component measures), which makes it structurally unreachable by the waterfall's own <code>EventType</code>-based cross-filter — a genuine DAX filter-precedence effect, not a relationship gap, and there's no single obviously-correct number "Active Customers filtered to Churn events only" would represent anyway.</div>
+<ol>
+<li>Select the MRR by Plan bar → Format → Edit interactions → set its effect on MRR Trend, Active Customers Trend, and all four Tier 2 cards to <b>None</b>. This isn't a workaround — there's no relationship path for it to filter through regardless of this setting, so None simply makes that explicit rather than leaving it as an unexplained accident. MRR by Plan stands as a standalone "current mix" chart, not a cross-filtering one.</li>
+<li>Select the MRR Movement waterfall → Format → Edit interactions → confirm its effect is <b>Filter</b> on MRR Trend and all four Tier 2 cards (this already works correctly). Set its effect on <b>Active Customers Trend specifically to None</b> — a deliberate scope decision, not a gap to fix, since "active customers, filtered to only churn events" has no clean interpretation the way "MRR, filtered to churn events" does.</li>
+<li>Select each of the 4 Tier 1 KPI cards individually → Format → Edit interactions → set to <b>None</b> against every other visual on the page. This is the specific, deliberate choice flagged in the design: headline scale must never silently narrow to one plan's numbers.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 12</b> — Clicking a bar in the MRR Movement waterfall changes MRR Trend and all four Tier 2 cards, but leaves Active Customers Trend and all four Tier 1 KPI cards unchanged. Clicking a bar in MRR by Plan changes nothing else on the page — that's correct, not broken. If a Tier 1 card's value changes when you click anything, its Edit interactions wasn't set to None — fix it there, not by adding a filter workaround.</div>
+
+
+<h2 id="step13"><span class="stepnum">Step 13 —</span> Tooltip page</h2>
+<ol>
+<li>Add a new page, rename it <code>Tooltip - MRR</code>. Page size 320×200 (Format → Canvas settings). Format → Page information → turn on <b>Tooltip</b>.</li>
+<li>Add a small table or stacked text showing: <code>DimDate[YearMonth]</code>, <code>[MRR]</code>, <code>[MRR Growth %]</code> (as "MoM %"), <code>[Net MRR Change]</code>, <code>[Active Customers]</code>.</li>
+<li>On the Executive Overview page, select the MRR Trend, MRR Movement, Active Customers trend, and MRR by Plan visuals in turn → Format → Tooltips → Type: Report page → select <code>Tooltip - MRR</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 13</b> — Hovering any point on the MRR Trend line shows the same 320×200 tooltip as hovering a bar in MRR by Plan — one tooltip design reused everywhere, not four different default tooltips.</div>
+
+<h2 id="step14"><span class="stepnum">Step 14 —</span> Drill-through</h2>
+<p>This step assumes Pages 5 (Segment Analysis) and 6 (Churn &amp; Retention) exist. If they don't yet, set up the drill-through fields now and wire the action once those pages are built — don't skip creating the fields, since retrofitting later means re-touching every source visual.</p>
+<div class="callout warn"><div class="eyebrow">Corrected after build feedback</div>Drill-through only passes what the clicked point's own filter context actually contains. The Active Customers trend's only dimension is <code>DimDate[YearMonth]</code> — no customer or segment field exists anywhere on that visual, so a "customer/segment-relevant" drill field (the original wording here) has nothing real to pass. Fixed below to drill by the field the visual actually carries.</div>
+<ol>
+<li>On the target page (Segment Analysis), Format → Page information → Drill through → add <code>DimPlan[PlanName]</code> as the drill-through field. Keep "Keep all filters" on. Confirm a back button appears (Power BI adds one automatically when drill-through is enabled).</li>
+<li>On the target page (Churn &amp; Retention), add <code>DimDate[YearMonth]</code> as the drill-through field — the same field already on the Active Customers trend's axis, not a customer/segment field. Keep "Keep all filters" on, so an ambient Segment slicer selection (Step 10) still carries through even though it isn't the field being drilled by.</li>
+<li>Right-click a bar in MRR by Plan on Executive Overview → confirm "Drill through → Segment Analysis" appears in the context menu.</li>
+<li>Right-click a specific month's point on the Active Customers trend → confirm "Drill through → Churn & Retention" appears.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 14</b> — Right-clicking a plan bar and choosing drill-through lands on Segment Analysis pre-filtered to that plan, with a working back button. Right-clicking a specific month's point on the Active Customers trend lands on Churn & Retention pre-filtered to that exact month, not to any customer or segment — if Churn & Retention's own visuals don't yet make sense filtered to a single month, that's a Page 6 build concern to address when that page is planned, not a sign this drill-through is wrong.</div>
+
+<h2 id="step15"><span class="stepnum">Step 15 —</span> Navigation buttons</h2>
+<ol>
+<li>In the nav band (y=60–90), create 6 text-based buttons or Blank buttons labeled: Executive Overview, Revenue &amp; Growth, Customer &amp; Retention, Unit Economics, Segment Analysis, Churn &amp; Retention. Spread across x=16 onward, 12px font.</li>
+<li>Default state color <code>#64748B</code>; hover state <code>#0F1B3D</code> (Format → Button → Hover state text color).</li>
+<li>Selected/current page state: bold navy <code>#0F1B3D</code> text plus a thin rectangle shape underneath as a 2px underline — since this is the Executive Overview page, only that button gets the underline rectangle here; the others get theirs when you build those pages.</li>
+<li>Assign each button's Action → Page navigation → the matching page (only Executive Overview will actually resolve correctly until the other pages exist — that's fine, wire them now).</li>
+<li>Select the entire header + nav band (title, data-through card, Period/Segment slicers, Filters button, 6 nav buttons) → right-click → Group → name it <code>Header_Nav_Global</code>. This is what gets copy-pasted onto Pages 2–6 unchanged, per the design's explicit reuse intent.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 15</b> — Clicking "Executive Overview" does nothing visible (you're already there) but doesn't error. Hovering the other 5 buttons shows the navy hover color even though they don't navigate anywhere real yet.</div>
+
+<h2 id="step16"><span class="stepnum">Step 16 —</span> Final Page 1 validation</h2>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Canvas</td><td>1280×720, gray background inherited from theme, no manual override</td></tr>
+<tr><td>Tier 1 values</td><td>MRR $1.00M · ARR $12.03M · MRR Growth 3.0% · Active Customers 3,587</td></tr>
+<tr><td>Tier 2 values</td><td>ARPA $279.55 · Customer Growth 2.66% · Logo Churn 2.40% · NRR 99.06%</td></tr>
+<tr><td>MRR Movement (Dec 2025)</td><td>New +$38.5K · Expansion +$44.1K · Contraction −$40.6K · Churned −$12.7K · Net +$29.3K</td></tr>
+<tr><td>MRR by Plan</td><td>5 plans, sorted descending, percentages sum to 100%, no "Other"</td></tr>
+<tr><td>Logo Churn color</td><td>Red when churn rose month over month — verify this specifically, it's the one inverted case</td></tr>
+<tr><td>Tier 1 cross-filter</td><td>Unaffected by clicking MRR by Plan or the waterfall</td></tr>
+<tr><td>Filter panel</td><td>Opens/closes without disturbing other selections; Clear all filters only touches its own 5 slicers</td></tr>
+<tr><td>Tooltips</td><td>Deliberately differentiated per visual, not one uniform panel: MRR Trend shows YearMonth/MRR/Net MRR Change; MRR by Plan shows Plan Name/MRR/%; MRR Movement shows EventType/MRR Change only; Active Customers Trend shows channel breakdown. Each answers the question its own chart raises, confirmed dynamic (updates per hover point) and free of the EventType/context-bleed bug found during testing.</td></tr>
+<tr><td>Accessibility</td><td>Body text ≥11px except axis furniture (9px); tab order set in Selection pane: header → Tier 1 → Tier 2 → trend → waterfall → bottom row → insight; alt text added on every visual</td></tr>
+</table>
+<p>Once every row above checks out against your live build, Page 1 is done and <code>Header_Nav_Global</code> is ready to carry forward — Page 2 (Revenue &amp; Growth) starts from its own plan-before-placement step, same as this one did.</p>
+
+</div>

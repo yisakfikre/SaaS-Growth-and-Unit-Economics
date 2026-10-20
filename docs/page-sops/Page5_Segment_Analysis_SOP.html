@@ -1,0 +1,217 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220; }
+}
+:root[data-theme="dark"]{ --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220; }
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:8px; border-top:1px solid var(--border);}
+h3{font-size:14px; font-weight:600; margin:20px 0 8px;}
+p{font-size:13px; line-height:1.6;}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout.stop{border-left-color:var(--red);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:12px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:7px 9px; font-weight:600; border-bottom:1px solid var(--border);}
+td{padding:7px 9px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:11.5px; background:var(--bg); padding:1px 5px; border-radius:4px;}
+pre{background:var(--code-bg); color:#E2E8F0; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:11.5px; line-height:1.6; margin:10px 0 20px;}
+.checkpoint{background:var(--bg); border:1px dashed var(--slate); border-radius:8px; padding:12px 16px; margin:14px 0 24px; font-size:12.5px;}
+.checkpoint b{color:var(--navy);}
+[data-theme="dark"] .checkpoint b, :root:not([data-theme="light"]) .checkpoint b{color:#93C5FD;}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:9.5px; padding:1px 7px; border-radius:9px; background:var(--bg); color:var(--slate); border:1px solid var(--border);}
+.tag.reuse{background:#DCFCE7; color:#166534; border-color:#86EFAC;}
+.tag.new{background:#FEF3C7; color:#92400E; border-color:#FCD34D;}
+[data-theme="dark"] .tag.reuse, :root:not([data-theme="light"]) .tag.reuse{background:#14532D; color:#BBF7D0; border-color:#166534;}
+[data-theme="dark"] .tag.new, :root:not([data-theme="light"]) .tag.new{background:#78350F; color:#FDE68A; border-color:#92400E;}
+</style>
+<header class="doc"><div class="wrap">
+<h1>Page 5 — Segment Analysis: Implementation SOP</h1>
+<p>SaaS Growth &amp; Unit Economics · Phase 4 · Built following the drillthrough architecture gate — final PASS</p>
+</div></header>
+<div class="wrap">
+
+<div class="callout stop">
+<div class="eyebrow">Read first</div>
+Page 5's drill-through field is <code>DimCustomer[CustomerSegment]</code>, not <code>DimPlan[PlanName]</code>. This is the single most important change from earlier drafts — it's what makes V1 and V3 respond correctly to arrival from Page 2, since <code>DimPlan → FactSubscriptionEvent</code> is inactive and always has been. The fix lives entirely in Section 8 below (Page 5's own drill-through well) — <b>Pages 1 and 2 are not modified.</b>
+</div>
+
+<nav class="toc">
+<a href="#s0">0. Pre-build</a><a href="#s1">1. Page setup</a><a href="#s2">2. Header &amp; nav</a>
+<a href="#s3">3. Period &amp; filters</a><a href="#s4">4. Group By parameter</a>
+<a href="#s5">5. Scatter</a><a href="#s6">6. Plan matrix</a><a href="#s7">7. Detail matrix</a>
+<a href="#s8">8. Drillthrough</a><a href="#s9">9. Interactions</a><a href="#s10">10. QA</a>
+</nav>
+
+<h2 id="s0">Section 0 — Pre-Build Check</h2>
+<table>
+<tr><th>Object</th><th>Status</th><th>Action</th></tr>
+<tr><td><code>[MRR]</code>, <code>[Active Customers]</code>, <code>[ARPA]</code>, <code>[Estimated LTV]</code></td><td>Exist, validated</td><td><span class="tag reuse">REUSE</span> unchanged</td></tr>
+<tr><td><code>_MRR by Plan</code>, <code>_MRR Share of Total</code></td><td>Exist (Page 2)</td><td><span class="tag reuse">REUSE</span> unchanged</td></tr>
+<tr><td><code>Page 2's "Plan / Segment" parameter</code></td><td>Exists, 2 options</td><td>Different object from this page's parameter — do not confuse or reuse</td></tr>
+<tr><td>Page 5's "Group By" parameter</td><td>Does not exist</td><td><span class="tag new">NEW</span> — Section 4</td></tr>
+<tr><td>Page 1 MRR-by-Plan chart, Page 2 matrix</td><td>Frozen</td><td><b>No changes to either</b> — see Section 8</td></tr>
+</table>
+<div class="callout warn">
+<div class="eyebrow">Confirm before building</div>
+This page excludes <code>New Customers</code> and <code>Churned Customers</code> (single-month semantics; Churned is Page 6's dimensional-churn ownership) and the R1 ARPA readout (duplicates the reference line's own label). If any of these decisions were reversed after this SOP was written, stop and reconcile before proceeding.
+</div>
+
+<h2 id="s1">Section 1 — Page Setup</h2>
+<ol>
+<li>Right-click any page tab → <b>New page</b> (blank — do not duplicate Page 4's tab).</li>
+<li>Rename <code>Segment Analysis</code>, drag to position 5.</li>
+<li>Canvas settings → Custom → Width <b>1280</b>, Height <b>720</b>.</li>
+<li><b>Background — leave unchanged; the theme supplies <code>#F4F5F7</code>.</b></li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 1</b> — 1280×720, gray background, no manual override.</div>
+
+<h2 id="s2">Section 2 — Header and Navigation <span class="tag reuse">REUSE FROM PAGE 4</span></h2>
+<ol>
+<li>Unit Economics → Selection pane → header/nav group → Ctrl+C. Segment Analysis → Ctrl+V.</li>
+<li>"Unit Economics" tab → Text color <code>#64748B</code>, Regular. "Segment Analysis" → <code>#0F1B3D</code>, Semibold, move underline beneath it.</li>
+<li>Header/nav band stays flat (no shadow) per the frozen amendment; content cards keep theme shadow.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 2</b> — "Segment Analysis" bold navy with underline; other five regular slate.</div>
+
+<h2 id="s3">Section 3 — Period Slicer and Filter Flyout</h2>
+<div class="callout">
+<div class="eyebrow">Different mechanism from Page 4, on purpose</div>
+Page 5's measures are <code>MAX(DimDate[Date])</code>-anchored snapshots, the same pattern as Pages 1–3 — not Page 4's period-window sums. Use the synced <code>DimDate[Date]</code> Date Picker, not Page 4's disconnected Period Options table.
+</div>
+<ol>
+<li>Copy the Period slicer from Page 3 (Date Picker, anchored to Last date) rather than Page 4's.</li>
+<li>Segment slicer: copy from Page 4 unchanged.</li>
+<li>Filters flyout <span class="tag reuse">REUSE PAGE 4 SHELL</span>: copy the shell, replace its contents with Industry and Country slicers only. Rebuild Filters Open/Closed bookmarks fresh (page-scoped).</li>
+<li>Flyout note text box: <i>"Plan and Acquisition Channel filters are not available on this page."</i> 10px <code>#64748B</code>.</li>
+<li>View → Sync slicers: clear the Page 5 box for Plan, Acquisition Channel, and Customer Health explicitly. Confirm no Plan filter is set at page or report level.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 3</b> — Period control shows the full date range, synced with Pages 1–3. Flyout contains exactly Industry and Country.</div>
+
+<h2 id="s4">Section 4 — Group By Field Parameter</h2>
+<ol>
+<li>Modeling ribbon → <b>New parameter → Fields</b>.</li>
+<li>Name: <code>Group By</code>. Clear "Add slicer to this page" — S1 is built manually in Section 5.</li>
+<li>Add fields in this order: <code>DimCustomer[CustomerSegment]</code>, <code>DimCustomer[Industry]</code>, <code>DimCustomer[Country]</code>.</li>
+<li>Rename display values: "Segment", "Industry", "Country".</li>
+<li>Create → confirms the parameter table exists in the Data pane.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 4</b> — <code>Group By</code> parameter table visible in Fields pane with three rows.</div>
+
+<h2 id="s5">Section 5 — Scatter (V1)</h2>
+<ol>
+<li>Insert → Scatter chart. X=<b>16</b>, Y=<b>102</b>, Width=<b>828</b>, Height=<b>316</b>.</li>
+<li>Values: <code>Group By</code> parameter field. X-axis: <code>[Active Customers]</code>. Y-axis: <code>[ARPA]</code>. Size: <code>[MRR]</code>.</li>
+<li>Category labels on, 10px Semibold <code>#0F172A</code>. Category label Overlap: <b>Off</b>.</li>
+<li>Bubble size range 8–32px. Marker color <code>#0F1B3D</code>.</li>
+<li>X-axis: Min 0, Max Auto, Title "Active customers →", 9px <code>#64748B</code>. Y-axis: Min 0, Max Auto, Title "ARPA", 9px.</li>
+<li>Gridlines <code>#EEF0F3</code>, horizontal only.</li>
+<li>Analytics pane → <b>Y-Axis Constant Line</b> → + Add line → Value → <b>fx</b> → <code>[ARPA]</code>. Style Dashed, 1.5px, <code>#0F172A</code>. Data label on, showing Name + Value: "ARPA · all groups $X" — confirmed current and correct via Microsoft documentation for scatter charts.</li>
+<li>Analytics pane → <b>Average Line</b> → + Add line → bind to <code>[Active Customers]</code>. Rename to "Avg Active Customers / Group". Style Dotted, 1px, <code>#94A3B8</code>.</li>
+<li>Title "Economic positioning by group", 14px Semibold. Subtitle "ARPA vs active customers · bubble = MRR", 10px <code>#94A3B8</code>.</li>
+<li>Tooltip fields: Group, <code>[MRR]</code>, <code>[Active Customers]</code>, <code>[ARPA]</code>, <code>[Estimated LTV]</code>.</li>
+</ol>
+<h3>5.1 — Group By selector (S1)</h3>
+<ol>
+<li>Insert → Slicer → drag the <code>Group By</code> field into it.</li>
+<li>Style: Tile. Single select, Force selection on.</li>
+<li>Selected: <code>#0F1B3D</code> fill, <code>#FFFFFF</code> 600 text. Unselected: <code>#FFFFFF</code> fill, <code>#64748B</code> text. 1px <code>#E2E5EA</code> outline.</li>
+<li>Position X=<b>612</b>, Y=<b>114</b>, Width=<b>216</b>, Height=<b>22</b> — inside V1's card, top-right, above V1 in z-order.</li>
+<li>Select "Industry" as the default, then save.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 5</b> — One bubble per industry by default. Company ARPA dashed line reads "ARPA · all groups $427" (or current value). Switching tiles changes both axes and category labels correctly.</div>
+
+<h2 id="s6">Section 6 — MRR by Plan (V2)</h2>
+<ol>
+<li>Insert → Matrix. X=<b>856</b>, Y=<b>102</b>, Width=<b>408</b>, Height=<b>316</b>.</li>
+<li>Rows: <code>DimPlan[PlanName]</code>. Values: <code>_MRR by Plan</code> (data bar, <code>#0F1B3D</code>), <code>_MRR Share of Total</code> (percentage).</li>
+<li>Sort descending by <code>_MRR by Plan</code>. Total row on. Row height 36px.</li>
+<li>Header: 10px <code>#64748B</code>, <code>#E2E8F0</code> rule. Cells 11.5px <code>#0F172A</code>.</li>
+<li>Title "MRR by plan", subtitle "MRR only · plans carry no customer counts".</li>
+<li>Tooltip off — every value is already printed.</li>
+</ol>
+<div class="callout stop">
+<div class="eyebrow">Checkpoint 6 — run all three sub-tests, not just a glance at the totals</div>
+<code>_MRR Share of Total</code>'s <code>ALLSELECTED()</code> logic has only ever been validated against Page 2's Plan/Segment parameter. This page introduces two contexts it has never been tested under — a three-option Group By parameter, and arrival via drillthrough — either of which could change what <code>ALLSELECTED()</code> actually resolves to. Do not accept "the numbers looked roughly right" as a pass; add up the percentages by hand for at least one case in each row below.
+<ol>
+<li><b>Baseline, no selection.</b> Shares sum to exactly 100% across all five plans, company-wide.</li>
+<li><b>Via Group By selection (no drillthrough).</b> On Page 5 itself, with Group By = Industry, click the Software bubble in V1. Note V2's five share values, add them by hand. They must sum to 100% <i>within Software</i> — not company-wide, and not frozen at the pre-click baseline. Repeat once with Group By = Country to confirm the same holds for a different underlying field.</li>
+<li><b>Via drillthrough arrival.</b> From Page 2, drill through on one segment. On arrival, before clicking anything else on Page 5, check V2 immediately. Its shares must already sum to 100% within the drilled segment — confirming the drillthrough filter reaches <code>_MRR Share of Total</code>'s denominator logic the same way a normal in-page click does, not just the numerator.</li>
+</ol>
+If any of the three sums to something other than 100%, the measure is resolving its denominator against the wrong filter scope for that context — stop and report which of the three failed before proceeding to Section 7.
+</div>
+
+<h2 id="s7">Section 7 — Group Detail (V3)</h2>
+<ol>
+<li>Insert → Matrix. X=<b>16</b>, Y=<b>430</b>, Width=<b>1248</b>, Height=<b>274</b>.</li>
+<li>Rows: <code>Group By</code> parameter field. Values: <code>[MRR]</code> (data bar), <code>[Active Customers]</code>, <code>[ARPA]</code>, <code>[Estimated LTV]</code>.</li>
+<li>Column widths: category 246, MRR 220, remaining three ~250 each.</li>
+<li>Sort descending by <code>[MRR]</code>. Total row on. Header 10px <code>#64748B</code>, <code>#E2E8F0</code> rule.</li>
+<li>Title "Group detail". Subtitle: <b>"Value and size by group · as of the end of the selected period · sorted by MRR"</b> — this wording is deliberate; every column here is an as-of-date snapshot, not a period sum, and the subtitle must say so accurately.</li>
+<li>Tooltip off.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 7</b> — Total row matches V1's implied company totals and the header's own baseline figures. No column shows a value inconsistent with a single point-in-time read.</div>
+
+<h2 id="s8">Section 8 — Drillthrough Configuration</h2>
+<div class="callout stop">
+<div class="eyebrow">This is the one change that touches this page's own setup only</div>
+Nothing on Page 1 or Page 2 is modified. The correction is entirely in Page 5's drill-through field well.
+</div>
+<ol>
+<li>Click empty canvas on Segment Analysis → Format pane → <b>Page information</b> → confirm "Allow drill through from" is set to Used as a drill-through target.</li>
+<li>In the Drill-through well: <b>remove <code>DimPlan[PlanName]</code></b> if present from earlier configuration.</li>
+<li>Add <code>DimCustomer[CustomerSegment]</code> as the drill-through field.</li>
+<li>Keep all filters: On.</li>
+<li>Confirm the back button renders top-left; reposition if needed.</li>
+</ol>
+<div class="callout stop">
+<div class="eyebrow">Checkpoint 8 — confirm the filter itself, not just its visible effect</div>
+Seeing one bubble and one row on arrival is consistent with the drill-through working correctly — but it's also consistent with a broken link that happens to show a plausible-looking page. Confirm the actual filter, not just the downstream appearance.
+<ol>
+<li>On Page 2, set the Plan/Segment parameter to Segment, right-click a segment row (e.g. Enterprise) → "Drillthrough → Segment Analysis" appears. Set the parameter to Plan, right-click a plan row → no Page 5 option appears (expected — <code>DimPlan</code> carries no segment value in that context). On Page 1's MRR-by-Plan bar, right-click any bar → no Page 5 option appears (expected, same reason).</li>
+<li>Drill through on Enterprise. <b>On arrival, open the Filters pane and expand "Filters on this page."</b> Confirm it shows <code>DimCustomer[CustomerSegment] is Enterprise</code> explicitly — not a blank filter card, not a different field, not "(All)". This is the direct evidence the link fired correctly, independent of what the visuals happen to display.</li>
+<li>With that filter card open, confirm V1 shows exactly one bubble and V3 exactly one row, and that both are labeled Enterprise — the visual outcome, now cross-checked against the confirmed filter rather than assumed from it.</li>
+<li>Switch Group By to Industry without touching the Filters pane. Confirm the <code>CustomerSegment is Enterprise</code> filter card is still present and unchanged, and that V1/V3 now show multiple industries — all of them plausibly Enterprise-segment industries, not the full company list.</li>
+<li>Click Back. Confirm Page 2 returns with its own parameter selection and any prior state intact, and that Page 5's filter card is gone on the next fresh arrival (i.e. it isn't sticking across visits).</li>
+</ol>
+If step 2's filter card shows anything other than the exact expected field and value, stop — the drill-through field well configuration in Section 8 needs to be rechecked before trusting anything else on this page.
+</div>
+
+<h2 id="s9">Section 9 — Interactions</h2>
+<ol>
+<li>V1 bubble → V2: <b>Filter</b>. V1 bubble → V3: <b>None</b>.</li>
+<li>V3 row → V2: <b>Filter</b>. V3 row → V1: <b>Highlight</b>.</li>
+<li>V2 plan row → V1: <b>None</b>. V2 plan row → V3: <b>None</b>. Mandatory — the model cannot apply a Plan filter to customer-count measures.</li>
+<li>Header Period, Segment → every visual: <b>Filter</b>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 9</b> — Selecting a Plan row in V2 changes nothing else on the page. Selecting a bubble or detail row correctly narrows V2 without disturbing V1/V3's own display.</div>
+
+<h2 id="s10">Section 10 — Final QA</h2>
+<ul>
+<li><b>Group By:</b> Segment shows 3 groups (or 1, if a single segment is also selected in the header — expected, not an error). Industry and Country produce one point/row per category.</li>
+<li><b>Period:</b> changing it moves every V1/V3 value to the new "as of" date.</li>
+<li><b>Drillthrough:</b> both source checks from Checkpoint 8 confirmed live.</li>
+<li><b>No duplicate measures:</b> confirm no <code>(P5)</code>-suffixed twin of any Page 1–4 measure exists.</li>
+<li><b>Palette:</b> only the frozen nine colors anywhere on the page. No semantic color — nothing here is a delta or judgement.</li>
+<li><b>Cross-page:</b> Pages 1 and 2 visually and functionally unchanged except their drill-through target behavior per Checkpoint 8.</li>
+<li><b>Tab order:</b> header → Period → Segment → Filters → Group By tiles → scatter → plan matrix → detail matrix.</li>
+</ul>
+<div class="checkpoint"><b>Final Checkpoint</b> — Page 5 is complete when every check above passes and drill-through from both Page 1 and Page 2 behaves exactly as specified in Checkpoint 8, not just plausibly.</div>
+
+</div>

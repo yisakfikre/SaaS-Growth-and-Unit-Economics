@@ -1,0 +1,868 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:8px; border-top:1px solid var(--border);}
+h2 .stepnum{color:var(--slate); font-weight:400;}
+h3{font-size:14px; font-weight:600; margin:20px 0 8px;}
+p{font-size:13px; line-height:1.6;}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout.stop{border-left-color:var(--red);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:12.5px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:8px 10px; font-weight:600; border-bottom:1px solid var(--border);}
+td{padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:12px; background:var(--bg); padding:1px 5px; border-radius:4px;}
+pre{background:var(--code-bg); color:#E2E8F0; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:12px; line-height:1.6; margin:10px 0 20px;}
+pre code{background:none; padding:0; color:inherit;}
+.checkpoint{background:var(--bg); border:1px dashed var(--slate); border-radius:8px; padding:12px 16px; margin:14px 0 24px; font-size:12.5px;}
+.checkpoint b{color:var(--navy);}
+[data-theme="dark"] .checkpoint b, :root:not([data-theme="light"]) .checkpoint b{color:#93C5FD;}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:10px; padding:2px 8px; border-radius:10px; background:var(--bg); color:var(--slate); border:1px solid var(--border); margin-left:6px;}
+.tag.reuse{background:#DCFCE7; color:#166534; border-color:#86EFAC;}
+.tag.new{background:#FEF3C7; color:#92400E; border-color:#FCD34D;}
+.tag.block{background:#FEE2E2; color:#991B1B; border-color:#FCA5A5;}
+[data-theme="dark"] .tag.reuse, :root:not([data-theme="light"]) .tag.reuse{background:#14532D; color:#BBF7D0; border-color:#166534;}
+[data-theme="dark"] .tag.new, :root:not([data-theme="light"]) .tag.new{background:#78350F; color:#FDE68A; border-color:#92400E;}
+[data-theme="dark"] .tag.block, :root:not([data-theme="light"]) .tag.block{background:#7F1D1D; color:#FECACA; border-color:#991B1B;}
+.spec{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:12px 0; font-size:12.5px;}
+.spec dt{font-weight:600; float:left; width:110px; clear:left;}
+.spec dd{margin:0 0 4px 120px;}
+</style>
+
+<header class="doc">
+<div class="wrap">
+<h1>Page 2 — Revenue &amp; Growth: Power BI Implementation SOP</h1>
+<p>SaaS Growth &amp; Unit Economics · Phase 4 · Built on the locked Phase 1–3 model and the completed, frozen Page 1</p>
+</div>
+</header>
+
+<div class="wrap">
+
+<div class="callout stop">
+<div class="eyebrow">Read first — one blocker and four missing dependencies</div>
+Per the instruction to stop and identify missing dependencies rather than invent replacements, Section 0 below lists four measures the approved design needs that do not exist in the model, plus one requirement in the approved spec (Section 11, plan cross-filtering) that <b>cannot be implemented as written</b> against the current model. All are detailed in Section 0 with exact reasons. Nothing else in the approved design is blocked.
+</div>
+
+<nav class="toc">
+<a href="#s0">0. Dependencies</a>
+<a href="#s1">1. Page setup</a>
+<a href="#s2">2. Header</a>
+<a href="#s3">3. Navigation</a>
+<a href="#s4">4. KPI strip</a>
+<a href="#s5">5. MRR &amp; Growth combo</a>
+<a href="#s6">6. MRR Movement waterfall</a>
+<a href="#s7">7. MRR Change Composition</a>
+<a href="#s8">8. Revenue Composition matrix</a>
+<a href="#s9">9. Field parameter</a>
+<a href="#s10">10. Filter panel</a>
+<a href="#s11">11. Interactions</a>
+<a href="#s12">12. Tooltip</a>
+<a href="#s13">13. Drill-through</a>
+<a href="#s14">14. Page connections</a>
+<a href="#s15">15. Final formatting</a>
+<a href="#s16">16. Accessibility</a>
+<a href="#s17">17. QA</a>
+<a href="#s18">18. Screenshot comparison</a>
+</nav>
+
+<h2 id="s0"><span class="stepnum">0.</span> Prerequisites &amp; Existing Dependencies</h2>
+
+<h3>0.1 — Dependency table</h3>
+<table>
+<tr><th>Page 2 element</th><th>Required measure / field</th><th>Status</th><th>Action</th></tr>
+<tr><td>KPI 1 · MRR</td><td><code>[MRR]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>KPI 1 delta</td><td><code>_MRR Delta Value</code>, <code>_MRR Delta Color</code></td><td>Exists (Page 1)</td><td>Reuse</td></tr>
+<tr><td>KPI 2 · ARR</td><td><code>[ARR]</code>, <code>_ARR Delta Value</code>, <code>_ARR Delta Color</code></td><td>Exists</td><td>Reuse</td></tr>
+<tr><td>KPI 3 · Net MRR Change</td><td><code>[Net MRR Change]</code></td><td>Exists (fixed)</td><td>Use as-is</td></tr>
+<tr><td>KPI 3 delta</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build <code>_Net MRR Change Delta Value</code> + Color (0.2)</td></tr>
+<tr><td>KPI 4 · Gross New MRR</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build <code>Gross New MRR</code> (0.2)</td></tr>
+<tr><td>KPI 4 split caption</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build <code>_Gross New MRR Split Text</code> (0.2)</td></tr>
+<tr><td>Combo · line</td><td><code>[MRR]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>Combo · columns</td><td><code>[MRR Growth %]</code></td><td>Exists</td><td>Use as-is</td></tr>
+<tr><td>Waterfall</td><td><code>_MRR Change (Current Month)</code> + <code>FactSubscriptionEvent[EventType]</code></td><td>Exists (Page 1)</td><td>Copy visual from Page 1</td></tr>
+<tr><td>Waterfall caption</td><td><code>_Expansion to Churned MRR Ratio</code></td><td>Exists</td><td>Reuse</td></tr>
+<tr><td>Composition · 4 stacks</td><td><code>[New MRR]</code>, <code>[Expansion MRR]</code>, <code>[Contraction MRR]</code>, <code>[Churned MRR]</code></td><td>Exists — but see 0.3</td><td>Verify <code>[New MRR]</code> first</td></tr>
+<tr><td>Composition · line</td><td><code>[Net MRR Change]</code></td><td>Exists (fixed)</td><td>Use as-is</td></tr>
+<tr><td>Matrix · MRR</td><td><code>_MRR by Plan</code></td><td>Exists (Page 1)</td><td>Use as-is — see 0.4</td></tr>
+<tr><td>Matrix · Share</td><td><code>_MRR by Plan % of Total</code></td><td>Exists — but see 0.4</td><td>Replace with parameter-safe version</td></tr>
+<tr><td>Matrix · Δ MoM</td><td>—</td><td><span class="tag new">MISSING</span></td><td>Build <code>_MRR by Plan MoM Delta</code> + Color (0.2)</td></tr>
+<tr><td>Plan/Segment toggle</td><td>Field parameter</td><td><span class="tag new">MISSING</span></td><td>Create in Section 9</td></tr>
+<tr><td>Header, nav, filter panel, tooltip</td><td>Page 1 objects</td><td>Exists</td><td><span class="tag reuse">REUSE FROM PAGE 1</span></td></tr>
+</table>
+
+<h3>0.2 — Missing measures to create before building <span class="tag new">new</span></h3>
+<p>All are mechanical derivations of locked measures — no new business logic, no change to any approved definition. Add all to <code>_Measures</code>.</p>
+<pre>Gross New MRR = [New MRR] + [Expansion MRR]</pre>
+<pre>_Gross New MRR Split Text = 
+VAR Gross = [Gross New MRR]
+RETURN
+FORMAT ( DIVIDE ( [New MRR], Gross ), "0%" ) & " / " &
+FORMAT ( DIVIDE ( [Expansion MRR], Gross ), "0%" )</pre>
+<pre>_Net MRR Change Delta Value = 
+VAR Current = [Net MRR Change]
+VAR Prior = CALCULATE ( [Net MRR Change], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR d = Current - Prior
+RETURN IF ( d >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( d ), "$#,##0,.0K" )</pre>
+<pre>_Net MRR Change Delta Color = 
+VAR Current = [Net MRR Change]
+VAR Prior = CALCULATE ( [Net MRR Change], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( Current - Prior >= 0, "#16A34A", IF ( Current - Prior < 0, "#DC2626", "#94A3B8" ) )</pre>
+<pre>_MRR by Plan MoM Delta = 
+VAR Current = [_MRR by Plan]
+VAR Prior = CALCULATE ( [_MRR by Plan], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN DIVIDE ( Current - Prior, Prior )</pre>
+<pre>_MRR by Plan MoM Delta Color = 
+IF ( [_MRR by Plan MoM Delta] >= 0, "#16A34A",
+     IF ( [_MRR by Plan MoM Delta] < 0, "#DC2626", "#94A3B8" ) )</pre>
+
+<div class="callout warn">
+<div class="eyebrow">0.3 — Verify [New MRR] before building the composition chart</div>
+<code>[New MRR]</code> was flagged during the Page 1 build as a likely carrier of the unscoped-<code>SUM</code> bug (a bare <code>CALCULATE</code> with only an <code>EventType</code> filter and no date restriction) but was never confirmed, because the waterfall fix routed around needing it. It is now load-bearing twice over — in <code>Gross New MRR</code> above and in the composition chart's stack.<br><br>
+<b>Check it now:</b> open <code>[New MRR]</code> in the formula bar. If it reads <code>CALCULATE ( SUM ( FactSubscriptionEvent[MRRChange] ), FactSubscriptionEvent[EventType] = "New" )</code> with no date filter, apply the same fix already used on <code>Expansion</code>/<code>Contraction</code>/<code>Churned MRR</code>:
+<pre style="margin-top:8px">New MRR = 
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "New",
+    FILTER ( ALL ( DimDate ), YEAR ( DimDate[Date] ) = CurrentYear && MONTH ( DimDate[Date] ) = CurrentMonth )
+)</pre>
+Validate: with no filters, <code>[New MRR]</code> must return <b>$38,504.60</b> (Dec 2025). If it returns something in the millions, it was unfixed.
+</div>
+
+<div class="callout warn">
+<div class="eyebrow">0.4 — _MRR by Plan % of Total must be replaced for the field parameter</div>
+The existing measure hard-codes <code>ALL ( DimPlan )</code>:
+<pre style="margin:8px 0"> _MRR by Plan % of Total = DIVIDE ( [_MRR by Plan], CALCULATE ( [_MRR by Plan], ALL ( DimPlan ) ) )</pre>
+That is correct while the matrix shows Plan, but returns wrong shares the moment the field parameter switches the row axis to <code>CustomerSegment</code> — <code>ALL(DimPlan)</code> does not clear a <code>DimCustomer</code> filter, so the denominator stays plan-scoped. Create this parameter-safe version and use it in the matrix instead (leave the original alone; Page 1's bar chart still uses it):
+<pre style="margin-top:8px">_MRR Share of Total = 
+DIVIDE ( [_MRR by Plan], CALCULATE ( [_MRR by Plan], ALLSELECTED () ) )</pre>
+<code>ALLSELECTED()</code> removes row-level axis filters from whichever dimension the parameter is currently projecting, while respecting slicer selections — so the shares always sum to 100% on both Plan and Segment.
+</div>
+
+<div class="callout stop">
+<div class="eyebrow">0.5 — BLOCKER: plan cross-filtering (spec Section 11) cannot work as written</div>
+The approved spec requires: <i>"selecting a plan bar filters all three charts."</i> Against the current locked model this is <b>not implementable for Plan</b>, and the reason is structural, not a formatting setting:<br><br>
+<code>DimPlan</code> has exactly one active relationship in the model — to <code>FactSubscription</code>. The combo chart (<code>[MRR]</code>, <code>[MRR Growth %]</code>), the waterfall (<code>_MRR Change (Current Month)</code>) and the composition chart (<code>[New MRR]</code> etc.) are all built from <code>FactSubscriptionEvent</code>, which has <b>no active relationship to <code>DimPlan</code></b> — <code>NewPlanID</code> and <code>PreviousPlanID</code> were both deliberately deactivated in Phase 3 to prevent blank-row contamination, and are only reached via <code>USERELATIONSHIP</code> inside specific churn measures. Setting Edit interactions to Filter will not help: there is no path for the filter to travel. This is the identical limitation already documented and accepted on Page 1 (MRR by Plan does not cross-filter that page).<br><br>
+<b>What DOES work:</b> when the field parameter is switched to <b>Segment</b>, cross-filtering works on all three charts — <code>DimCustomer</code> has active relationships to both fact tables. So the requirement is half-satisfiable as written.<br><br>
+<b>Implement as:</b> Section 11 below sets the matrix→charts interactions to <b>Filter</b>. On Segment they will filter correctly; on Plan they will not respond. Do not treat the non-response as a build error. Resolving it properly means rebuilding the core measures onto <code>FactSubscription</code> or adding an <code>EffectivePlanID</code> column to <code>FactSubscriptionEvent</code> — both reopen Phase 2/3, which this SOP is instructed not to do. Flag in template notes.
+</div>
+
+<h3>0.6 — Page 1 components to reuse <span class="tag reuse">REUSE FROM PAGE 1</span></h3>
+<table>
+<tr><th>Component</th><th>How</th></tr>
+<tr><td><code>Header_Nav_Global</code> group (title, Data-through card, Period + Segment slicers, Filters button, 6 nav buttons)</td><td>Copy/paste from Page 1; change only the selected-state underline</td></tr>
+<tr><td><code>FilterPanel</code> group (rectangle, 4 slicers, Close, Clear)</td><td>Copy/paste from Page 1; rebuild bookmarks on Page 2 (bookmarks are page-scoped)</td></tr>
+<tr><td>MRR Movement waterfall</td><td>Copy/paste from Page 1; resize to Page 2 coordinates</td></tr>
+<tr><td>KPI card pattern (base Card + 2 overlay Cards, all Titles off)</td><td>Copy a Tier-2 card group, swap the three field bindings</td></tr>
+<tr><td><code>Tooltip - MRR</code> page</td><td>Duplicate and extend (Section 12)</td></tr>
+<tr><td>Theme</td><td>Already applied report-wide — no action</td></tr>
+</table>
+
+<div class="checkpoint"><b>Checkpoint 0</b> — All six measures in 0.2 created; <code>[New MRR]</code> verified at $38,504.60; <code>_MRR Share of Total</code> created; blocker 0.5 understood and accepted. Do not proceed until <code>[New MRR]</code> is confirmed — the composition chart and Gross New MRR both depend on it.</div>
+
+<h2 id="s1"><span class="stepnum">1.</span> Page Setup</h2>
+<ol>
+<li>Right-click any page tab at the bottom of the canvas → <b>New page</b>.</li>
+<li>Double-click the new page's tab → type <code>Revenue &amp; Growth</code> → Enter.</li>
+<li>Click an empty area of the canvas (deselect all visuals).</li>
+<li>Format pane → <b>Canvas settings</b> → Type: <b>Custom</b> → Width <b>1280</b> → Height <b>720</b>.</li>
+<li><b>Canvas background — leave unchanged; default (theme) setting is appropriate.</b> The theme supplies <code>#F4F5F7</code>. Do not set it manually.</li>
+<li><b>Wallpaper — leave unchanged; default setting is appropriate.</b></li>
+<li>View ribbon → <b>Page view</b> → <b>Fit to page</b>.</li>
+</ol>
+<p>Grid reference (identical to Page 1 — 12 columns × 93 px, 12 px gutters, 16 px margin):</p>
+<table>
+<tr><th>Col</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr>
+<tr><td>x</td><td>16</td><td>121</td><td>226</td><td>331</td><td>436</td><td>541</td><td>646</td><td>751</td><td>856</td><td>961</td><td>1066</td><td>1171</td></tr>
+</table>
+<table>
+<tr><th>Band</th><th>Y range</th><th>Height</th></tr>
+<tr><td>Header</td><td>16–56</td><td>40</td></tr>
+<tr><td>Nav</td><td>60–90</td><td>30</td></tr>
+<tr><td>KPI strip</td><td>102–166</td><td>64</td></tr>
+<tr><td>Analysis row</td><td>178–418</td><td>240</td></tr>
+<tr><td>Driver row</td><td>430–704</td><td>274</td></tr>
+</table>
+<div class="checkpoint"><b>Checkpoint 1</b> — Page named "Revenue &amp; Growth", canvas 1280×720, background renders gray with no manual override applied.</div>
+
+<h2 id="s2"><span class="stepnum">2.</span> Header <span class="tag reuse">REUSE FROM PAGE 1</span></h2>
+<ol>
+<li>Go to the <b>Executive Overview</b> page.</li>
+<li>View ribbon → <b>Selection</b> pane.</li>
+<li>In the Selection pane, click the <code>Header_Nav_Global</code> group once to select the whole group.</li>
+<li><b>Ctrl+C</b>.</li>
+<li>Switch to the <b>Revenue &amp; Growth</b> page tab.</li>
+<li>Click empty canvas → <b>Ctrl+V</b>. The group pastes at its original coordinates — header and nav land correctly with no repositioning needed.</li>
+<li>Verify in the Selection pane that the pasted group contains: title text box, Data-through card, Period slicer, Segment slicer, Filters button, 6 nav buttons.</li>
+<li><b>Slicer selections — leave unchanged; default setting is appropriate.</b> Period and Segment carry their Page 1 configuration (fixed Jan 1 2023 – Dec 31 2025 range; Segment = All).</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 2</b> — Header renders identically to Page 1: company name at 15px, report name at 13px slate, Period and Segment controls at the right, navy Filters button, "Data through Dec 2025" card. Nothing is offset by even a pixel from Page 1's header.</div>
+
+<h2 id="s3"><span class="stepnum">3.</span> Navigation — update selected state only</h2>
+<ol>
+<li>In the Selection pane, expand the pasted <code>Header_Nav_Global</code> group.</li>
+<li>Click the <b>Executive Overview</b> nav button (individually, not the group).</li>
+<li>Format pane → <b>Button</b> → <b>Style</b> → State: <b>Default</b> → <b>Text</b> → Font color: <code>#64748B</code>, Font weight: Regular.</li>
+<li>In the Selection pane, find the 2px underline rectangle sitting beneath the Executive Overview button. Click it → Format → <b>General → Properties</b> → move its X to sit under "Revenue &amp; Growth" instead (approx X=238, same Y).</li>
+<li>Click the <b>Revenue &amp; Growth</b> nav button → Format pane → <b>Button → Style</b> → State: <b>Default</b> → <b>Text</b> → Font color: <code>#0F1B3D</code>, Font weight: <b>Semibold</b>.</li>
+<li><b>Hover states — leave unchanged; default setting is appropriate.</b> All six buttons inherit <code>#0F1B3D</code> hover from the Page 1 configuration.</li>
+<li><b>Button actions — leave unchanged; default setting is appropriate.</b> All six Page navigation actions copied with the group.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 3</b> — "Revenue &amp; Growth" is bold navy with the underline beneath it; "Executive Overview" is regular slate with no underline. Click "Executive Overview" → lands on Page 1. Click back to Revenue &amp; Growth via its own tab.</div>
+
+<h2 id="s4"><span class="stepnum">4.</span> KPI Strip — four Tier-2-pattern cards, 64 px</h2>
+<p>Each card is the Page 1 three-visual pattern: base Card (new) + colored delta overlay + neutral caption overlay, all with Title off. Copy one Page 1 Tier-2 group and rebind rather than building from scratch.</p>
+
+<h3>4.1 — Bring over the pattern <span class="tag reuse">REUSE FROM PAGE 1</span></h3>
+<ol>
+<li>Go to Executive Overview → Selection pane → click the <code>KPI_ARPA</code> group → <b>Ctrl+C</b>.</li>
+<li>Return to Revenue &amp; Growth → <b>Ctrl+V</b>.</li>
+<li>With the pasted group selected: Format pane → <b>General → Properties</b> → X = <b>16</b>, Y = <b>102</b>, Width = <b>303</b>, Height = <b>64</b>.</li>
+<li>In the Selection pane, rename the group to <code>P2_KPI_MRR</code>.</li>
+</ol>
+
+<h3>4.2 — Rebind card 1 (MRR)</h3>
+<ol>
+<li>Expand <code>P2_KPI_MRR</code> in the Selection pane. Click the <b>base card</b> (the largest of the three).</li>
+<li>In the Data pane, uncheck <code>[ARPA]</code> from the visual's Data value well; check <code>[MRR]</code>.</li>
+<li>Format visual → <b>Callout value</b> → Font: Segoe UI Semibold, Size: <b>22</b>, Color: <code>#0F172A</code>.</li>
+<li>Format visual → <b>Callout value</b> → <b>Display units</b>: <b>Auto</b>, <b>Value decimal places</b>: <b>1</b>.</li>
+<li>Format visual → <b>Category label</b> → Font: Segoe UI, Size: <b>11</b>, Color: <code>#64748B</code>.</li>
+<li>Format visual → <b>General → Title</b>: <b>Off</b>.</li>
+<li>Click the <b>delta overlay card</b> → rebind its Data value to <code>_MRR Delta Value</code>.</li>
+<li>With it still selected: Format visual → <b>Callout value</b> → <b>fx (Conditional formatting)</b> under Color → Format style: <b>Field value</b> → What field should we base this on: <code>_MRR Delta Color</code> → OK.</li>
+<li>Click the <b>caption overlay card</b> → rebind its Data value to <code>_MRR Delta Caption</code>. <b>Conditional formatting — leave unchanged (none); default is appropriate.</b> Its color stays fixed <code>#94A3B8</code>.</li>
+<li>Edit the caption text: the Page 1 caption reads "vs prior month"; the approved Page 2 design shows "MoM". Change the measure used to a new one if you want the shorter label — or <b>leave unchanged; "vs prior month" is analytically identical and avoids a duplicate measure.</b> This SOP leaves it unchanged.</li>
+</ol>
+
+<h3>4.3 — Cards 2–4 by copy</h3>
+<ol>
+<li>Select <code>P2_KPI_MRR</code> in the Selection pane → <b>Ctrl+C</b> → <b>Ctrl+V</b> three times.</li>
+<li>Set each copy's <b>General → Properties</b>: Y = <b>102</b>, Width = <b>303</b>, Height = <b>64</b>, X per the table below.</li>
+<li>Rebind the three field wells in each copy per the table. Rename each group in the Selection pane.</li>
+</ol>
+<table>
+<tr><th>Card</th><th>Group name</th><th>X</th><th>Base value</th><th>Delta overlay</th><th>Conditional color</th><th>Caption overlay</th></tr>
+<tr><td>MRR</td><td><code>P2_KPI_MRR</code></td><td>16</td><td><code>[MRR]</code></td><td><code>_MRR Delta Value</code></td><td><code>_MRR Delta Color</code></td><td><code>_MRR Delta Caption</code></td></tr>
+<tr><td>ARR</td><td><code>P2_KPI_ARR</code></td><td>331</td><td><code>[ARR]</code></td><td><code>_ARR Delta Value</code></td><td><code>_ARR Delta Color</code></td><td><code>_ARR Delta Caption</code></td></tr>
+<tr><td>Net MRR Change</td><td><code>P2_KPI_NetChange</code></td><td>646</td><td><code>[Net MRR Change]</code></td><td><code>_Net MRR Change Delta Value</code></td><td><code>_Net MRR Change Delta Color</code></td><td><code>_MRR Delta Caption</code></td></tr>
+<tr><td>Gross New MRR</td><td><code>P2_KPI_GrossNew</code></td><td>961</td><td><code>[Gross New MRR]</code></td><td><code>_Gross New MRR Split Text</code></td><td><span class="tag">none</span></td><td>type-in text box: "new · expansion"</td></tr>
+</table>
+<p><b>Card 4 exception:</b> the Gross New MRR card shows a composition split (75% / 25%), not a directional delta. On its delta overlay: Format visual → Callout value → <b>remove the conditional formatting</b> (click <i>fx</i> → Remove) and set a fixed color <code>#0F172A</code>, Font weight Semibold. A split is not a good/bad signal, so semantic green/red would be misleading.</p>
+<div class="checkpoint"><b>Checkpoint 4 — KPI Strip</b><br>
+• Four cards exist at X = 16 / 331 / 646 / 961, all Y=102, all 303×64 — no card taller than 64 px.<br>
+• Values read approximately: MRR <b>$1.0M</b>, ARR <b>$12.0M</b>, Net MRR Change <b>$29.3K</b>, Gross New MRR <b>$82.6K</b> (= 38,504.60 + 44,055.82).<br>
+• Gross New MRR split reads approximately <b>47% / 53%</b> for this dataset (not 75%/25% — that figure is from the design mockup's illustrative data).<br>
+• No text is clipped; all four Titles are Off.<br>
+• Cross-filter behaviour is configured later in Section 11 — do not test it yet.</div>
+
+<h2 id="s5"><span class="stepnum">5.</span> MRR &amp; Growth Combo Chart</h2>
+<div class="spec">
+<dl>
+<dt>Visual type</dt><dd>Line and clustered column chart</dd>
+<dt>Purpose</dt><dd>Revenue trajectory (line) against growth rate (columns) in one reading movement</dd>
+<dt>X</dt><dd>16</dd>
+<dt>Y</dt><dd>178</dd>
+<dt>Width</dt><dd>828</dd>
+<dt>Height</dt><dd>240</dd>
+</dl>
+</div>
+<h3>Fields</h3>
+<ol>
+<li>Click empty canvas → Visualizations pane → <b>Line and clustered column chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → <b>X-axis</b>.</li>
+<li>Drag <code>[MRR Growth %]</code> → <b>Column y-axis</b>.</li>
+<li>Drag <code>[MRR]</code> → <b>Line y-axis</b>.</li>
+<li><b>Legend field well — leave empty; default is appropriate.</b> The two series legend is generated automatically from the measure names.</li>
+</ol>
+<h3>Format</h3>
+<ol>
+<li>Format visual → <b>General → Properties</b> → X=<b>16</b>, Y=<b>178</b>, Width=<b>828</b>, Height=<b>240</b>.</li>
+<li>Format visual → <b>Visual → X-axis</b> → <b>Values</b>: Font Segoe UI, Size <b>9</b>, Color <code>#94A3B8</code>.</li>
+<li>X-axis → <b>Title</b>: <b>Off</b>.</li>
+<li>X-axis → <b>Concatenate labels</b>: <b>Off</b>.</li>
+<li>X-axis → <b>Gridlines</b>: <b>Off</b>.</li>
+<li>Format visual → <b>Visual → Y-axis</b> — <b>this is the PRIMARY axis, and it carries the COLUMN series, i.e. MRR Growth %</b>, not MRR. Confirm by reading its values: it shows percentages. → <b>Values</b>: Size <b>9</b>, Color <code>#94A3B8</code>.</li>
+<li>Y-axis → <b>Title</b>: <b>Off</b>.</li>
+<li>Y-axis → <b>Range</b> → <b>Minimum</b>: <b>0</b>, <b>Maximum</b>: <b>0.25</b> (25%). <b>Build-verified value.</b>
+<br><b>Corrected three times during the build — the reasoning matters more than the number.</b> It originally read "leave blank (auto)", which breaks on any dataset whose early months start from a small base: MRR here begins at $18.9K, so early-2023 months post growth rates near 50%, the auto axis stretches to fit them, and all later months compress into unreadable slivers — the chart then falsely reads "growth was enormous once and stopped". A first correction named the wrong axis (secondary), which caps MRR instead and collapses the line to the floor. A second set 0.10, which pinned ~18 months flat against the ceiling and destroyed the deceleration story at the other end.
+<br><b>How to choose this value for a new dataset:</b> the bound must span most of the growth range, not a multiple of the <i>current</i> rate. This business ranges ~50% down to ~3% — roughly 17×. Look at the actual spread, pick a maximum that clips only the two or three most extreme early months, and confirm visually that no long run of months sits pinned at the ceiling. With growth spanning that wide a range, no single linear bound serves every month equally; you are choosing which end to sacrifice, and the right answer sacrifices the fewest months.</li>
+<li>Y-axis → <b>Gridlines</b>: On, Color <code>#EEF0F3</code>, Width <b>1</b>, Style Solid.</li>
+<li>Format visual → <b>Visual → Secondary y-axis</b> → toggle <b>On</b>. <b>This is the LINE series axis, i.e. MRR</b> — confirm by reading its values: it shows currency.</li>
+<li>Secondary y-axis → <b>Values</b>: Size <b>9</b>, Color <code>#94A3B8</code>.</li>
+<li>Secondary y-axis → <b>Title</b>: <b>Off</b>.</li>
+<li>Secondary y-axis → <b>Gridlines</b>: <b>Off</b> (prevents two competing gridline sets).</li>
+<li>Secondary y-axis → <b>Range → Minimum and Maximum</b>: <b>leave blank (auto)</b>. Required for reusability — this axis carries revenue, and a fixed bound here breaks on any client at a different scale. Putting the growth bound (<code>0.25</code>) here by mistake caps MRR at 25 cents and collapses the line to the axis floor. Tell the two axes apart by reading their values, not their names: the percentage one is growth (primary, bound it), the currency one is MRR (secondary, leave auto).</li>
+<li><b>Axis sides are fixed by the visual type — do not attempt to swap them.</b> In a Line and clustered column chart, the Column series always renders on the primary (left) axis and the Line series on the secondary (right). The approved mockup shows MRR on the left, which is not reproducible here; reversing the field wells to achieve it would make MRR the columns and growth % the line, destroying the design intent. Leave as built.</li>
+<li>Format visual → <b>Visual → Columns</b> → <b>Colors</b> → <code>#CBD5E1</code>. This keeps the growth rate visually subordinate to the navy line, per the approved spec.</li>
+<li>Format visual → <b>Visual → Lines</b> → <b>Colors</b> → <code>#0F1B3D</code>.</li>
+<li>Lines → <b>Stroke width</b>: <b>2</b>. <b>Line type</b>: Solid. <b>Join type</b>: Round. <b>Smooth line</b>: Off.</li>
+<li>Lines → <b>Markers</b>: <b>Off</b>. (Per Page 1 precedent — the last-point dot is not reliably configurable per-point; the endpoint is carried by the title-zone readout instead.)</li>
+<li>Format visual → <b>Visual → Data labels</b>: <b>Off</b>.</li>
+<li>Format visual → <b>Visual → Legend</b>: <b>On</b>, Position <b>Top right</b>, Font size <b>9</b>, Color <code>#64748B</code>. (The approved screenshot shows an explicit MRR / MRR Growth % legend.)</li>
+<li>Format visual → <b>General → Title</b> → On → Text: <code>MRR trajectory &amp; growth rate</code>, Font Segoe UI Semibold, Size <b>14</b>, Color <code>#0F172A</code>, Alignment Left.</li>
+<li>Format visual → <b>General → Subtitle</b> → On → Text: <code>MRR line · MoM growth % columns · 36 months</code>, Size <b>10</b>, Color <code>#94A3B8</code>.</li>
+<li><b>General → Effects</b>: <b>leave unchanged; theme supplies white background, no border, 4px radius and shadow.</b></li>
+</ol>
+<h3>Filters</h3>
+<ol>
+<li><b>Filters on this visual — leave empty; default is appropriate.</b> The header Period slicer already scopes this chart to the full 36 months.</li>
+</ol>
+<h3>Validation</h3>
+<ol>
+<li>Line rises from ~$18.9K (Jan 2023) to ~$1.00M (Dec 2025) — no flat spots, no gaps.</li>
+<li>Columns are visible but visually quiet — light slate, never competing with the navy line.</li>
+<li>Secondary axis shows percentages (0%–~4%), primary axis shows currency.</li>
+<li>Hover any column → growth % for that month; hover the line → MRR for that month.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 5</b> — Both series render on their own axes; the MRR line is clearly dominant. If the columns tower over the line, the secondary axis did not bind — re-check that <code>[MRR Growth %]</code> is in <b>Column y-axis</b> and <code>[MRR]</code> in <b>Line y-axis</b>, not reversed.</div>
+
+<h2 id="s6"><span class="stepnum">6.</span> MRR Movement Waterfall <span class="tag reuse">REUSE FROM PAGE 1</span></h2>
+<div class="spec">
+<dl>
+<dt>Visual type</dt><dd>Waterfall chart</dd>
+<dt>Purpose</dt><dd>This month's MRR bridge</dd>
+<dt>X</dt><dd>856</dd>
+<dt>Y</dt><dd>178</dd>
+<dt>Width</dt><dd>408</dd>
+<dt>Height</dt><dd>240</dd>
+</dl>
+</div>
+<ol>
+<li>Go to Executive Overview → click the <b>MRR Movement</b> waterfall → <b>Ctrl+C</b>.</li>
+<li>Return to Revenue &amp; Growth → <b>Ctrl+V</b>.</li>
+<li>Format visual → <b>General → Properties</b> → X=<b>856</b>, Y=<b>178</b>, Width=<b>408</b>, Height=<b>240</b>.</li>
+<li><b>Fields — leave unchanged; they copy correctly.</b> Category = <code>FactSubscriptionEvent[EventType]</code> (sorted by <code>EventTypeSortOrder</code>), Values = <code>_MRR Change (Current Month)</code>.</li>
+<li><b>Sentiment colors — leave unchanged; default (copied) setting is appropriate.</b> Increase <code>#16A34A</code>, Decrease <code>#DC2626</code>, Total <code>#0F1B3D</code>.</li>
+<li>The "Net change" text box that covers the native "Total" label copies with the visual <b>only if it was grouped</b>. Check the Selection pane: if it did not come across, go back to Page 1, copy the text box separately, paste here, and reposition it over the fifth bar's label.</li>
+<li>Format visual → <b>General → Title</b> → Text: <code>MRR movement</code>, Size <b>14</b> Semibold.</li>
+<li>Format visual → <b>General → Subtitle</b> → Text: <code>Dec 2025 · $ thousands</code>, Size <b>10</b>, Color <code>#94A3B8</code>. (Static text is acceptable here only because the dataset end is fixed; for the .pbit in Phase 5, replace with a dynamic measure.)</li>
+</ol>
+<h3>Caption line</h3>
+<ol>
+<li>Create a measure for the approved caption:
+<pre>_Expansion Coverage Text = 
+"Expansion covered " & FORMAT ( [_Expansion to Churned MRR Ratio], "0%" ) & " of churned MRR this month."</pre></li>
+<li>Insert → <b>Card (new)</b> → Data value: <code>_Expansion Coverage Text</code>.</li>
+<li>Format visual → <b>General → Title</b>: <b>Off</b>. <b>Category label</b>: <b>Off</b>.</li>
+<li>Format visual → <b>Callout value</b> → Size <b>10</b>, Color <code>#64748B</code>, Alignment Left.</li>
+<li>Format visual → <b>General → Effects</b> → Background: <b>Off</b>, Border: <b>Off</b>, Shadow: <b>Off</b>.</li>
+<li><b>General → Properties</b> → X=<b>872</b>, Y=<b>388</b>, Width=<b>376</b>, Height=<b>18</b>.</li>
+<li>Select waterfall + caption card → right-click → <b>Group</b> → rename <code>P2_Waterfall</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 6</b> — Bars read New <b>+38.50K</b>, Expansion <b>+44.06K</b>, Contraction <b>−40.55K</b>, Churn <b>−12.69K</b>, Net change <b>29.32K</b>, in that left-to-right order. Caption reads "Expansion covered 347% of churned MRR this month." (347% is correct for this dataset — the 113% in the mockup is illustrative.) Waterfall's top edge aligns exactly with the combo chart's top edge at Y=178.</div>
+
+<h2 id="s7"><span class="stepnum">7.</span> MRR Change Composition Chart</h2>
+<div class="spec">
+<dl>
+<dt>Visual type</dt><dd>Line and stacked column chart</dd>
+<dt>Purpose</dt><dd>12-month pattern of movement components — where growth quality becomes visible</dd>
+<dt>X</dt><dd>16</dd>
+<dt>Y</dt><dd>430</dd>
+<dt>Width</dt><dd>828</dd>
+<dt>Height</dt><dd>274</dd>
+</dl>
+</div>
+<div class="callout">
+<div class="eyebrow">Sign convention — no new measure needed</div>
+The approved spec's contingency ("if Churned MRR returns a positive number…") does not apply here. <code>[Contraction MRR]</code> and <code>[Churned MRR]</code> already return negative values in this model (validated: −$40,552.07 and −$12,685.97 for Dec 2025). Power BI stacks negatives below zero automatically, so the diverging stack works with the locked measures unchanged. <b>No quick measure required; no template note required.</b>
+</div>
+<h3>Fields</h3>
+<ol>
+<li>Click empty canvas → Visualizations pane → <b>Line and stacked column chart</b>.</li>
+<li>Drag <code>DimDate[YearMonth]</code> → <b>X-axis</b>.</li>
+<li>Drag <code>[New MRR]</code> → <b>Column y-axis</b>.</li>
+<li>Drag <code>[Expansion MRR]</code> → <b>Column y-axis</b> (below New MRR).</li>
+<li>Drag <code>[Contraction MRR]</code> → <b>Column y-axis</b>.</li>
+<li>Drag <code>[Churned MRR]</code> → <b>Column y-axis</b>.</li>
+<li>Drag <code>[Net MRR Change]</code> → <b>Line y-axis</b>.</li>
+<li><b>Column legend field well — leave empty; default is appropriate.</b> Using four measures in Column y-axis (rather than one measure + a legend field) is what allows four independent colors.</li>
+</ol>
+<h3>Format</h3>
+<ol>
+<li>Format visual → <b>General → Properties</b> → X=<b>16</b>, Y=<b>430</b>, Width=<b>828</b>, Height=<b>274</b>.</li>
+<li>Format visual → <b>Visual → Columns</b> → expand the series list → set each color individually:
+<ul>
+<li>New MRR → <code>#16A34A</code></li>
+<li>Expansion MRR → <code>#86C99C</code></li>
+<li>Contraction MRR → <code>#E9A0A0</code></li>
+<li>Churned MRR → <code>#DC2626</code></li>
+</ul></li>
+<li>Format visual → <b>Visual → Lines</b> → Colors → <code>#0F1B3D</code>; Stroke width <b>2</b>; Join type Round; Smooth line Off; Markers Off.</li>
+<li>Format visual → <b>Visual → X-axis → Values</b>: Size <b>9</b>, Color <code>#94A3B8</code>. Title: <b>Off</b>. Concatenate labels: <b>Off</b>. Gridlines: <b>Off</b>.</li>
+<li>Format visual → <b>Visual → Y-axis → Values</b>: Size <b>9</b>, Color <code>#94A3B8</code>. Title: <b>Off</b>.</li>
+<li>Y-axis → <b>Range</b> → Minimum and Maximum: <b>leave blank (auto)</b>. Auto-scaling is required so the stack stays symmetric around zero on any dataset.</li>
+<li>Y-axis → <b>Gridlines</b>: On, Color <code>#EEF0F3</code>, Width <b>1</b>.</li>
+<li>Format visual → <b>Visual → Secondary y-axis</b>: <b>Off</b>. The Net line shares the same $-thousands scale as the columns, so a second axis would imply a false distinction.</li>
+<li>Format visual → <b>Visual → Data labels</b>: <b>Off</b>. Per the approved spec, exact values come from the tooltip instead.</li>
+<li>Format visual → <b>Visual → Legend</b>: <b>On</b>, Position <b>Top right</b>, Size <b>9</b>, Color <code>#64748B</code>. Required for accessibility — the four stack colors must carry a legend, not color alone.</li>
+<li>Format visual → <b>General → Title</b> → Text: <code>What is driving MRR change</code>, Size <b>14</b> Semibold, Color <code>#0F172A</code>.</li>
+<li>Format visual → <b>General → Subtitle</b> → Text: <code>Monthly movement components · last 12 months · $ thousands</code>, Size <b>10</b>, Color <code>#94A3B8</code>.</li>
+</ol>
+<h3>Filters — 12-month relative window</h3>
+<ol>
+<li>With the visual selected, open the <b>Filters</b> pane.</li>
+<li>Under <b>Filters on this visual</b>, drag <code>DimDate[Date]</code> into the well.</li>
+<li>Set <b>Filter type</b>: <b>Relative date</b>.</li>
+<li>Configure: <b>Show items when the value</b> → <b>is in the last</b> → <b>12</b> → <b>calendar months</b>.</li>
+<li>Click <b>Apply filter</b>.</li>
+<li><b>Do not enter any fixed dates anywhere in this filter.</b></li>
+</ol>
+<div class="callout warn">
+<div class="eyebrow">Expected behaviour with this dataset</div>
+The relative-date filter anchors to the system clock, and this dataset ends Dec 2025 while the current system date is later. The chart may therefore render empty or partial. <b>This is correct template behaviour, not a build error</b> — it is exactly the dynamic-window reuse the spec requires, and it will populate correctly on any client dataset that runs to the present.<br><br>
+<b>To validate the design now:</b> temporarily change the filter to <b>is in the last 12 calendar months</b> → note the result → then temporarily switch <b>Filter type</b> to <b>Advanced filtering</b> → <b>is on or after 2025-01-01</b> to confirm the visual renders correctly with 12 months of data. <b>Then switch it back to Relative date before finishing the page</b> — the fixed version must not ship.
+</div>
+<h3>Interactions</h3>
+<ol>
+<li>Configured in Section 11 — do not set here.</li>
+</ol>
+<h3>Validation</h3>
+<ol>
+<li>Green/light-green stacks sit above zero; red/light-red stacks sit below zero.</li>
+<li>The navy Net line tracks near the net of the two halves each month.</li>
+<li>December 2025's column stack matches the waterfall: +38.50K, +44.06K, −40.55K, −12.69K.</li>
+<li>Legend shows all four series names plus Net.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 7</b> — Stack diverges around a visible zero line; four distinct colors in two hue families; Net line readable over the stack. If everything renders above zero, <code>[Contraction MRR]</code> or <code>[Churned MRR]</code> is returning positives — stop and re-check those measures rather than negating them in the visual.</div>
+
+<h2 id="s8"><span class="stepnum">8.</span> Revenue Composition Matrix</h2>
+<div class="spec">
+<dl>
+<dt>Visual type</dt><dd>Matrix</dd>
+<dt>Purpose</dt><dd>Where the revenue base sits and which part moved</dd>
+<dt>X</dt><dd>856</dd>
+<dt>Y</dt><dd>430</dd>
+<dt>Width</dt><dd>408</dd>
+<dt>Height</dt><dd>274</dd>
+</dl>
+</div>
+<p><b>Build Section 9 (the field parameter) first</b> — the matrix's Rows well needs it. If you prefer to build the matrix now, temporarily place <code>DimPlan[PlanName]</code> in Rows and swap it for the parameter in Section 9.</p>
+<h3>Fields</h3>
+<ol>
+<li>Click empty canvas → Visualizations pane → <b>Matrix</b>.</li>
+<li>Drag the <code>Plan / Segment</code> field parameter (from Section 9) → <b>Rows</b>.</li>
+<li>Drag <code>[_MRR by Plan]</code> → <b>Values</b>.</li>
+<li>Drag <code>[_MRR Share of Total]</code> → <b>Values</b>.</li>
+<li>Add this measure to <code>_Measures</code> first, then drag it → <b>Values</b> (use the text version, not the raw numeric <code>_MRR by Plan MoM Delta</code> — a bare "2%" carries its meaning in color alone, breaking the project's accessibility rule):
+<pre style="margin:8px 0 0">_MRR by Plan MoM Delta Text = 
+VAR d = [_MRR by Plan MoM Delta]
+RETURN IF ( d >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" )</pre></li>
+<li><b>Columns well — leave empty; default is appropriate.</b> This is a flat list, not a cross-tab.</li>
+</ol>
+<div class="callout warn">
+<div class="eyebrow">What a matrix can and cannot reproduce from the mockup</div>
+The approved design was drawn in HTML, where a row can stack a value above a full-width bar with a gray track behind it. A Power BI matrix gives every measure its own side-by-side column — that is what a matrix <i>is</i>. Two things in the mockup therefore have no native equivalent and should not be chased: (1) value-and-share stacked <i>above</i> a full-width bar, and (2) the light gray 100% track behind each bar. The formatting below gets everything else. Rebuilding this as layered bar-chart-plus-text-cards would take 15+ visuals per card, be fragile to maintain, and break the Top-N reusability the spec requires — not worth it for a cosmetic gain.
+</div>
+<h3>Format</h3>
+<ol>
+<li>Format visual → <b>General → Properties</b> → X=<b>856</b>, Y=<b>430</b>, Width=<b>408</b>, Height=<b>274</b>.</li>
+<li>Format visual → <b>Visual → Values</b> → <b>Font</b>: Segoe UI, Size <b>10</b>, Color <code>#0F172A</code>.</li>
+<li>Values → <b>Alternate background color</b>: set to <code>#FFFFFF</code> (or toggle the alternating row style off). Zebra striping is not in the approved design.</li>
+<li>Values → <b>Row padding</b>: set so rows render at <b>31 px</b>. Increase/decrease padding and re-measure; the fixed height prevents a wrapping category name from pushing the footer out of the card.</li>
+<li>Format visual → <b>Visual → Row headers</b> → Font Size <b>10</b>, Color <code>#0F172A</code>, <b>Alignment: Right</b> (matches the design — labels sit against the bars).</li>
+<li>Row headers → <b>Word wrap</b>: <b>Off</b>. This produces the ellipsis truncation the spec requires and protects the 31px row height.</li>
+<li>Format visual → <b>Visual → Column headers</b>: <b>Off</b>. The subtitle already carries the labeling and the design shows no column header row. If you prefer to keep the "Δ MoM" label visible, leave headers <b>On</b> and instead use <b>Rename for this visual</b> on the two MRR columns to blank them out.</li>
+<li>Format visual → <b>Visual → Gridlines</b> → <b>Vertical</b>: Off. <b>Horizontal</b>: Off.</li>
+<li>Format visual → <b>Visual → Totals</b> → <b>Row subtotals</b>: <b>On</b>. Set its <b>Label</b> to <code>Total MRR</code>. Font: Semibold. (The design's dynamic "· 5 of 5 plans shown" suffix would need its own measure — optional, not built here.)</li>
+<li>Format visual → <b>General → Title</b> → Text: <code>Revenue composition</code>, Size <b>14</b> Semibold.</li>
+<li>Format visual → <b>General → Subtitle</b> → Text: <code>MRR · share of total</code>, Size <b>10</b>, Color <code>#94A3B8</code>.</li>
+</ol>
+<h3>Conditional formatting — data bars on MRR</h3>
+<ol>
+<li>Format visual → <b>Visual → Cell elements</b>.</li>
+<li>In the <b>Series</b> dropdown at the top of that section, select <b>_MRR by Plan</b>.</li>
+<li>Toggle <b>Data bars</b>: <b>On</b> → click <b>fx</b> beside it.</li>
+<li>Set <b>Positive bar</b>: <code>#3E5C8A</code>. <b>Negative bar</b>: <code>#3E5C8A</code>.
+<b>Do not use <code>#0F1B3D</code> here</b> — at navy the bar and the dark value text render at nearly the same darkness and the largest row's figure becomes unreadable on top of its own bar. Mid blue is in the locked palette and keeps the number legible. If the longest bar still swallows its value, step down to <code>#94A3B8</code>.</li>
+<li>Set <b>Show bar only</b>: <b>Off</b> — the number must remain visible beside the bar.</li>
+<li>Click <b>OK</b>.</li>
+</ol>
+<h3>Conditional formatting — Δ MoM font color</h3>
+<ol>
+<li>Still in <b>Cell elements</b>, change the <b>Series</b> dropdown to <b>_MRR by Plan MoM Delta Text</b>.</li>
+<li>Toggle <b>Font color</b>: <b>On</b> → click <b>fx</b>.</li>
+<li>Format style: <b>Field value</b> → What field should we base this on: <code>_MRR by Plan MoM Delta Color</code> → <b>OK</b>.</li>
+</ol>
+<h3>Number formatting</h3>
+<ol>
+<li>Data pane → click <code>_MRR by Plan</code> → Measure tools ribbon → Format: <b>Currency</b>, Decimal places <b>0</b>, Display units <b>Thousands</b>.</li>
+<li>Click <code>_MRR Share of Total</code> → Format: <b>Percentage</b>, Decimal places <b>0</b>.</li>
+<li><code>_MRR by Plan MoM Delta Text</code> returns text and carries its own formatting — <b>leave unchanged; no format setting applies.</b></li>
+</ol>
+<h3>Filters — Top 5 + Other</h3>
+<ol>
+<li>With the matrix selected, open the <b>Filters</b> pane.</li>
+<li>Under <b>Filters on this visual</b>, find the field-parameter field → set <b>Filter type</b>: <b>Top N</b>.</li>
+<li>Show items: <b>Top</b> → <b>5</b>.</li>
+<li>By value: drag <code>[_MRR by Plan]</code> into the "By value" well.</li>
+<li>Click <b>Apply filter</b>.</li>
+<li>With exactly 5 plans and 3 segments in this model, Top 5 shows all rows and no "Other" group appears — <b>expected, not a bug</b>. The filter exists so the template survives a client with 30 plans.</li>
+</ol>
+<h3>Validation</h3>
+<ol>
+<li>Five plan rows: Enterprise ~$443K · 44%, Business ~$288K · 29%, Professional ~$148K · 15%, Growth ~$79K · 8%, Starter ~$44K · 4%.</li>
+<li>Shares sum to 100%; footer total reads <b>$1,003K</b>.</li>
+<li>Data bars are proportional and single-hue navy.</li>
+<li>Δ MoM values carry a glyph and sign (▲ +4.1% / ▼ −0.8%) and are green when positive, red when negative — never color alone.</li>
+<li>Every row's dollar value is readable; no value is obscured by its own data bar.</li>
+<li>No zebra striping; row labels right-aligned; footer reads "Total MRR".</li>
+<li>No row wraps to two lines; long names truncate with an ellipsis.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 8</b> — Switch the field parameter tile to <b>Segment</b>: rows change to SMB / Mid-Market / Enterprise, shares still sum to 100%, and the footer total still reads $1,003K. If shares do not sum to 100% on Segment, the matrix is still bound to <code>_MRR by Plan % of Total</code> instead of <code>_MRR Share of Total</code> — see 0.4.</div>
+
+<h2 id="s9"><span class="stepnum">9.</span> Plan / Segment Field Parameter</h2>
+<h3>9.1 — Check whether one already exists</h3>
+<ol>
+<li>Open the <b>Model</b> view (left rail).</li>
+<li>Look for a small table named like <code>Plan / Segment</code>, <code>Parameter</code>, or similar, containing three columns (a display-name text column, a <code>Fields</code> column, and an <code>Order</code> column).</li>
+<li>If one exists with <code>PlanName</code> and <code>CustomerSegment</code> in it: <b>skip to 9.3</b> and reuse it. Do not create a duplicate.</li>
+<li>If none exists, continue to 9.2. (For this project, none exists — Page 1 used no field parameters.)</li>
+</ol>
+<h3>9.2 — Create it</h3>
+<ol>
+<li>Go to <b>Report</b> view.</li>
+<li><b>Modeling</b> ribbon → <b>New parameter</b> → <b>Fields</b>.</li>
+<li>In the dialog, set <b>Name</b>: <code>Plan / Segment</code>.</li>
+<li>Ensure <b>Add slicer to this page</b> is <b>checked</b>.</li>
+<li>In the <b>Fields</b> list on the right, expand <code>DimPlan</code> → double-click <code>PlanName</code> to add it.</li>
+<li>Expand <code>DimCustomer</code> → double-click <code>CustomerSegment</code> to add it.</li>
+<li>In the staging list, confirm the order is <b>PlanName</b> then <b>CustomerSegment</b> (drag to reorder if needed) — Plan must be first so it is the default selection.</li>
+<li>Rename the display values: click into the first row's name cell → type <code>Plan</code>. Second row → type <code>Segment</code>.</li>
+<li>Click <b>Create</b>.</li>
+<li>A slicer appears on the canvas and a new table appears in the Data pane.</li>
+</ol>
+<h3>9.3 — Configure and style the slicer as two tiles</h3>
+<ol>
+<li>Select the new slicer on the canvas.</li>
+<li>Format visual → <b>Visual → Slicer settings → Options → Style</b>: <b>Tile</b>.</li>
+<li>Slicer settings → <b>Selection</b> → <b>Single select</b>: <b>On</b>. <b>Show "Select all"</b>: <b>Off</b>.</li>
+<li>Format visual → <b>Visual → Values</b> → State: <b>Default</b> → Font Size <b>10</b>, Font color <code>#64748B</code>, Background <code>#FFFFFF</code>.</li>
+<li>Values → State: <b>Selected</b> → Font color <b>#FFFFFF</b>, Background <code>#0F1B3D</code>.</li>
+<li>Values → State: <b>Hover</b> → Font color <code>#0F1B3D</code>, Background <code>#F4F5F7</code>.</li>
+<li>Format visual → <b>Visual → Values → Border</b> → On, Color <code>#E2E5EA</code>, Width <b>1</b>.</li>
+<li>Format visual → <b>General → Title</b>: <b>Off</b>.</li>
+<li>Format visual → <b>General → Effects</b> → Background <b>Off</b>, Border <b>Off</b>, Shadow <b>Off</b> — it sits inside the matrix card, not as its own card.</li>
+<li>Format visual → <b>General → Properties</b> → X=<b>1105</b>, Y=<b>440</b>, Width=<b>145</b>, Height=<b>26</b> (top-right corner inside the composition card, per the approved screenshot).</li>
+<li>Select the slicer → right-click → <b>Bring to front</b> so it renders above the matrix card.</li>
+</ol>
+<h3>9.4 — Wire the matrix to it</h3>
+<ol>
+<li>Select the matrix → in the Data pane, expand the <code>Plan / Segment</code> parameter table.</li>
+<li>Drag the parameter's <b>display-name field</b> (the one named <code>Plan / Segment</code>) into the matrix's <b>Rows</b> well.</li>
+<li>Remove any temporary <code>DimPlan[PlanName]</code> from Rows.</li>
+</ol>
+<h3>9.5 — Test</h3>
+<ol>
+<li>Click the <b>Plan</b> tile → matrix rows show Enterprise / Business / Professional / Growth / Starter.</li>
+<li>Click the <b>Segment</b> tile → matrix rows switch to the three customer segments.</li>
+<li>Confirm the selected tile is navy-filled with white text and the unselected tile is white with slate text.</li>
+<li>Confirm the footer total is identical under both selections ($1,003K) — a differing total means the share or MRR measure is not parameter-safe.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 9</b> — Two tiles render side by side; exactly one is selectable at a time; the matrix re-projects cleanly with no blank rows and no error. Note that the field parameter changes only the matrix's rows — it does not by itself filter anything else on the page (see Section 11).</div>
+
+<h2 id="s10"><span class="stepnum">10.</span> Filter Panel <span class="tag reuse">REUSE FROM PAGE 1</span></h2>
+<div class="callout warn">
+<div class="eyebrow">Bookmarks do not copy with the objects</div>
+The <code>FilterPanel</code> group copies across pages, but bookmarks are report-level objects bound to specific visuals on the page where they were created. The Page 1 "Filters Open / Filters Closed / Clear all filters" bookmarks will not control the Page 2 copy. Three new bookmarks must be created here. The <b>slicer selections themselves</b> do carry between pages because Data = Off is set on all bookmarks — that requirement from the spec is satisfied by the bookmark configuration, not by sharing bookmarks.
+</div>
+<h3>10.1 — Copy the panel</h3>
+<ol>
+<li>Go to Executive Overview → Selection pane → click the <code>FilterPanel</code> group → <b>Ctrl+C</b>.</li>
+<li>Return to Revenue &amp; Growth → <b>Ctrl+V</b>. It pastes at the same coordinates.</li>
+<li>In the Selection pane, confirm the group contains: background rectangle, 4 slicers (Country, Industry, Channel, HealthScore), "✕ Close" button, "Clear all filters" button.</li>
+<li>Right-click the group → <b>Bring to front</b>.</li>
+<li>Rename the group to <code>P2_FilterPanel</code>.</li>
+</ol>
+<h3>10.2 — Create the three bookmarks</h3>
+<ol>
+<li>View ribbon → open both <b>Bookmarks</b> and <b>Selection</b> panes.</li>
+<li>Ensure <code>P2_FilterPanel</code> is <b>visible</b> (eye icon on) and positioned correctly.</li>
+<li>Bookmarks pane → <b>Add</b> → rename the new bookmark <code>P2 Filters Open</code>.</li>
+<li>Click the <b>⋯</b> on <code>P2 Filters Open</code> → uncheck <b>Data</b> → keep <b>Display</b> checked → keep <b>All visuals</b>.</li>
+<li>In the Selection pane, click <code>P2_FilterPanel</code>'s eye icon to <b>hide</b> it.</li>
+<li>Bookmarks pane → <b>Add</b> → rename <code>P2 Filters Closed</code>.</li>
+<li>Its <b>⋯</b> → uncheck <b>Data</b> → keep <b>Display</b> → keep <b>All visuals</b>.</li>
+<li>Turn <code>P2_FilterPanel</code>'s visibility back <b>on</b>.</li>
+<li>In the Selection pane, expand <code>P2_FilterPanel</code> and <b>Ctrl+click each of the 4 slicers individually</b> — never the group row itself. (Selecting the group does not register for Selected-visuals scoping.)</li>
+<li>On canvas, clear each of the 4 slicers' current selections using each slicer's own eraser icon.</li>
+<li>Bookmarks pane → <b>Add</b> → rename <code>P2 Clear all filters</code>.</li>
+<li>Its <b>⋯</b> → switch to <b>Selected visuals</b> → keep <b>Data</b> <b>checked</b> (resetting filters is this bookmark's purpose).</li>
+<li>Its <b>⋯</b> again → <b>Update</b>. Switching the scope does not re-capture state; Update is what saves it under the new scope.</li>
+</ol>
+<h3>10.3 — Wire the buttons</h3>
+<ol>
+<li>Select the header's <b>▾ Filters</b> button (inside <code>Header_Nav_Global</code>) → Format pane → <b>Action</b> → On → Type: <b>Bookmark</b> → Bookmark: <b>P2 Filters Open</b>.</li>
+<li>Select the panel's <b>✕ Close</b> button → Action → Type: <b>Bookmark</b> → Bookmark: <b>P2 Filters Closed</b>.</li>
+<li>Select the panel's <b>Clear all filters</b> button → Action → Type: <b>Bookmark</b> → Bookmark: <b>P2 Clear all filters</b>.</li>
+<li>Set the page's resting state: click <b>P2 Filters Closed</b> in the Bookmarks pane so the panel is hidden before you save.</li>
+</ol>
+<h3>10.4 — Test</h3>
+<ol>
+<li>Switch to <b>View → Reading view</b> (a plain click in Edit view only selects the button; Ctrl+click also works).</li>
+<li>Click <b>▾ Filters</b> → panel appears with all 4 slicers, Close and Clear.</li>
+<li>Select a Country → confirm the charts respond.</li>
+<li>Click <b>Clear all filters</b> → only the 4 panel slicers reset; Period and Segment in the header are untouched.</li>
+<li>Click <b>✕ Close</b> → panel disappears; the page returns to its analytical state.</li>
+<li>Navigate to Executive Overview and back → confirm any panel selection you made persists (Data = Off working correctly).</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 10</b> — Panel opens and closes cleanly over the charts; Clear resets only panel slicers; selections survive page navigation in both directions.</div>
+
+<h2 id="s11"><span class="stepnum">11.</span> Cross-Visual Interactions</h2>
+<p>Edit interactions is set <b>from the source visual</b>. Select the source, then click the icon shown on each target.</p>
+<h3>11.1 — Turn on the controls</h3>
+<ol>
+<li>Select any visual on the page.</li>
+<li><b>Format</b> ribbon (appears when a visual is selected) → <b>Edit interactions</b>. Small icon sets now appear on every other visual.</li>
+</ol>
+<h3>11.2 — Matrix as source</h3>
+<ol>
+<li>Click the <b>Revenue Composition matrix</b> to make it the source.</li>
+<li>On the <b>MRR &amp; Growth combo chart</b> → click the <b>Filter</b> icon (funnel).</li>
+<li>On the <b>MRR Movement waterfall</b> → click the <b>Filter</b> icon.</li>
+<li>On the <b>MRR Change Composition chart</b> → click the <b>Filter</b> icon.</li>
+<li>On <b>KPI MRR</b> → click <b>None</b> (circle-with-slash).</li>
+<li>On <b>KPI ARR</b> → click <b>None</b>.</li>
+<li>On <b>KPI Net MRR Change</b> → click <b>Filter</b>.</li>
+<li>On <b>KPI Gross New MRR</b> → click <b>Filter</b>.</li>
+</ol>
+<div class="callout stop">
+<div class="eyebrow">Expected behaviour — read before testing</div>
+With the parameter on <b>Segment</b>, clicking a row filters all three charts and both movement KPIs correctly. With the parameter on <b>Plan</b>, <b>nothing will respond</b> — this is blocker 0.5, and the Filter setting above is correct regardless. Do not "fix" the non-response by changing interaction settings; there is no relationship path for the filter to travel. Record it in the template notes.
+</div>
+<h3>11.3 — Combo chart as source</h3>
+<ol>
+<li>Click the <b>MRR &amp; Growth combo chart</b>.</li>
+<li>On <b>KPI MRR</b> and <b>KPI ARR</b> → click <b>None</b>.</li>
+<li>On <b>KPI Net MRR Change</b> and <b>KPI Gross New MRR</b> → click <b>Filter</b>.</li>
+<li>On the <b>waterfall</b>, <b>composition chart</b> and <b>matrix</b> → <b>leave unchanged; default (Filter) is appropriate</b> — selecting a month should re-scope the other visuals.</li>
+</ol>
+<h3>11.4 — Composition chart as source</h3>
+<ol>
+<li>Click the <b>MRR Change Composition chart</b>.</li>
+<li>On <b>KPI MRR</b> and <b>KPI ARR</b> → click <b>None</b>.</li>
+<li>On all other visuals → <b>leave unchanged; default (Filter) is appropriate</b>.</li>
+</ol>
+<h3>11.5 — Waterfall as source</h3>
+<ol>
+<li>Click the <b>MRR Movement waterfall</b>.</li>
+<li>On <b>KPI MRR</b> and <b>KPI ARR</b> → click <b>None</b>.</li>
+<li>On the <b>combo chart</b> and <b>matrix</b> → <b>leave unchanged; default (Filter) is appropriate</b>.</li>
+<li>On the <b>MRR Change Composition chart</b> → click <b>None</b>. Both visuals break out the same four <code>EventType</code> categories; a selection on one would filter the other to a single category, producing a one-series stack that reads as broken rather than informative.</li>
+</ol>
+<h3>11.6 — Turn off edit mode</h3>
+<ol>
+<li><b>Format</b> ribbon → click <b>Edit interactions</b> again to exit.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 11</b> — Switch the parameter to Segment, click a segment row: combo, waterfall and composition all re-scope; Net MRR Change and Gross New MRR update; MRR and ARR stay at full-company values. Click the same row again to deselect and confirm everything returns.</div>
+
+<h2 id="s12"><span class="stepnum">12.</span> Tooltip <span class="tag reuse">REUSE FROM PAGE 1</span></h2>
+<div class="callout">
+<div class="eyebrow">What exists today</div>
+Page 1 does not use one shared tooltip — during its build, four purpose-built tooltips were deliberately created, each answering the question its own chart raises. Page 2 follows that established pattern rather than the single-shared-tooltip wording in the original spec: duplicate the closest existing tooltip page and extend it with the four movement measures the composition chart needs.
+</div>
+<h3>12.1 — Duplicate and extend</h3>
+<ol>
+<li>Right-click the <code>Tooltip - MRR</code> page tab → <b>Duplicate page</b>.</li>
+<li>Rename the duplicate to <code>Tooltip - MRR Movement</code>.</li>
+<li>Confirm Format pane → <b>Canvas settings</b> → Type: <b>Tooltip</b>, and <b>Page information → Allow use as tooltip</b>: <b>On</b>.</li>
+<li>Canvas settings → Width <b>320</b>, Height <b>260</b> (taller than Page 1's 200 to fit four extra rows).</li>
+<li>Select the table/card on that page and add to its fields, in this order: <code>DimDate[YearMonth]</code>, <code>[MRR]</code>, <code>[MRR Growth %]</code>, <code>[Net MRR Change]</code>, <code>[New MRR]</code>, <code>[Expansion MRR]</code>, <code>[Contraction MRR]</code>, <code>[Churned MRR]</code>.</li>
+<li><b>Do not add <code>[Active Customers]</code></b> — it hard-codes an <code>EventType</code> filter internally and will not respond correctly in an EventType-bearing context. It belongs on the Active Customers tooltip, which already carries it.</li>
+<li>Format the table: Values font size <b>10</b>, Column headers <b>10</b> Semibold, Grid → Vertical gridlines <b>Off</b>.</li>
+</ol>
+<h3>12.2 — Assign</h3>
+<ol>
+<li>Go to Revenue &amp; Growth → select the <b>MRR Change Composition chart</b>.</li>
+<li>Format visual → <b>General → Tooltips</b> → <b>Type</b>: <b>Report page</b> → <b>Page</b>: <code>Tooltip - MRR Movement</code>.</li>
+<li>Select the <b>MRR &amp; Growth combo chart</b> → Format visual → General → Tooltips → Type: <b>Report page</b> → Page: <code>Tooltip - MRR</code> (the original — a revenue chart wants revenue context).</li>
+<li>Select the <b>waterfall</b> → <b>leave unchanged; it copied its Page 1 tooltip assignment</b> (EventType + MRR Change).</li>
+<li>Select the <b>matrix</b> → <b>leave unchanged; default tooltip is appropriate</b> — its three columns already show MRR, share and Δ on the face of the visual.</li>
+</ol>
+<h3>12.3 — Test</h3>
+<ol>
+<li>Hover a column on the composition chart → the extended tooltip shows that month's four movement values plus MRR and Net.</li>
+<li>Hover a different month → every value changes. A frozen value means the tooltip's measures are not month-scoped.</li>
+<li>Hover the combo chart's line → the original MRR tooltip appears, not the extended one.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 12</b> — Composition chart's tooltip is dynamic per month and shows all four components; no tooltip anywhere on the page shows a value in the hundreds of thousands for a single month's movement (that symptom means an unscoped measure slipped in).</div>
+
+<h2 id="s13"><span class="stepnum">13.</span> Drill-Through</h2>
+<div class="callout warn">
+<div class="eyebrow">Prerequisite</div>
+Pages 5 (Segment Analysis) and 6 (Churn &amp; Retention) must exist as pages before these actions resolve. If they do not yet exist, create empty placeholder pages with those exact names now, configure the drill-through fields on them, and build their content later — retrofitting drill-through means re-touching every source visual.
+</div>
+<h3>13.1 — Month → Page 6</h3>
+<ol>
+<li>Go to the <b>Churn &amp; Retention</b> page.</li>
+<li>Click empty canvas → Format pane → <b>Page information</b> → <b>Allow drill through from</b>: <b>Used as a drill-through target</b>.</li>
+<li>Scroll to the <b>Drill through</b> section in the Visualizations pane → drag <code>DimDate[YearMonth]</code> into <b>Add drill-through fields here</b>.</li>
+<li>Set <b>Keep all filters</b>: <b>On</b>.</li>
+<li><b>Back button — leave unchanged; Power BI adds one automatically.</b> Drag it to the top-left of the page if it lands elsewhere.</li>
+</ol>
+<h3>13.2 — Plan/Segment → Page 5</h3>
+<ol>
+<li>Go to the <b>Segment Analysis</b> page.</li>
+<li>Format pane → <b>Page information</b> → <b>Allow drill through from</b>: <b>Used as a drill-through target</b>.</li>
+<li>Drag <code>DimPlan[PlanName]</code> into the drill-through fields well.</li>
+<li>Drag <code>DimCustomer[CustomerSegment]</code> into the same well as a second field — the matrix can project either, so both must be accepted or drill-through breaks on one of the two parameter states.</li>
+<li>Set <b>Keep all filters</b>: <b>On</b>.</li>
+</ol>
+<h3>13.3 — Test</h3>
+<ol>
+<li>On Revenue &amp; Growth, right-click a column in the <b>MRR Change Composition</b> chart → <b>Drill through</b> → <b>Churn &amp; Retention</b> should appear → click it → target page opens filtered to that month.</li>
+<li>Click the back button → returns to Revenue &amp; Growth with state intact.</li>
+<li>Right-click a row in the <b>Revenue Composition matrix</b> (parameter on Plan) → <b>Drill through</b> → <b>Segment Analysis</b>.</li>
+<li>Switch the parameter to Segment and repeat — the drill-through must still resolve, now passing the segment.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 13</b> — Both drill-through paths appear in the right-click menu and land on pre-filtered target pages with working back buttons, under both parameter states.</div>
+
+<h2 id="s14"><span class="stepnum">14.</span> Navigation and Page Connections</h2>
+<ol>
+<li>Switch to <b>View → Reading view</b>.</li>
+<li>Click each of the six nav buttons in turn; confirm each lands on its named page (or does nothing without erroring if that page does not yet exist).</li>
+<li>Return to Revenue &amp; Growth; confirm its nav item is bold navy with the underline beneath it.</li>
+<li>Hover the other five; confirm each shifts to <code>#0F1B3D</code> on hover.</li>
+<li>From Executive Overview, click "Revenue &amp; Growth" → lands here. From here, click "Executive Overview" → lands there. Both header states remain pixel-identical through the transition.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 14</b> — Navigation is bidirectional and the header does not shift position between pages.</div>
+
+<h2 id="s15"><span class="stepnum">15.</span> Final Formatting Pass</h2>
+<ol>
+<li>Open the <b>Selection</b> pane and confirm the z-order top-to-bottom: <code>P2_FilterPanel</code> (top) → <code>Header_Nav_Global</code> → field-parameter slicer → matrix → charts → KPI groups.</li>
+<li>Select the four KPI groups → <b>Format</b> ribbon → <b>Align</b> → <b>Align top</b>.</li>
+<li>With them still selected → <b>Format → Distribute → Distribute horizontally</b>.</li>
+<li>Select combo chart + waterfall → <b>Align → Align top</b>.</li>
+<li>Select composition chart + matrix → <b>Align → Align top</b>.</li>
+<li>Select waterfall + matrix → <b>Align → Align left</b> (both must sit on the x=856 seam).</li>
+<li>Verify every visual's <b>General → Effects</b> is inherited from the theme — no manually set background, border, shadow or radius anywhere. Manual values block a future theme swap.</li>
+<li>Check that no visual's <b>General → Title</b> is left on at a default like "Sum of MRR".</li>
+<li><b>Save the file now</b> (Ctrl+S) before any further testing.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 15</b> — Both chart rows align on the x=856 seam; KPI strip is evenly distributed; no stray default titles; file saved.</div>
+
+<h2 id="s16"><span class="stepnum">16.</span> Accessibility and Tab Order</h2>
+<ol>
+<li>View ribbon → <b>Selection</b> pane → click the <b>Tab order</b> tab at the top of the pane.</li>
+<li>Use the up/down arrows to set this order (per the approved spec): header group → KPI MRR → KPI ARR → KPI Net MRR Change → KPI Gross New MRR → combo chart → waterfall → composition chart → field-parameter slicer → matrix → filter panel.</li>
+<li>For each visual: select it → Format visual → <b>General → Alt text</b> → enter a one-sentence description, e.g. for the combo chart: <code>Line and column chart showing monthly recurring revenue and month-over-month growth rate over 36 months.</code></li>
+<li>Repeat for all four KPI cards, both charts, the waterfall and the matrix.</li>
+<li>Confirm no content text is below 10 px; only axis furniture is 9 px.</li>
+<li>Confirm the composition chart's legend is on — the four stack colors must never be the only signal distinguishing the series.</li>
+<li>Confirm every delta indicator carries a glyph (▲/▼) and an explicit sign, not color alone.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 16</b> — Tab order reads logically top-to-bottom, left-to-right; every visual has alt text; no meaning is carried by color alone anywhere on the page.</div>
+
+<h2 id="s17"><span class="stepnum">17.</span> Page 2 QA Checklist</h2>
+<h3>A · Layout</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Canvas</td><td>1280×720, theme background, no manual override</td></tr>
+<tr><td>Margins</td><td>16 px all sides; content spans x=16 to x=1264</td></tr>
+<tr><td>Bands</td><td>Header 16–56 · nav 60–90 · KPI 102–166 · analysis 178–418 · driver 430–704</td></tr>
+<tr><td>Seam</td><td>Waterfall and matrix both start at x=856</td></tr>
+<tr><td>Widths</td><td>303 (KPI) · 828 (left charts) · 408 (right visuals) — no other widths</td></tr>
+<tr><td>KPI height</td><td>Exactly 64 px — no card enlarged</td></tr>
+</table>
+<h3>B · KPI</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>MRR</td><td>~$1.0M, ▲ green delta</td></tr>
+<tr><td>ARR</td><td>~$12.0M, ▲ green delta</td></tr>
+<tr><td>Net MRR Change</td><td>~$29.3K — must match the waterfall's Net change bar exactly</td></tr>
+<tr><td>Gross New MRR</td><td>~$82.6K with a split caption; split has no green/red coloring</td></tr>
+<tr><td>Clipping</td><td>No text clipped in any card; all Titles Off</td></tr>
+</table>
+<h3>C · Charts</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>MRR &amp; Growth</td><td>Navy line dominant on primary axis; light slate columns on secondary axis; both axes labelled, neither titled</td></tr>
+<tr><td>MRR Movement</td><td>New → Expansion → Contraction → Churn → Net change order; values 38.50K / 44.06K / −40.55K / −12.69K / 29.32K</td></tr>
+<tr><td>MRR Change Composition</td><td>Diverging stack around zero; four colors in two hue families; Net line navy; legend on</td></tr>
+<tr><td>Revenue Composition</td><td>5 rows, 31 px each; mid-blue data bars with all values legible; no zebra striping; right-aligned row labels; shares sum to 100%; Δ MoM shows glyph + sign + color; footer "Total MRR" $1,003K</td></tr>
+<tr><td>Cross-check</td><td>Dec 2025 column in the composition chart equals the waterfall's four bars</td></tr>
+</table>
+<h3>D · Filters</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Period</td><td>Jan 1 2023 – Dec 31 2025; charts respond</td></tr>
+<tr><td>Segment</td><td>Defaults to All; filters Tier-appropriate visuals</td></tr>
+<tr><td>Filter panel</td><td>Opens/closes via bookmarks; 4 slicers present</td></tr>
+<tr><td>Clear filters</td><td>Resets only the 4 panel slicers</td></tr>
+<tr><td>Persistence</td><td>Panel selections survive navigation to Page 1 and back</td></tr>
+</table>
+<h3>E · Interactions</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Matrix → charts (Segment)</td><td>All three charts re-scope</td></tr>
+<tr><td>Matrix → charts (Plan)</td><td>No response — known limitation 0.5, not a defect</td></tr>
+<tr><td>KPI MRR / ARR</td><td>Never change on any selection</td></tr>
+<tr><td>KPI Net Change / Gross New</td><td>Follow the selection</td></tr>
+<tr><td>Waterfall → composition</td><td>Set to None</td></tr>
+<tr><td>Tooltips</td><td>Composition chart shows 4 movement measures, dynamic per month</td></tr>
+<tr><td>Drill-through</td><td>Month → Page 6; Plan/Segment row → Page 5; both with back buttons</td></tr>
+<tr><td>Navigation</td><td>All six buttons work; Revenue &amp; Growth shows selected state</td></tr>
+</table>
+<h3>F · Reusability</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Hard-coded dates</td><td>None anywhere — composition chart uses Relative date (Last 12 calendar months)</td></tr>
+<tr><td>Fixed axis ranges</td><td>None on the secondary (MRR) axis — it auto-scales to any client's revenue scale. The primary (growth %) axis is deliberately bounded 0–0.25: the one intentional dataset-sensitive value on this page; document it in the template notes as the single number to review per deployment</td></tr>
+<tr><td>Top N</td><td>Matrix set to Top 5 by MRR, survives a different category count</td></tr>
+<tr><td>Dynamic categories</td><td>Field parameter re-projects Plan/Segment without breaking on renames</td></tr>
+<tr><td>Dynamic scale</td><td>Abbreviated number formats absorb a $50K or $10M client</td></tr>
+<tr><td>Static text</td><td>The waterfall subtitle "Dec 2025" is static — convert to a measure before .pbit packaging in Phase 5</td></tr>
+</table>
+<h3>G · Accessibility</h3>
+<table>
+<tr><th>Check</th><th>Expected</th></tr>
+<tr><td>Font sizes</td><td>Content ≥10 px; chart furniture 9 px</td></tr>
+<tr><td>Contrast</td><td><code>#0F172A</code> on white = 15.9:1; <code>#64748B</code> on white = 4.8:1</td></tr>
+<tr><td>Color independence</td><td>Legend + above/below-zero position on the stack; glyph + sign on every delta</td></tr>
+<tr><td>Tab order</td><td>Explicitly set in the Selection pane</td></tr>
+<tr><td>Alt text</td><td>Present on all four KPI cards and all four visuals</td></tr>
+</table>
+
+<h2 id="s18"><span class="stepnum">18.</span> Final Screenshot Comparison</h2>
+<p>Compare your build against the approved Claude Design screenshot. <b>Ignore every number</b> — the mockup uses illustrative data (Northwind Cloud, Aug 2026, $487.2K MRR, 75%/25% split, 113% expansion coverage). Your figures will differ and should match the validated Phase 3 values instead.</p>
+<p><b>Compare these, and only these:</b></p>
+<ol>
+<li><b>Hierarchy</b> — is the combo chart clearly the largest object? Is the KPI strip clearly a caption line, not a hero row?</li>
+<li><b>Proportions</b> — analysis row visibly shorter than the driver row (240 vs 274); 8/4 column split on both rows.</li>
+<li><b>Alignment</b> — the x=856 seam runs unbroken from the waterfall down through the matrix.</li>
+<li><b>Spacing</b> — 12 px between cards, 12 px between bands, 16 px page margin; no gap is visually wider than another at the same level.</li>
+<li><b>Typography</b> — 14 px Semibold titles with 10 px slate subtitles on one baseline; 22 px KPI values.</li>
+<li><b>Color</b> — navy line dominant, light slate columns subordinate, two green tints above zero, two red tints below, single-hue navy data bars. No color outside the locked palette.</li>
+<li><b>Visual density</b> — four visuals plus a KPI strip; no visual is cramped and no large empty area sits inside any card.</li>
+<li><b>Interaction behaviour</b> — tile slicer renders as two horizontal buttons inside the composition card, selected tile navy-filled.</li>
+</ol>
+<p>Report any meaningful difference in the above. Differences in numbers, company name, or date labels are expected and are <b>not</b> defects.</p>
+
+</div>

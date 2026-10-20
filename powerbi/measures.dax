@@ -1,0 +1,1407 @@
+// =====================================================================
+// SaaS Growth & Unit Economics - DAX measure set
+//
+// Exported from SaaS_Growth_Unit_Economics.pbit (Power BI Desktop).
+// 180 measures across 10 measure-holder tables, plus the model's
+// calculated columns, calculated tables and field parameters.
+//
+// This file is REFERENCE DOCUMENTATION, not an installer. The measures
+// already exist inside the .pbit; this export exists so the logic can be
+// read, reviewed and reused without opening Power BI Desktop.
+//
+// MODEL PREREQUISITES
+//   Dimensions: DimCustomer, DimPlan, DimDate, DimAcquisitionChannel
+//   Facts:      FactSubscription, FactSubscriptionEvent,
+//               FactMarketing, FactCustomerHealth
+//
+//   Active relationships (single-direction, from fact to dimension):
+//     FactSubscription       -> DimCustomer, DimPlan, DimDate
+//     FactSubscriptionEvent  -> DimCustomer, DimDate
+//     FactMarketing          -> DimDate, DimAcquisitionChannel
+//     FactCustomerHealth     -> DimCustomer, DimDate
+//     DimCustomer            -> DimAcquisitionChannel
+//
+//   INACTIVE relationships (activated per-measure with USERELATIONSHIP):
+//     FactSubscriptionEvent -> DimPlan  (NewPlanID and PreviousPlanID)
+//     FactSubscription      -> DimDate  (EndDate role)
+//
+//   DimDate is marked as the model date table.
+//
+// NAMING CONVENTION
+//   A leading underscore marks a measure that is internal to a visual's
+//   construction (delta values, conditional-format colours, caption
+//   strings, intermediate helpers) rather than a business metric a
+//   reader would ask for by name.
+// =====================================================================
+
+
+// =====================================================================
+// CALCULATED COLUMNS
+// =====================================================================
+
+// DimCustomer[SignupMonth]
+SignupMonth =
+DATE ( YEAR ( DimCustomer[SignupDate] ), MONTH ( DimCustomer[SignupDate] ), 1 )
+
+// DimCustomer[Signup Quarter]
+Signup Quarter =
+"Q" & QUARTER ( DimCustomer[SignupDate] ) & " " & YEAR ( DimCustomer[SignupDate] )
+
+// DimCustomer[Signup Quarter Sort]
+Signup Quarter Sort =
+YEAR ( DimCustomer[SignupDate] ) * 10 + QUARTER ( DimCustomer[SignupDate] )
+
+// DimCustomer[Segment Short Label]
+Segment Short Label =
+
+SWITCH (
+    DimCustomer[CustomerSegment],
+    "SMB", "SMB",
+    "Mid-Market", "Mid",
+    "Enterprise", "Ent",
+    LEFT ( SUBSTITUTE ( DimCustomer[CustomerSegment], "-", " " ), 4 )
+)
+
+// DimPlan[Plan Short Label]
+Plan Short Label =
+
+SWITCH (
+    DimPlan[PlanName],
+    "Starter", "Start",
+    "Growth", "Grow",
+    "Professional", "Prof",
+    "Business", "Bus",
+    "Enterprise", "Ent",
+    LEFT ( DimPlan[PlanName], 4 )
+)
+
+// DimAcquisitionChannel[Channel Group]
+Channel Group =
+
+VAR ChannelRank =
+    RANKX (
+        ALL ( DimAcquisitionChannel[AcquisitionChannel] ),
+        CALCULATE ( [Marketing Spend (P4)] ),
+        ,
+        DESC
+    )
+RETURN
+    IF ( ChannelRank <= 6, DimAcquisitionChannel[AcquisitionChannel], "Other" )
+
+
+// =====================================================================
+// CALCULATED TABLES, FIELD PARAMETERS AND WHAT-IF PARAMETERS
+// =====================================================================
+
+// TABLE: DimAcquisitionChannel
+DimAcquisitionChannel =
+
+DISTINCT (
+    UNION (
+        VALUES ( DimCustomer[AcquisitionChannel] ),
+        VALUES ( FactMarketing[AcquisitionChannel] )
+    )
+)
+
+// TABLE: CohortAge
+CohortAge =
+GENERATESERIES ( 0, 35, 1 )
+
+// TABLE: Plan / Segment
+Plan / Segment =
+{
+    ("Plan", NAMEOF('DimPlan'[PlanName]), 0),
+    ("Segment", NAMEOF('DimCustomer'[CustomerSegment]), 1)
+}
+
+// TABLE: _P_Additional_Measure
+_P_Additional_Measure =
+{ BLANK() }
+
+// TABLE: LTV CAC Target Value
+LTV CAC Target Value =
+GENERATESERIES(10, 100, 5)
+
+// TABLE: Min Volume Value
+Min Volume Value =
+GENERATESERIES(0, 100, 5)
+
+// TABLE: Assumed Gross Margin %
+Assumed Gross Margin % =
+GENERATESERIES(0, 1, 0.05)
+
+// TABLE: Group By
+Group By =
+{
+    ("Segment", NAMEOF('DimCustomer'[CustomerSegment]), 0),
+    ("Industry", NAMEOF('DimCustomer'[Industry]), 1),
+    ("Country", NAMEOF('DimCustomer'[Country]), 2)
+}
+
+
+// =====================================================================
+// _MEASURES  (53 measures)
+// Core business measures. This is the canonical set - every page draws from here.
+// =====================================================================
+
+// format: \$#,0.0;(\$#,0.0);\$#,0.0
+MRR =
+
+CALCULATE(
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FILTER (
+        ALL ( DimDate ),
+        DimDate[Date] <= MAX ( DimDate[Date] )
+    )
+)
+
+// format: \$#,0.0;(\$#,0.0);\$#,0.0
+ARR =
+[MRR] * 12
+
+New MRR =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "New",
+    FILTER ( ALL ( DimDate ), YEAR ( DimDate[Date] ) = CurrentYear && MONTH ( DimDate[Date] ) = CurrentMonth )
+)
+
+Expansion MRR =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "Expansion",
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+Contraction MRR =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "Contraction",
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+Churned MRR =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "Churn",
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+// format: \$#,0.0;(\$#,0.0);\$#,0.0
+Net MRR Change =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+MRR Bridge Variance =
+[Net MRR Change] - ( [New MRR] + [Expansion MRR] + [Contraction MRR] + [Churned MRR] )
+
+// format: 0.0%;-0.0%;0.0%
+MRR Growth % =
+
+VAR CurrentMRR = [MRR]
+VAR PriorMRR   = CALCULATE ( [MRR], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN DIVIDE ( CurrentMRR - PriorMRR, PriorMRR )
+
+// format: 0
+Total Customers =
+
+CALCULATE(
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "New",
+    FILTER ( ALL ( DimDate ), DimDate[Date] <= MAX ( DimDate[Date] ) )
+)
+
+// format: 0
+Cumulative Churned Customers =
+
+CALCULATE(
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "Churn",
+    FILTER ( ALL ( DimDate ), DimDate[Date] <= MAX ( DimDate[Date] ) )
+)
+
+// format: #,0
+Active Customers =
+[Total Customers] - [Cumulative Churned Customers]
+
+// format: 0
+New Customers =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "New",
+    FILTER ( ALL ( DimDate ), YEAR ( DimDate[Date] ) = CurrentYear && MONTH ( DimDate[Date] ) = CurrentMonth )
+)
+
+// format: 0
+Churned Customers =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "Churn",
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+// format: 0.0%;-0.0%;0.0%
+Customer Growth % =
+
+VAR CurrentActive = [Active Customers]
+VAR PriorActive   = CALCULATE ( [Active Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN DIVIDE ( CurrentActive - PriorActive, PriorActive )
+
+// format: \$#,0.00;(\$#,0.00);\$#,0.00
+ARPA =
+DIVIDE ( [MRR], [Active Customers] )
+
+// format: 0.0%;-0.0%;0.0%
+Revenue Churn Rate =
+DIVIDE ( -[Churned MRR], [_MRR at Period Start] )
+
+Churned MRR by Plan =
+
+CALCULATE(
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FactSubscriptionEvent[EventType] = "Churn",
+    USERELATIONSHIP ( DimPlan[PlanID], FactSubscriptionEvent[PreviousPlanID] )
+)
+
+// format: 0
+Churned Customers by Plan =
+
+CALCULATE(
+    DISTINCTCOUNT ( FactSubscriptionEvent[CustomerID] ),
+    FactSubscriptionEvent[EventType] = "Churn",
+    USERELATIONSHIP ( DimPlan[PlanID], FactSubscriptionEvent[PreviousPlanID] )
+)
+
+// format: 0.0%;-0.0%;0.0%
+Logo Churn Rate =
+DIVIDE ( [Churned Customers], [_Active Customers at Period Start] )
+
+// format: 0
+Count =
+COUNTROWS ( DimPlan )
+
+_MRR at Period Start =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR PeriodStart = DATE ( YEAR ( CurrentPeriodEnd ), MONTH ( CurrentPeriodEnd ), 1 )
+RETURN
+    CALCULATE (
+        [MRR],
+        FILTER ( ALL ( DimDate ), DimDate[Date] = PeriodStart - 1 )
+    )
+
+// format: #,0
+_Active Customers at Period Start =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR PeriodStart = DATE ( YEAR ( CurrentPeriodEnd ), MONTH ( CurrentPeriodEnd ), 1 )
+RETURN
+    CALCULATE (
+        [Active Customers],
+        FILTER ( ALL ( DimDate ), DimDate[Date] = PeriodStart - 1 )
+    )
+
+// format: 0.0%;-0.0%;0.0%
+GRR =
+
+DIVIDE (
+    [_MRR at Period Start] + [Churned MRR] + [Contraction MRR],
+    [_MRR at Period Start]
+)
+
+// format: 0.0%;-0.0%;0.0%
+NRR =
+
+DIVIDE (
+    [_MRR at Period Start] + [Churned MRR] + [Contraction MRR] + [Expansion MRR],
+    [_MRR at Period Start]
+)
+
+// format: 0.00%;-0.00%;0.00%
+Customer Retention % =
+1 - [Logo Churn Rate]
+
+// format: $#,0
+Estimated LTV =
+DIVIDE ( [ARPA] * [Assumed Gross Margin % Value], [_Smoothed Monthly Revenue Churn Rate] )
+
+// format: 0
+Leads =
+SUM ( FactMarketing[Leads] )
+
+// format: 0.00%;-0.00%;0.00%
+Lead to Customer Conversion Rate =
+DIVIDE ( [New Customers], [Leads] )
+
+Avg Health Score =
+AVERAGE ( FactCustomerHealth[HealthScore] )
+
+Avg NPS =
+AVERAGE ( FactCustomerHealth[NPS] )
+
+Avg Product Usage =
+AVERAGE ( FactCustomerHealth[ProductUsage] )
+
+Avg Support Tickets =
+AVERAGE ( FactCustomerHealth[SupportTickets] )
+
+Avg Active Users =
+AVERAGE ( FactCustomerHealth[ActiveUsers] )
+
+Avg Health Score at Churn =
+
+VAR ChurnedCustomerEvents = FILTER ( FactSubscriptionEvent, FactSubscriptionEvent[EventType] = "Churn" )
+RETURN
+    AVERAGEX (
+        ChurnedCustomerEvents,
+        VAR ThisCustomer  = FactSubscriptionEvent[CustomerID]
+        VAR ThisChurnDate = FactSubscriptionEvent[EventDate]
+        VAR LatestSnapshotDate = 
+            CALCULATE (
+                MAX ( FactCustomerHealth[Date] ),
+                FactCustomerHealth[CustomerID] = ThisCustomer,
+                FactCustomerHealth[Date] <= ThisChurnDate,
+                ALL ( FactCustomerHealth ),
+                ALL ( DimDate )
+            )
+        RETURN
+            CALCULATE (
+                AVERAGE ( FactCustomerHealth[HealthScore] ),
+                FactCustomerHealth[CustomerID] = ThisCustomer,
+                FactCustomerHealth[Date] = LatestSnapshotDate,
+                ALL ( FactCustomerHealth ),
+                ALL ( DimDate )
+            )
+    )
+
+// format: 0.00
+Avg NPS at Churn =
+
+VAR ChurnedCustomerEvents = FILTER ( FactSubscriptionEvent, FactSubscriptionEvent[EventType] = "Churn" )
+RETURN
+    AVERAGEX (
+        ChurnedCustomerEvents,
+        VAR ThisCustomer  = FactSubscriptionEvent[CustomerID]
+        VAR ThisChurnDate = FactSubscriptionEvent[EventDate]
+        VAR LatestSnapshotDate = 
+            CALCULATE (
+                MAX ( FactCustomerHealth[Date] ),
+                FactCustomerHealth[CustomerID] = ThisCustomer,
+                FactCustomerHealth[Date] <= ThisChurnDate,
+                ALL ( FactCustomerHealth ),
+                ALL ( DimDate )
+            )
+        RETURN
+            CALCULATE (
+                AVERAGE ( FactCustomerHealth[NPS] ),
+                FactCustomerHealth[CustomerID] = ThisCustomer,
+                FactCustomerHealth[Date] = LatestSnapshotDate,
+                ALL ( FactCustomerHealth ),
+                ALL ( DimDate )
+            )
+    )
+
+// format: 0.00%;-0.00%;0.00%
+Cumulative Logo Churn % =
+DIVIDE ( [Cumulative Churned Customers], [Total Customers] )
+
+// format: 0.00%;-0.00%;0.00%
+Cohort Retention % =
+
+VAR SelectedAge = SELECTEDVALUE ( CohortAge[Months Since Signup] )
+VAR MaxDataDate = CALCULATE ( MAX ( DimDate[Date] ), ALL ( DimDate ) )
+VAR CohortCustomers =
+    FILTER ( DimCustomer, EDATE ( DimCustomer[SignupDate], SelectedAge ) <= MaxDataDate )
+VAR CohortSize = COUNTROWS ( CohortCustomers )
+VAR Retained =
+    COUNTROWS (
+        FILTER (
+            CohortCustomers,
+            VAR TargetDate = EDATE ( DimCustomer[SignupDate], SelectedAge )
+            VAR ChurnDate =
+                CALCULATE ( MAX ( FactSubscriptionEvent[EventDate] ), FactSubscriptionEvent[EventType] = "Churn" )
+            RETURN ISBLANK ( ChurnDate ) || ChurnDate > TargetDate
+        )
+    )
+RETURN DIVIDE ( Retained, CohortSize )
+
+// format: 0.00%;-0.00%;0.00%
+Cohort Revenue Retention % =
+
+VAR SelectedCohortMonth = SELECTEDVALUE ( DimCustomer[SignupMonth] )
+VAR SelectedAge         = SELECTEDVALUE ( CohortAge[Months Since Signup] )
+VAR AsOfDate            = EOMONTH ( SelectedCohortMonth, SelectedAge )
+VAR MaxDataDate         = CALCULATE ( MAX ( DimDate[Date] ), ALL ( DimDate ) )
+VAR StartingMRR = 
+    CALCULATE (
+        SUM ( FactSubscriptionEvent[NewMRR] ),
+        FactSubscriptionEvent[EventType] = "New",
+        REMOVEFILTERS ( DimDate )
+    )
+VAR CurrentMRR = 
+    CALCULATE ( SUM ( FactSubscriptionEvent[MRRChange] ), FILTER ( ALL ( DimDate ), DimDate[Date] <= AsOfDate ) )
+RETURN
+    IF (
+        NOT ISBLANK ( SelectedCohortMonth ) && NOT ISBLANK ( SelectedAge ) && AsOfDate <= MaxDataDate,
+        DIVIDE ( CurrentMRR, StartingMRR )
+    )
+
+// format: 0.00%;-0.00%;0.00%
+MRR YoY % =
+
+VAR CurrentMRR  = [MRR]
+VAR PriorYearMRR = CALCULATE ( [MRR], DATEADD ( DimDate[Date], -1, YEAR ) )
+RETURN
+    DIVIDE ( CurrentMRR - PriorYearMRR, PriorYearMRR )
+
+// format: 0.00%;-0.00%;0.00%
+_Trailing 3M Revenue Churn Rate (Cumulative) =
+
+VAR ContextDate         = MAX ( DimDate[Date] )
+VAR IsCompleteMonth     = ContextDate = EOMONTH ( ContextDate, 0 )
+VAR AnchorDate          = IF ( IsCompleteMonth, ContextDate, EOMONTH ( ContextDate, -1 ) )
+VAR WindowStart         = EDATE ( AnchorDate, -2 )
+VAR WindowStartFirstDay = DATE ( YEAR ( WindowStart ), MONTH ( WindowStart ), 1 )
+VAR MRRAtWindowStart = 
+    CALCULATE ( [MRR], FILTER ( ALL ( DimDate ), DimDate[Date] = WindowStartFirstDay - 1 ) )
+VAR ChurnedMRRInWindow = 
+    CALCULATE (
+        SUM ( FactSubscriptionEvent[MRRChange] ),
+        FactSubscriptionEvent[EventType] = "Churn",
+        DimDate[Date] >= WindowStartFirstDay,
+        DimDate[Date] <= AnchorDate,
+        ALL ( DimDate )
+    )
+RETURN
+    DIVIDE ( -ChurnedMRRInWindow, MRRAtWindowStart )
+
+// format: 0.00%;-0.00%;0.00%
+_Smoothed Monthly Revenue Churn Rate =
+1 - ( 1 - [_Trailing 3M Revenue Churn Rate (Cumulative)] ) ^ ( 1 / 3 )
+
+// format: 0
+_CountRows_FactSubscription =
+COUNTROWS(FactSubscription)
+
+// format: \$#,0;(\$#,0);\$#,0
+_MRR by Plan =
+
+VAR CurrentDate = MAX ( DimDate[Date] )
+RETURN
+CALCULATE (
+    SUM ( FactSubscription[MonthlyPrice] ),
+    FactSubscription[StartDate] <= CurrentDate,
+    FactSubscription[EndDate] > CurrentDate || ISBLANK ( FactSubscription[EndDate] )
+)
+
+// format: 0.00%;-0.00%;0.00%
+_MRR by Plan % of Total =
+DIVIDE ( [_MRR by Plan], CALCULATE ( [_MRR by Plan], ALL ( DimPlan ) ) )
+
+_MRR by Plan Label =
+FORMAT([_MRR by Plan],"$#,##0,K") & " · " & FORMAT([_MRR by Plan % of Total],"0%")
+
+_MRR Change (Current Month) =
+
+VAR CurrentPeriodEnd = MAX ( DimDate[Date] )
+VAR CurrentYear = YEAR ( CurrentPeriodEnd )
+VAR CurrentMonth = MONTH ( CurrentPeriodEnd )
+RETURN
+CALCULATE (
+    SUM ( FactSubscriptionEvent[MRRChange] ),
+    FILTER (
+        ALL ( DimDate ),
+        YEAR ( DimDate[Date] ) = CurrentYear &&
+        MONTH ( DimDate[Date] ) = CurrentMonth
+    )
+)
+
+// format: \$#,0.0;(\$#,0.0);\$#,0.0
+Gross New MRR =
+[New MRR] + [Expansion MRR]
+
+// format: 0.0%;-0.0%;0.0%
+_MRR Share of Total =
+DIVIDE ( [_MRR by Plan], CALCULATE ( [_MRR by Plan], ALLSELECTED () ) )
+
+// format: 0.00%;-0.00%;0.00%
+New Customer Rate =
+DIVIDE ( [New Customers], [_Active Customers at Period Start] )
+
+// format: General Date
+_TEST ChurnDate =
+CALCULATE ( MAX ( FactSubscriptionEvent[EventDate] ), FactSubscriptionEvent[EventType] = "Churn" )
+
+_Churned MRR by Reason =
+CALCULATE ( SUM ( FactSubscriptionEvent[MRRChange] ), FactSubscriptionEvent[EventType] = "Churn" )
+
+// format: 0
+_Active Customers Net Change =
+
+VAR CurrentCustomer = [Active Customers]
+VAR Prior = CALCULATE ( [Active Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN CurrentCustomer - Prior
+
+
+// =====================================================================
+// _P_ADDITIONAL_MEASURE  (33 measures)
+// Unit-economics measures (CAC, LTV, LTV:CAC, payback) and their channel-level variants.
+// =====================================================================
+
+// format: 0
+_New Customers by Channel =
+SUM ( FactMarketing[NewCustomers] )
+
+// format: General Date
+_P4 Period End Date =
+EOMONTH ( MAX ( DimDate[Date] ), 0 )
+
+_P4 Period Start Date =
+
+VAR SelectedPeriod = SELECTEDVALUE ( 'Period Options'[Period], "Last 12 complete months" )
+VAR PeriodEndDate = EOMONTH ( MAX ( DimDate[Date] ), 0 )
+RETURN
+SWITCH (
+    SelectedPeriod,
+    "Last 12 complete months", EOMONTH ( PeriodEndDate, -12 ) + 1,
+    EOMONTH ( PeriodEndDate, -12 ) + 1
+)
+
+// format: \$#,0.00;(\$#,0.00);\$#,0.00
+Cost per Lead (P4) =
+DIVIDE ( [Marketing Spend (P4)], [Leads (P4)] )
+
+// format: 0
+_New Customers by Channel (P4) =
+
+VAR StartDate = [_P4 Period Start Date]
+VAR EndDate   = [_P4 Period End Date]
+RETURN CALCULATE ( [_New Customers by Channel], DimDate[Date] >= StartDate, DimDate[Date] <= EndDate )
+
+// format: $#,0
+Blended Marketing CAC (P4) =
+DIVIDE([Marketing Spend (P4)], [_New Customers by Channel (P4)])
+
+// format:  0.0"×"
+Estimated LTV:CAC (P4) =
+DIVIDE ( [Estimated LTV], [Blended Marketing CAC (P4)] )
+
+// format:  0.0" mo"
+Marketing CAC Payback (P4) =
+DIVIDE ( [Blended Marketing CAC (P4)], [ARPA] * [Assumed Gross Margin % Value] )
+
+P4 Blended CAC (All Channels) =
+CALCULATE ( [Blended Marketing CAC (P4)], REMOVEFILTERS ( 'DimAcquisitionChannel' ) )
+
+// format: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+Marketing Spend =
+SUM ( FactMarketing[MarketingSpend] )
+
+// format: 0
+P4 Judgement Code =
+
+IF ( HASONEVALUE ( DimAcquisitionChannel[Channel Group] ),
+    SWITCH ( TRUE (),
+        SELECTEDVALUE ( DimAcquisitionChannel[Channel Group] ) = "Other", 3,
+        [_New Customers by Channel (P4)] < [Min Volume Value Value], 3,
+        ISBLANK ( [Estimated LTV:CAC (P4)] ), 3,
+        ROUND ( [Estimated LTV:CAC (P4)], 1 ) >= [LTV CAC Target Value Value], 1,
+        2 ) )
+
+P4 Marker Color =
+SWITCH ( [P4 Judgement Code], 1, "#0F1B3D", 2, "#DC2626", 3, "#94A3B8" )
+
+P4 Text Color =
+SWITCH ( [P4 Judgement Code], 2, "#DC2626", 3, "#64748B", "#0F1B3D" )
+
+// format: 0
+P4 Flag Above =
+IF ( [P4 Judgement Code] = 1, 1 )
+
+// format: 0
+P4 Flag Below =
+IF ( [P4 Judgement Code] = 2, 1 )
+
+// format: 0.0%;-0.0%;0.0%
+P4 Spend Share =
+
+DIVIDE (
+[Marketing Spend (P4)],
+CALCULATE ( [Marketing Spend (P4)], REMOVEFILTERS ( 'DimAcquisitionChannel' ) )
+)
+
+// format: 0.0%;-0.0%;0.0%
+P4 Spend Share Below Target =
+
+DIVIDE (
+    SUMX ( VALUES ( DimAcquisitionChannel[Channel Group] ), IF ( [P4 Judgement Code] = 2, [Marketing Spend (P4)] ) ),
+    CALCULATE ( [Marketing Spend (P4)], REMOVEFILTERS ( 'DimAcquisitionChannel' ) ) )
+
+P4 Headline Sentence =
+
+"of marketing spend sits in channels below the " & FORMAT ( [LTV CAC Target Value Value], "0.0" ) & "× LTV:CAC target"
+
+// format: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+Marketing Spend (P4) =
+
+VAR StartDate = [_P4 Period Start Date]
+VAR EndDate   = [_P4 Period End Date]
+RETURN CALCULATE ( [Marketing Spend], DimDate[Date] >= StartDate, DimDate[Date] <= EndDate )
+
+// format: 0
+Leads (P4) =
+
+VAR StartDate = [_P4 Period Start Date]
+VAR EndDate   = [_P4 Period End Date]
+RETURN CALCULATE ( [Leads], DimDate[Date] >= StartDate, DimDate[Date] <= EndDate )
+
+// format: 0.0%;-0.0%;0.0%
+Lead-to-Customer Conversion Rate (P4) =
+DIVIDE ( [_New Customers by Channel (P4)], [Leads (P4)] )
+
+// format: 0.0%;-0.0%;0.0%
+P4 Spend Share At or Above Target =
+
+DIVIDE (
+    SUMX ( VALUES ( DimAcquisitionChannel[Channel Group] ), IF ( [P4 Judgement Code] = 1, [Marketing Spend (P4)] ) ),
+    CALCULATE ( [Marketing Spend (P4)], REMOVEFILTERS ( 'DimAcquisitionChannel' ) ) )
+
+// format: 0.0%;-0.0%;0.0%
+P4 Spend Share Not Judged =
+
+DIVIDE (
+    SUMX ( VALUES ( DimAcquisitionChannel[Channel Group] ), IF ( [P4 Judgement Code] = 3, [Marketing Spend (P4)] ) ),
+    CALCULATE ( [Marketing Spend (P4)], REMOVEFILTERS ( 'DimAcquisitionChannel' ) ) )
+
+P4 Not Judged Note =
+
+VAR Names =
+    CONCATENATEX (
+        FILTER ( VALUES ( DimAcquisitionChannel[Channel Group] ), [P4 Judgement Code] = 3 ),
+        DimAcquisitionChannel[Channel Group], ", ", DimAcquisitionChannel[Channel Group], ASC )
+RETURN
+"Not judged · " & FORMAT ( [P4 Spend Share Not Judged], "0.0%" ) & " of spend: " & Names &
+". Low volume = fewer than " & [Min Volume Value Value] &
+" new customers in the period; the minimum and the target are parameters set in Filters."
+
+P4 Judgement Label =
+
+SWITCH (
+    [P4 Judgement Code],
+    1, "At or above target",
+    2, "Below target",
+    3, "Not judged"
+)
+
+_Health Score Before Churn =
+
+AVERAGEX (
+    FILTER ( FactSubscriptionEvent, FactSubscriptionEvent[EventType] = "Churn" ),
+    VAR ChurnedCustomer = FactSubscriptionEvent[CustomerID]
+    VAR ChurnDate = FactSubscriptionEvent[EventDate]
+    VAR LastHealthDate =
+        CALCULATE (
+            MAX ( FactCustomerHealth[Date] ),
+            FactCustomerHealth[CustomerID] = ChurnedCustomer,
+            FactCustomerHealth[Date] <= ChurnDate,
+            ALL ( FactCustomerHealth )
+        )
+    RETURN
+        CALCULATE (
+            AVERAGE ( FactCustomerHealth[HealthScore] ),
+            FactCustomerHealth[CustomerID] = ChurnedCustomer,
+            FactCustomerHealth[Date] = LastHealthDate
+        )
+)
+
+_Active Customer Health Score =
+
+AVERAGEX (
+    FILTER (
+        DimCustomer,
+        NOT (
+            CALCULATE (
+                COUNTROWS ( FactSubscriptionEvent ),
+                FactSubscriptionEvent[EventType] = "Churn"
+            ) > 0
+        )
+    ),
+    VAR ThisCustomer = DimCustomer[CustomerID]
+    VAR LastHealthDate =
+        CALCULATE (
+            MAX ( FactCustomerHealth[Date] ),
+            FactCustomerHealth[CustomerID] = ThisCustomer,
+            ALL ( FactCustomerHealth )
+        )
+    RETURN
+        CALCULATE (
+            AVERAGE ( FactCustomerHealth[HealthScore] ),
+            FactCustomerHealth[CustomerID] = ThisCustomer,
+            FactCustomerHealth[Date] = LastHealthDate
+        )
+)
+
+_NPS Before Churn =
+
+AVERAGEX (
+    FILTER ( FactSubscriptionEvent, FactSubscriptionEvent[EventType] = "Churn" ),
+    VAR ChurnedCustomer = FactSubscriptionEvent[CustomerID]
+    VAR ChurnDate = FactSubscriptionEvent[EventDate]
+    VAR LastHealthDate =
+        CALCULATE (
+            MAX ( FactCustomerHealth[Date] ),
+            FactCustomerHealth[CustomerID] = ChurnedCustomer,
+            FactCustomerHealth[Date] <= ChurnDate,
+            ALL ( FactCustomerHealth )
+        )
+    RETURN
+        CALCULATE (
+            AVERAGE ( FactCustomerHealth[NPS] ),
+            FactCustomerHealth[CustomerID] = ChurnedCustomer,
+            FactCustomerHealth[Date] = LastHealthDate
+        )
+)
+
+_Active Customer NPS =
+
+AVERAGEX (
+    FILTER (
+        DimCustomer,
+        NOT (
+            CALCULATE (
+                COUNTROWS ( FactSubscriptionEvent ),
+                FactSubscriptionEvent[EventType] = "Churn"
+            ) > 0
+        )
+    ),
+    VAR ThisCustomer = DimCustomer[CustomerID]
+    VAR LastHealthDate =
+        CALCULATE (
+            MAX ( FactCustomerHealth[Date] ),
+            FactCustomerHealth[CustomerID] = ThisCustomer,
+            ALL ( FactCustomerHealth )
+        )
+    RETURN
+        CALCULATE (
+            AVERAGE ( FactCustomerHealth[NPS] ),
+            FactCustomerHealth[CustomerID] = ThisCustomer,
+            FactCustomerHealth[Date] = LastHealthDate
+        )
+)
+
+_NPS Before Churn Display =
+
+VAR v = [_NPS Before Churn]
+RETURN IF ( v <= [_Active Customer NPS], "▼ ", "▲ " ) & FORMAT ( v, "0.00" )
+
+_Health Score Before Churn Display =
+
+VAR v = [_Health Score Before Churn]
+RETURN IF ( v <= [_Active Customer Health Score], "▼ ", "▲ " ) & FORMAT ( v, "0.00" )
+
+_Churned MRR by Reason +ve =
+-[_Churned MRR by Reason]
+
+// format: \$#,0.0;(\$#,0.0);\$#,0.0
+Churned MRR by Plan +ve =
+-('_Measures'[Churned MRR by Plan])
+
+
+// =====================================================================
+// BASE DELTA MEASURES  (15 measures)
+// Period-over-period comparisons and narrative text used by the KPI cards.
+// =====================================================================
+
+// format: 0.00%;-0.00%;0.00%
+_MRR Growth PP Delta =
+
+VAR CurrentGrowth = [MRR Growth %]
+VAR PriorGrowth =
+    CALCULATE([MRR Growth %], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+CurrentGrowth - PriorGrowth
+
+_ARPA Growth % =
+
+VAR CurrentCustomer = [ARPA]
+VAR Prior = CALCULATE([ARPA], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+DIVIDE(CurrentCustomer - Prior, Prior)
+
+_Customer Growth % PP Delta =
+
+VAR CurrentCustomer = [Customer Growth %]
+VAR Prior =
+    CALCULATE([Customer Growth %], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+CurrentCustomer - Prior
+
+_Logo Churn Rate PP Delta =
+
+VAR CurrentCustomer = [Logo Churn Rate]
+VAR Prior =
+    CALCULATE([Logo Churn Rate], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+CurrentCustomer - Prior
+
+_NRR PP Delta =
+
+VAR CurrentCustomer = [NRR]
+VAR Prior = CALCULATE([NRR], DATEADD(DimDate[Date], -1, MONTH))
+RETURN
+CurrentCustomer - Prior
+
+_Expansion to Churned MRR Ratio =
+DIVIDE([Expansion MRR], ABS([Churned MRR]))
+
+_Data Through Label =
+"Data through " & FORMAT(MAX(DimDate[Date]), "MMM YYYY")
+
+Current Month =
+FORMAT(MAX(DimDate[Date]), "MMM YYYY")
+
+__Executive Insight Text =
+
+VAR MRRNow = [MRR]
+VAR GrowthPct = [MRR Growth %]
+VAR ChurnPct = [Logo Churn Rate]
+VAR ExpMRR = [Expansion MRR]
+VAR ChurnedMRR = [Churned MRR]
+VAR MonthLabel = FORMAT(MAX(DimDate[Date]), "MMM YYYY")
+RETURN
+"MRR increased " & FORMAT(GrowthPct, "0.0%") & " to " &
+FORMAT(MRRNow, "$#,##0,K") & " in " & MonthLabel & ". Expansion MRR of " &
+FORMAT(ExpMRR, "$#,##0,K") & " exceeded churned MRR of " &
+FORMAT(ABS(ChurnedMRR), "$#,##0,K") & "; logo churn was " &
+FORMAT(ChurnPct, "0.0%") & "."
+
+_NRR GRR Text =
+FORMAT([NRR],"0.0%") & " · " & FORMAT([GRR],"0.0%")
+
+// format: 0.00%;-0.00%;0.00%
+_MRR by Plan MoM Delta =
+
+VAR CurrentCustomer = [_MRR by Plan]
+VAR Prior = CALCULATE ( [_MRR by Plan], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN DIVIDE ( CurrentCustomer - Prior, Prior )
+
+_Customer Base Composition Latest =
+FORMAT ( [Total Customers], "#,##0" ) & " total · " & FORMAT ( [Active Customers], "#,##0" ) & " active"
+
+// format: 0.0%;-0.0%;0.0%
+_Logo Churn Rate 12M Average =
+
+VAR CurrentMonthEnd = EOMONTH ( MAX ( DimDate[Date] ), 0 )
+RETURN
+AVERAGEX (
+    GENERATESERIES ( 0, 11, 1 ),
+    VAR MonthEnd = EOMONTH ( CurrentMonthEnd, -[Value] )
+    RETURN CALCULATE ( [Logo Churn Rate], DimDate[Date] = MonthEnd )
+)
+
+// format:  #,##0;#,##0
+_Churned Customers (Negative) =
+-[Churned Customers]
+
+Logo churn · 12-month average =
+FORMAT([Logo Churn Rate],"0.0%") & " · " & FORMAT([_Logo Churn Rate 12M Average],"0.0%")
+
+
+// =====================================================================
+// DELTA VALUE  (18 measures)
+// The numeric delta shown on each KPI card.
+// =====================================================================
+
+_MRR Delta Value =
+
+VAR d = [MRR Growth %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")
+
+_ARR Delta Value =
+
+VAR d = [MRR YoY %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")
+
+_MRR Growth Delta Value =
+
+VAR d = [_MRR Growth PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"
+
+_Active Customers Delta Value =
+
+VAR pct = [Customer Growth %]
+RETURN IF(pct >= 0, "▲ +", "▼ ") & FORMAT(pct, "0.0%")
+
+_ARPA Delta Value =
+
+VAR d = [_ARPA Growth %]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d, "0.0%")
+
+_Customer Growth Delta Value =
+
+VAR d = [_Customer Growth % PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"
+
+_Logo Churn Delta Value =
+
+VAR d = [_Logo Churn Rate PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"
+
+_NRR Delta Value =
+
+VAR d = [_NRR PP Delta]
+RETURN IF(d >= 0, "▲ +", "▼ ") & FORMAT(d*100, "0.0") & " pp"
+
+_Net MRR Change Delta Value =
+
+VAR CurrentCustomer = [Net MRR Change]
+VAR Prior = CALCULATE ( [Net MRR Change], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR d = CurrentCustomer - Prior
+RETURN IF ( d >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( d ), "$#,##0,.0K" )
+
+_Gross New MRR Split Text =
+
+VAR Gross = [Gross New MRR]
+RETURN
+FORMAT ( DIVIDE ( [New MRR], Gross ), "0%" ) & " / " &
+FORMAT ( DIVIDE ( [Expansion MRR], Gross ), "0%" )
+
+_New Customers Delta Value =
+
+VAR CurrentCustomer = [New Customers]
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR pct = DIVIDE ( CurrentCustomer - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )
+
+_Churned Customers Delta Value =
+
+VAR CurrentCustomer = [Churned Customers]
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR pct = DIVIDE ( CurrentCustomer - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )
+
+_CAC Delta Value =
+
+VAR CurrentCustomer = [Blended Marketing CAC (P4)]
+VAR Prior = CALCULATE ( [Blended Marketing CAC (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+VAR pct = DIVIDE ( CurrentCustomer - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )
+
+_LTV Delta Value =
+
+VAR CurrentCustomer = [Estimated LTV]
+VAR Prior = CALCULATE ( [Estimated LTV], DATEADD ( DimDate[Date], -12, MONTH ) )
+VAR pct = DIVIDE ( CurrentCustomer - Prior, Prior )
+RETURN
+    IF (
+        ISBLANK ( CurrentCustomer ) || ISBLANK ( Prior ) || Prior = 0,
+        "–",
+        IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )
+    )
+
+_LTVCAC Delta Value =
+
+VAR CurrentCustomer = [Estimated LTV:CAC (P4)]
+VAR Prior = CALCULATE ( [Estimated LTV:CAC (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+VAR delta = CurrentCustomer - Prior
+RETURN
+    IF (
+        ISBLANK ( CurrentCustomer ) || ISBLANK ( Prior ),
+        "–",
+        IF ( delta >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( delta ), "0.00" ) & "×"
+    )
+
+_Payback Delta Value =
+
+VAR CurrentCustomer = [Marketing CAC Payback (P4)]
+VAR Prior = CALCULATE ( [Marketing CAC Payback (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+VAR delta = CurrentCustomer - Prior
+RETURN
+    IF (
+        ISBLANK ( CurrentCustomer ) || ISBLANK ( Prior ),
+        "–",
+        IF ( delta >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( delta ), "0.0" ) & " mo"
+    )
+
+_GRR Delta Value =
+
+VAR CurrentCustomer = [GRR]
+VAR Prior = CALCULATE ( [GRR], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR PPChange = CurrentCustomer - Prior
+RETURN
+IF ( PPChange >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( PPChange ), "0.00" ) & " pp"
+
+_Revenue Churn Rate Delta Value =
+
+VAR CurrentCustomer = [Revenue Churn Rate]
+VAR Prior = CALCULATE ( [Revenue Churn Rate], DATEADD ( DimDate[Date], -1, MONTH ) )
+VAR PPChange = CurrentCustomer - Prior
+RETURN
+IF ( PPChange >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( PPChange ), "0.00" ) & " pp"
+
+
+// =====================================================================
+// COLOR MEASURES  (19 measures)
+// Conditional-formatting colour returns for KPI deltas.
+// =====================================================================
+
+_MRR Delta Color =
+IF([MRR Growth %]>=0,"#16A34A",IF([MRR Growth %]<0,"#DC2626","#94A3B8"))
+
+_ARR Delta Color =
+IF([MRR YoY %]>=0,"#16A34A",IF([MRR YoY %]<0,"#DC2626","#94A3B8"))
+
+_MRR Growth Delta Color =
+IF([_MRR Growth PP Delta]>=0,"#16A34A",IF([_MRR Growth PP Delta]<0,"#DC2626","#94A3B8"))
+
+_Active Customers Delta Color =
+IF([Customer Growth %]>=0,"#16A34A",IF([Customer Growth %]<0,"#DC2626","#94A3B8"))
+
+_ARPA Delta Color =
+IF([_ARPA Growth %]>=0,"#16A34A",IF([_ARPA Growth %]<0,"#DC2626","#94A3B8"))
+
+_Customer Growth Delta Color =
+IF([_Customer Growth % PP Delta]>=0,"#16A34A",IF([_Customer Growth % PP Delta]<0,"#DC2626","#94A3B8"))
+
+_Logo Churn Delta Color =
+IF([_Logo Churn Rate PP Delta]<=0,"#16A34A",IF([_Logo Churn Rate PP Delta]>0,"#DC2626","#94A3B8"))
+
+_NRR Delta Color =
+IF([_NRR PP Delta]>=0,"#16A34A",IF([_NRR PP Delta]<0,"#DC2626","#94A3B8"))
+
+_Net MRR Change Delta Color =
+
+VAR CurrentCustomer = [Net MRR Change]
+VAR Prior = CALCULATE ( [Net MRR Change], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( CurrentCustomer - Prior >= 0, "#16A34A", IF ( CurrentCustomer - Prior < 0, "#DC2626", "#94A3B8" ) )
+
+_MRR by Plan MoM Delta Color =
+
+IF ( [_MRR by Plan MoM Delta] >= 0, "#16A34A",
+     IF ( [_MRR by Plan MoM Delta] < 0, "#DC2626", "#94A3B8" ) )
+
+_New Customers Delta Color =
+
+VAR CurrentCustomer = [New Customers]
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( CurrentCustomer >= Prior, "#16A34A", IF ( CurrentCustomer < Prior, "#DC2626", "#94A3B8" ) )
+
+_Churned Customers Delta Color =
+
+VAR CurrentCustomer = [Churned Customers]
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN IF ( CurrentCustomer <= Prior, "#16A34A", IF ( CurrentCustomer > Prior, "#DC2626", "#94A3B8" ) )
+
+// format: 0
+Inactive Customers =
+[Total Customers] - [Active Customers]
+
+_CAC Delta Color =
+
+VAR CurrentCustomer = [Blended Marketing CAC (P4)]
+VAR Prior = CALCULATE ( [Blended Marketing CAC (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+RETURN IF ( CurrentCustomer <= Prior, "#16A34A", IF ( CurrentCustomer > Prior, "#DC2626", "#94A3B8" ) )
+
+_LTV Delta Color =
+
+VAR CurrentCusotmer = [Estimated LTV]
+VAR Prior = CALCULATE ( [Estimated LTV], DATEADD ( DimDate[Date], -12, MONTH ) )
+RETURN
+    IF (
+        ISBLANK ( CurrentCusotmer ) || ISBLANK ( Prior ),
+        "#94A3B8",
+        IF ( CurrentCusotmer >= Prior, "#16A34A", IF ( CurrentCusotmer < Prior, "#DC2626", "#94A3B8" ) )
+    )
+
+_LTVCAC Delta Color =
+
+VAR CurrentCustomer = [Estimated LTV:CAC (P4)]
+VAR Prior = CALCULATE ( [Estimated LTV:CAC (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+RETURN
+    IF (
+        ISBLANK ( CurrentCustomer ) || ISBLANK ( Prior ),
+        "#94A3B8",
+        IF ( CurrentCustomer >= Prior, "#16A34A", IF ( CurrentCustomer < Prior, "#DC2626", "#94A3B8" ) )
+    )
+
+_Payback Delta Color =
+
+VAR CurrentCustomer = [Marketing CAC Payback (P4)]
+VAR Prior = CALCULATE ( [Marketing CAC Payback (P4)], DATEADD ( DimDate[Date], -12, MONTH ) )
+RETURN
+    IF (
+        ISBLANK ( CurrentCustomer ) || ISBLANK ( Prior ),
+        "#94A3B8",
+        IF ( CurrentCustomer <= Prior, "#16A34A", IF ( CurrentCustomer > Prior, "#DC2626", "#94A3B8" ) )
+    )
+
+_GRR Delta Color =
+
+VAR CurrentCustomer = [GRR]
+VAR Prior = CALCULATE ( [GRR], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN
+IF ( CurrentCustomer >= Prior, "#16A34A", IF ( CurrentCustomer < Prior, "#DC2626", "#94A3B8" ) )
+
+_Revenue Churn Rate Delta Color =
+
+VAR CurrentCustomer = [Revenue Churn Rate]
+VAR Prior = CALCULATE ( [Revenue Churn Rate], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN
+IF ( CurrentCustomer <= Prior, "#16A34A", IF ( CurrentCustomer > Prior, "#DC2626", "#94A3B8" ) )
+
+
+// =====================================================================
+// DELTA CAPTION MEASURES  (18 measures)
+// The caption string beneath each KPI delta.
+// =====================================================================
+
+_MRR Delta Caption =
+"vs prior month"
+
+_ARR Delta Caption =
+"vs same month LY"
+
+_MRR Growth Delta Caption =
+
+VAR Prior = [MRR Growth %] - [_MRR Growth PP Delta]
+RETURN "vs prior month (" & FORMAT(Prior, "0.0%") & ")"
+
+_Active Customers Delta Caption =
+
+VAR net = [_Active Customers Net Change]
+RETURN IF(net >= 0, "+", "") & FORMAT(net, "#,##0") & " net vs prior month"
+
+_ARPA Delta Caption =
+"vs prior month"
+
+_Customer Growth Delta Caption =
+"vs prior month"
+
+_Logo Churn Delta Caption =
+"vs prior month"
+
+_NRR Delta Caption =
+"vs prior month"
+
+_Expansion Coverage Text =
+
+"Expansion covered " & FORMAT ( [_Expansion to Churned MRR Ratio], "0%" ) & " of churned MRR this month."
+
+_MRR by Plan MoM Delta Text =
+
+VAR d = [_MRR by Plan MoM Delta]
+RETURN IF ( d >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" )
+
+_New Customers Delta Caption =
+
+VAR Prior = CALCULATE ( [New Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN "vs " & FORMAT ( Prior, "#,##0" )
+
+_Churned Customers Delta Caption =
+
+VAR Prior = CALCULATE ( [Churned Customers], DATEADD ( DimDate[Date], -1, MONTH ) )
+RETURN "vs " & FORMAT ( Prior, "#,##0" )
+
+_CAC Delta Caption =
+"vs prior 12 mo"
+
+_LTV Delta Caption =
+"vs prior 12 mo"
+
+_LTVCAC Delta Caption =
+"vs prior 12 mo"
+
+_Payback Delta Caption =
+"vs prior 12 mo"
+
+_GRR Delta Caption =
+"vs prior month"
+
+_Revenue Churn Rate Delta Caption =
+"vs prior month"
+
+
+// =====================================================================
+// ALT TEXT  (21 measures)
+// Screen-reader alternative text for visuals (accessibility).
+// =====================================================================
+
+_Blended CAC Alt Text =
+"Average cost to acquire a customer across channels, last 12 complete months: $" & FORMAT ( [Blended Marketing CAC (P4)], "#,0" )
+
+_LTV Alt Text =
+"Estimated lifetime value per customer, last 12 complete months: $" & FORMAT ( [Estimated LTV], "#,0" )
+
+_LTVCAC Alt Text =
+"Return on acquisition cost, last 12 complete months: " & FORMAT ( [Estimated LTV:CAC (P4)], "0.0" ) & " times"
+
+_MRR Alt Text =
+"$" & FORMAT ( [MRR], "#,0" ) & " in monthly recurring revenue."
+
+_Payback Alt Text =
+"Months to recover acquisition cost, last 12 complete months: " & FORMAT ( [Marketing CAC Payback (P4)], "0.0" )
+
+_ARR Alt Text =
+"$" & FORMAT ( [ARR], "#,0" ) & " in annualized revenue."
+
+_Active Customers Alt Text =
+FORMAT ( [Active Customers], "#,0" ) & " active customers."
+
+_Logo Churn Alt Text =
+FORMAT ( [Logo Churn Rate], "0.0%" ) & " of customers churned this month."
+
+_Customer Growth Alt Text =
+
+VAR pct = [Customer Growth %]
+RETURN "Customer base " & IF ( pct >= 0, "growing ", "shrinking " ) & FORMAT ( ABS ( pct ), "0.0%" ) & " this month."
+
+_NRR Alt Text =
+FORMAT ( [NRR], "0.0%" ) & " of revenue retained including expansion."
+
+_MRR Growth Alt Text =
+
+VAR pct = [MRR Growth %]
+RETURN "Revenue " & IF ( pct >= 0, "growing ", "shrinking " ) & FORMAT ( ABS ( pct ), "0.0%" ) & " month over month."
+
+_ARPA Alt Text =
+"$" & FORMAT ( [ARPA], "#,0.00" ) & " average revenue per account."
+
+_Net MRR Change Alt Text =
+"$" & FORMAT ( [Net MRR Change], "#,0" ) & " net revenue change this month."
+
+_Gross New MRR Alt Text =
+"$" & FORMAT ( [Gross New MRR], "#,0" ) & " in new and expanded revenue before losses."
+
+_New Customers Alt Text =
+FORMAT ( [New Customers], "#,0" ) & " new customers added this month."
+
+_Churned Customers Alt Text =
+FORMAT ( [Churned Customers], "#,0" ) & " customers lost this month."
+
+_GRR Alt Text =
+FORMAT ( [GRR], "0.0%" ) & " of revenue retained before counting expansion."
+
+_Revenue Churn Rate Alt Text =
+FORMAT ( [Revenue Churn Rate], "0.0%" ) & " of revenue lost to outright churn."
+
+_MRR by Plan Alt Text =
+
+VAR RankedPlans = 
+    CALCULATETABLE (
+        ADDCOLUMNS ( VALUES ( DimPlan[PlanName] ), "@MRR", [_MRR by Plan] ),
+        ALLSELECTED ( DimPlan )
+    )
+VAR TopPlan = TOPN ( 1, RankedPlans, [@MRR], DESC )
+VAR TopPlanName = CONCATENATEX ( TopPlan, DimPlan[PlanName] )
+RETURN
+    TopPlanName & " contributes the largest share of monthly revenue by plan."
+
+_Churn by Reason Alt Text =
+
+VAR RankedReasons = 
+    CALCULATETABLE (
+        ADDCOLUMNS ( VALUES ( FactSubscriptionEvent[ChurnReason] ), "@ChurnedMRR", [Churned MRR] ),
+        ALLSELECTED ( FactSubscriptionEvent[ChurnReason] )
+    )
+VAR TopReason = TOPN ( 1, RankedReasons, ABS ( [@ChurnedMRR] ), DESC )
+VAR TopReasonName = CONCATENATEX ( TopReason, FactSubscriptionEvent[ChurnReason] )
+RETURN
+    TopReasonName & " accounts for the largest share of revenue lost to churn."
+
+_Churn by Plan Alt Text =
+
+VAR RankedPlans = 
+    CALCULATETABLE (
+        ADDCOLUMNS ( VALUES ( DimPlan[PlanName] ), "@ChurnedMRR", [Churned MRR by Plan] ),
+        ALLSELECTED ( DimPlan )
+    )
+VAR TopPlan = TOPN ( 1, RankedPlans, ABS ( [@ChurnedMRR] ), DESC )
+VAR TopPlanName = CONCATENATEX ( TopPlan, DimPlan[PlanName] )
+RETURN
+    TopPlanName & " accounts for the largest share of revenue lost to churn."
+
+
+// =====================================================================
+// LTV CAC TARGET VALUE  (1 measures)
+// What-if parameter readback.
+// =====================================================================
+
+LTV CAC Target Value Value =
+SELECTEDVALUE('LTV CAC Target Value'[LTV CAC Target Value], 50)
+
+
+// =====================================================================
+// MIN VOLUME VALUE  (1 measures)
+// What-if parameter readback.
+// =====================================================================
+
+// format: 0
+Min Volume Value Value =
+SELECTEDVALUE('Min Volume Value'[Min Volume Value], 30)
+
+
+// =====================================================================
+// ASSUMED GROSS MARGIN %  (1 measures)
+// What-if parameter readback.
+// =====================================================================
+
+Assumed Gross Margin % Value =
+SELECTEDVALUE('Assumed Gross Margin %'[Assumed Gross Margin %], 0.8)
+

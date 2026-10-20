@@ -1,0 +1,425 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+  }
+}
+:root[data-theme="dark"]{ --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220; }
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:8px; border-top:1px solid var(--border);}
+h3{font-size:14px; font-weight:600; margin:20px 0 8px;}
+p{font-size:13px; line-height:1.6;}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout.stop{border-left-color:var(--red);}
+.callout.ok{border-left-color:var(--green);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:12px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:7px 9px; font-weight:600; border-bottom:1px solid var(--border);}
+td{padding:7px 9px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:11.5px; background:var(--bg); padding:1px 5px; border-radius:4px;}
+pre{background:var(--code-bg); color:#E2E8F0; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:11.5px; line-height:1.6; margin:10px 0 20px;}
+pre code{background:none; padding:0; color:inherit;}
+.checkpoint{background:var(--bg); border:1px dashed var(--slate); border-radius:8px; padding:12px 16px; margin:14px 0 24px; font-size:12.5px;}
+.checkpoint b{color:var(--navy);}
+[data-theme="dark"] .checkpoint b, :root:not([data-theme="light"]) .checkpoint b{color:#93C5FD;}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:9.5px; padding:1px 7px; border-radius:9px; background:var(--bg); color:var(--slate); border:1px solid var(--border);}
+.tag.reuse{background:#DCFCE7; color:#166534; border-color:#86EFAC;}
+.tag.new{background:#FEF3C7; color:#92400E; border-color:#FCD34D;}
+.tag.verify{background:#FEE2E2; color:#991B1B; border-color:#FCA5A5;}
+[data-theme="dark"] .tag.reuse, :root:not([data-theme="light"]) .tag.reuse{background:#14532D; color:#BBF7D0; border-color:#166534;}
+[data-theme="dark"] .tag.new, :root:not([data-theme="light"]) .tag.new{background:#78350F; color:#FDE68A; border-color:#92400E;}
+[data-theme="dark"] .tag.verify, :root:not([data-theme="light"]) .tag.verify{background:#7F1D1D; color:#FECACA; border-color:#991B1B;}
+</style>
+
+<header class="doc">
+<div class="wrap">
+<h1>Page 4 — Unit Economics: Implementation SOP (Revised)</h1>
+<p>SaaS Growth &amp; Unit Economics · Phase 4 · Measure architecture corrected per the Pages 1–4 consolidation audit</p>
+</div>
+</header>
+
+<div class="wrap">
+
+<h2>What changed from the previous SOP</h2>
+<table>
+<tr><th>Change</th><th>Reason</th></tr>
+<tr><td><b>Removed all <code>(P4)</code> suffixes from core business metrics.</b> <code>Marketing Spend</code>, <code>Leads</code>, <code>Lead to Customer Conversion Rate</code>, <code>Blended Marketing CAC</code>, <code>Estimated LTV to CAC Ratio</code>, <code>Marketing CAC Payback (Months)</code> are now modified in place, not duplicated.</td><td>Nothing outside Page 4 uses these six, so there's no earlier page to protect. A suffixed twin would create two measures where one suffices — the exact duplication this project avoids.</td></tr>
+<tr><td><b>Kept <code>P4</code> prefix only on genuinely page-specific artifacts:</b> <code>_P4 Period Start/End Date</code>, <code>P4 Judgement Code</code>, <code>P4 Marker Color</code>, <code>P4 Text Color</code>, <code>P4 Spend Share*</code>, <code>P4 Blended CAC (All Channels)</code>.</td><td>These have no meaning outside this page. The prefix correctly signals page-scoped presentation/helper logic, consistent with how <code>_MRR by Plan</code> and <code>_Customer Base Gap</code> are scoped on earlier pages.</td></tr>
+<tr><td><b>Section 3 now requires searching the model for existing delta measures before building any.</b></td><td>The previous version instructed building ~21 new delta measures without checking. Pages 1–3 already contain delta triplets; some may be reusable.</td></tr>
+<tr><td><b>Six measures explicitly marked "inspect before modifying" rather than given rewritten DAX.</b></td><td>Their actual definitions have never been seen in this project — only their validated output values. Writing replacement DAX for an unseen measure risks silently changing behavior.</td></tr>
+<tr><td><b>Flow vs snapshot distinction made explicit per measure.</b></td><td>Period Options applies only to flow measures (Spend, Leads, channel counts). ARPA, Logo Churn Rate, and Estimated LTV are snapshot ratios and must not be windowed.</td></tr>
+<tr><td>Removed: <code>[Monthly Logo Churn Rate]</code> references, duplicate Date/channel dimension construction, hardcoded "Other" grouping, invented colors.</td><td>Carried over from the original draft; all incorrect against this model.</td></tr>
+</table>
+
+<nav class="toc">
+<a href="#s0">0. Pre-build &amp; measures</a>
+<a href="#s1">1. Page setup</a>
+<a href="#s2">2. Header &amp; nav</a>
+<a href="#s3">3. KPI cards</a>
+<a href="#s4">4. Input card</a>
+<a href="#s5">5. Period Options &amp; Filters</a>
+<a href="#s6">6. Scatter</a>
+<a href="#s7">7. Where spend sits</a>
+<a href="#s8">8. Channel detail table</a>
+<a href="#s9">9. Tooltips</a>
+<a href="#s10">10. Interactions</a>
+<a href="#s11">11. QA</a>
+</nav>
+
+<h2 id="s0">Section 0 — Pre-Build Check &amp; Measure Architecture</h2>
+
+<h3>0.1 — Confirm existing objects (do not recreate any of these)</h3>
+<table>
+<tr><th>Object</th><th>Status</th><th>Page 4 action</th></tr>
+<tr><td><code>DimAcquisitionChannel</code></td><td>Exists, bridges <code>DimCustomer</code> and <code>FactMarketing</code></td><td><span class="tag reuse">REUSE</span> — do not build a channel dimension</td></tr>
+<tr><td><code>DimDate</code></td><td>Exists</td><td><span class="tag reuse">REUSE</span> — do not build any second date table</td></tr>
+<tr><td><code>Assumed Gross Margin %</code></td><td>Exists, parameter, default 80%</td><td><span class="tag reuse">REUSE</span> — do not recreate at 78%; that was the mockup's slider position</td></tr>
+<tr><td><code>_Data Through Label</code></td><td>Exists, used on all pages</td><td><span class="tag reuse">REUSE</span></td></tr>
+<tr><td><code>[ARPA]</code></td><td>Exists, snapshot ratio</td><td><span class="tag reuse">REUSE unchanged</span></td></tr>
+<tr><td><code>[Logo Churn Rate]</code></td><td>Exists, single-month, MAX-anchored</td><td><span class="tag reuse">REUSE unchanged</span></td></tr>
+<tr><td><code>[New Customers]</code></td><td>Exists — <code>FactSubscriptionEvent</code>, company-wide, load-bearing on Page 3</td><td><b>Never bind anything on this page to this name.</b> Page 4 needs a separate channel-attributed measure.</td></tr>
+<tr><td><code>[Monthly Logo Churn Rate]</code></td><td><b>Does not exist</b> — deleted in Phase 3 as orphaned</td><td>Ignore any reference to it</td></tr>
+</table>
+
+<h3>0.2 — Flow vs snapshot: which measures the Period window applies to</h3>
+<p>This distinction governs every DAX decision below. <b>Flow measures</b> accumulate activity over a span and are meaningful to sum across months. <b>Snapshot measures</b> describe a state at a point in time and were never summable.</p>
+<table>
+<tr><th>Measure</th><th>Type</th><th>Period window?</th></tr>
+<tr><td><code>Marketing Spend</code></td><td>Flow</td><td><b>Yes</b></td></tr>
+<tr><td><code>Leads</code></td><td>Flow</td><td><b>Yes</b></td></tr>
+<tr><td><code>_New Customers by Channel</code></td><td>Flow</td><td><b>Yes</b></td></tr>
+<tr><td><code>Lead to Customer Conversion Rate</code></td><td>Flow ÷ Flow</td><td><b>Yes</b> — both terms, same window</td></tr>
+<tr><td><code>Blended Marketing CAC</code></td><td>Flow ÷ Flow</td><td><b>Yes</b> — both terms, same window</td></tr>
+<tr><td><code>ARPA</code></td><td>Snapshot</td><td><b>No</b></td></tr>
+<tr><td><code>Logo Churn Rate</code></td><td>Snapshot</td><td><b>No</b></td></tr>
+<tr><td><code>Estimated LTV</code></td><td>Snapshot (built from ARPA + churn)</td><td><b>No</b></td></tr>
+<tr><td><code>Estimated LTV to CAC Ratio</code></td><td>Snapshot ÷ windowed flow</td><td>Inherits from CAC only</td></tr>
+<tr><td><code>Marketing CAC Payback (Months)</code></td><td>Windowed flow ÷ snapshot</td><td>Inherits from CAC only</td></tr>
+</table>
+<div class="callout">
+<div class="eyebrow">The mixed ratios are intentional, not an inconsistency</div>
+<code>Estimated LTV to CAC Ratio</code> and <code>Marketing CAC Payback (Months)</code> each combine a snapshot term with a windowed-flow term. That is standard SaaS unit-economics practice: LTV is the forward-looking value of <i>today's</i> customer relationship; CAC is the trailing cost of acquiring customers over a recent window. Do not "harmonize" them.
+</div>
+
+<h3>0.3 — Six measures to inspect before modifying <span class="tag verify">VERIFY FIRST</span></h3>
+<div class="callout stop">
+<div class="eyebrow">Do not write replacement DAX for these before reading their current definitions</div>
+Their validated output values are known from Phase 3; their internal filter logic has never been examined in this project. Open each in the formula bar and classify it before doing anything else.
+</div>
+<table>
+<tr><th>Measure</th><th>What to check</th><th>If shape A</th><th>If shape B</th></tr>
+<tr><td><code>Marketing Spend</code></td><td>Does it contain any internal date restriction (<code>MAX(DimDate[Date])</code>, <code>FILTER(ALL(DimDate)...)</code>, <code>DATESINPERIOD</code>)?</td><td><b>Plain SUM, no internal date logic</b> → leave the measure completely alone. The Period window is applied at the visual/page level instead (0.5).</td><td><b>Internally MAX-anchored to one month</b> → modify in place per 0.6, removing the internal anchor and substituting the Period window.</td></tr>
+<tr><td><code>Leads</code></td><td>Same</td><td>Same — leave alone</td><td>Same — modify in place</td></tr>
+<tr><td><code>Lead to Customer Conversion Rate</code></td><td>Which denominator does it use — <code>[New Customers]</code> or a <code>FactMarketing</code> column?</td><td>Uses a <code>FactMarketing</code> count → structurally fine, follows Spend/Leads handling</td><td><b>Uses <code>[New Customers]</code></b> → must be repointed to <code>_New Customers by Channel</code>; the company-wide measure is wrong here</td></tr>
+<tr><td><code>Blended Marketing CAC</code></td><td>Same denominator question</td><td>Uses a <code>FactMarketing</code> count → follows Spend/Leads handling</td><td><b>Uses <code>[New Customers]</code></b> → repoint to <code>_New Customers by Channel</code></td></tr>
+<tr><td><code>Estimated LTV</code></td><td>Run the channel test in 0.4 before reading the DAX at all</td><td>Varies by channel → reuse unchanged, no DAX work</td><td>Identical across channels → stop and report which internal input is blocked</td></tr>
+<tr><td><code>Estimated LTV to CAC Ratio</code> and <code>Marketing CAC Payback (Months)</code></td><td>Do they reference the measures above by name, or re-derive their logic inline?</td><td><b>Reference by name</b> → no change needed at all; they inherit every fix automatically</td><td><b>Re-derive inline</b> → update their internal references to match</td></tr>
+</table>
+
+<h3>0.4 — Estimated LTV channel test (run this first)</h3>
+<ol>
+<li>Blank table visual: <code>DimAcquisitionChannel[AcquisitionChannel]</code> + <code>[Estimated LTV]</code>.</li>
+<li><b>Different values per channel</b> → reuse unchanged; no new DAX. Both <code>DimCustomer</code> relationships are active, so this is the expected result.</li>
+<li><b>Identical value on every row</b> → a channel filter isn't reaching one of its inputs. Stop and report which — the fix depends on whether ARPA or the churn term is blocked.</li>
+<li>Delete the scratch visual.</li>
+</ol>
+
+<h3>0.5 — Period Options mechanism <span class="tag new">NEW</span></h3>
+<p>Disconnected lookup table, no relationship to anything — the same mechanism already proven in this model for <code>Assumed Gross Margin %</code>.</p>
+<ol>
+<li>Home ribbon → <b>Enter data</b>. Column <code>Period</code>, one row: <code>Last 12 complete months</code>. Table name: <code>Period Options</code> → Load.</li>
+<li><b>Create no relationship from this table to <code>DimDate</code> or anything else.</b></li>
+</ol>
+<pre>_P4 Period Start Date = 
+VAR SelectedPeriod = SELECTEDVALUE ( 'Period Options'[Period], "Last 12 complete months" )
+VAR PeriodEndDate = EOMONTH ( MAX ( DimDate[Date] ), 0 )
+RETURN
+SWITCH (
+    SelectedPeriod,
+    "Last 12 complete months", EOMONTH ( PeriodEndDate, -12 ) + 1,
+    EOMONTH ( PeriodEndDate, -12 ) + 1
+)</pre>
+<pre>_P4 Period End Date = EOMONTH ( MAX ( DimDate[Date] ), 0 )</pre>
+<div class="callout warn">
+<div class="eyebrow">Only one option is approved</div>
+"Last 12 complete months" is the only period option confirmed anywhere in this project's sources. Do not invent others. If more are approved later, add rows to the <code>Period Options</code> table and extend the <code>SWITCH</code> — no structural change required.
+</div>
+
+<h3>0.6 — New measures <span class="tag new">NEW</span></h3>
+<pre>_New Customers by Channel = SUM ( FactMarketing[NewCustomers] )</pre>
+<p>Genuinely new — <code>[New Customers]</code> is a different concept (distinct customer entities from <code>FactSubscriptionEvent</code>, company-wide) and is load-bearing on Page 3. These two can legitimately disagree; that is expected, not an error.</p>
+
+<p><b>Applying the Period window.</b> Use this pattern only for measures classified as <b>shape B</b> in 0.3, and for <code>_New Customers by Channel</code>:</p>
+<pre>&lt;measure&gt; = 
+CALCULATE (
+    &lt;existing aggregation&gt;,
+    FILTER (
+        ALL ( DimDate ),
+        DimDate[Date] &gt;= [_P4 Period Start Date] &&
+        DimDate[Date] &lt;= [_P4 Period End Date]
+    )
+)</pre>
+<p>For <b>shape A</b> measures, do not modify the measure at all — instead apply the window once at page level in 0.7.</p>
+
+<pre>P4 Blended CAC (All Channels) = 
+CALCULATE ( [Blended Marketing CAC], REMOVEFILTERS ( 'DimAcquisitionChannel' ) )</pre>
+
+<h3>0.7 — Page-level period filter (shape A route only)</h3>
+<p>If the base flow measures proved to be plain sums with no internal date logic, apply the Period window once rather than editing six measures:</p>
+<ol>
+<li>With no visual selected, Filters pane → <b>Filters on this page</b>.</li>
+<li>Drag <code>DimDate[Date]</code> in → Filter type: <b>Advanced filtering</b>.</li>
+<li>Bind via <b>fx</b> to <code>[_P4 Period Start Date]</code> / <code>[_P4 Period End Date]</code> if your build supports measure-bound advanced filters. If it does not, fall back to modifying the flow measures individually per 0.6 — and note that choice in the build log so a future reader knows why.</li>
+</ol>
+<div class="callout">
+<div class="eyebrow">Why the page-level route is preferable when available</div>
+It leaves every existing measure definition untouched, which means nothing can regress on any other page, and the Period selector governs the whole page with one object instead of six near-identical edits.
+</div>
+
+<h3>0.8 — Parameters and judgement measures <span class="tag new">NEW</span></h3>
+<pre>LTV CAC Target Value — Modeling → New parameter → Numeric range
+  Decimal, Min 1, Max 6, Increment 0.1, Default 3</pre>
+<pre>Min Volume Value — Modeling → New parameter → Numeric range
+  Whole number, Min 0, Max 100, Increment 5, Default 30</pre>
+<pre>P4 Judgement Code = 
+IF ( HASONEVALUE ( DimAcquisitionChannel[Channel Group] ),
+  SWITCH ( TRUE (),
+    SELECTEDVALUE ( DimAcquisitionChannel[Channel Group] ) = "Other", 3,
+    [_New Customers by Channel] &lt; [Min Volume Value], 3,
+    ISBLANK ( [Estimated LTV to CAC Ratio] ), 3,
+    ROUND ( [Estimated LTV to CAC Ratio], 1 ) &gt;= [LTV CAC Target Value], 1,
+    2 ) )</pre>
+<p>The <code>ROUND</code> is deliberate: a ratio displaying as 3.0× must never be classified below a 3.0 target because of hidden decimals.</p>
+<pre>P4 Marker Color = SWITCH ( [P4 Judgement Code], 1, "#0F1B3D", 2, "#DC2626", 3, "#94A3B8" )</pre>
+<pre>P4 Text Color = SWITCH ( [P4 Judgement Code], 2, "#DC2626", 3, "#64748B", "#0F1B3D" )</pre>
+<pre>P4 Flag Above = IF ( [P4 Judgement Code] = 1, 1 )</pre>
+<pre>P4 Flag Below = IF ( [P4 Judgement Code] = 2, 1 )</pre>
+<pre>P4 Spend Share = 
+DIVIDE ( [Marketing Spend], CALCULATE ( [Marketing Spend], REMOVEFILTERS ( 'DimAcquisitionChannel' ) ) )</pre>
+<pre>P4 Spend Share Below Target = 
+DIVIDE (
+    SUMX ( VALUES ( DimAcquisitionChannel[Channel Group] ),
+           IF ( [P4 Judgement Code] = 2, [Marketing Spend] ) ),
+    CALCULATE ( [Marketing Spend], REMOVEFILTERS ( 'DimAcquisitionChannel' ) )
+)</pre>
+<p>Same pattern for <code>P4 Spend Share At or Above Target</code> (<code>= 1</code>) and <code>P4 Spend Share Not Judged</code> (<code>= 3</code>).</p>
+<pre>P4 Headline Sentence = 
+"of marketing spend sits in channels below the " & FORMAT ( [LTV CAC Target Value], "0.0" ) & "× LTV:CAC target"</pre>
+
+<h3>0.9 — Channel Group: native Top N, never hardcoded</h3>
+<div class="callout stop">
+<div class="eyebrow">Do not hardcode which channels become "Other"</div>
+Apply a Top N visual-level filter on the scatter, table, and finding panel — the same mechanism already used for Plan breakdowns on Pages 1 and 2. It recalculates on every refresh; a hand-typed channel list would silently show the wrong channels on any other client's data.
+</div>
+<ol>
+<li>On each of the three visuals: Filters pane → <code>DimAcquisitionChannel[Channel]</code> → Filter type <b>Top N</b> → Top <b>6</b> → By value <code>[Marketing Spend]</code>.</li>
+<li>Apply identically on all three so they agree on which channels are shown.</li>
+</ol>
+
+<div class="checkpoint"><b>Checkpoint 0</b> — All six measures in 0.3 inspected and classified. <code>Estimated LTV</code> channel test run. <code>_New Customers by Channel</code>, period helpers, parameters, and judgement measures built. No duplicate Date table, no duplicate channel dimension, no measure named <code>(P4)</code> that shadows an existing business metric.</div>
+
+<h2 id="s1">Section 1 — Page Setup</h2>
+<ol>
+<li>Right-click any page tab → <b>New page</b> (blank — do not duplicate Page 3, which risks carrying stray hidden objects).</li>
+<li>Rename <code>Unit Economics</code>, drag to position 4.</li>
+<li>Canvas settings → Custom → Width <b>1280</b>, Height <b>720</b>.</li>
+<li><b>Background — leave unchanged; the theme supplies <code>#F4F5F7</code>.</b></li>
+<li>View → Page view → Fit to page.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 1</b> — 1280×720, gray background, no manual override.</div>
+
+<h2 id="s2">Section 2 — Header and Navigation <span class="tag reuse">REUSE FROM PAGE 3</span></h2>
+<ol>
+<li>Customer Growth → Selection pane → header/nav group → Ctrl+C. Unit Economics → Ctrl+V.</li>
+<li>"Customer Growth" button → Format → Button → Style → Default → Text <code>#64748B</code>, Regular. "Unit Economics" → <code>#0F1B3D</code>, Semibold. Move the underline rectangle beneath it.</li>
+<li><b>Keep the Segment slicer exactly as copied.</b> Its interactions are set to None in Section 10 — that is the correct handling of the fact that <code>FactMarketing</code> has no segment column. Do not delete it or substitute a static button.</li>
+<li><b>Delete the copied Period slicer.</b> Page 4 uses a named-option dropdown instead, built in Section 5.</li>
+<li>Header/nav band stays flat (no shadow) per the frozen design system; content cards keep theme shadow.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 2</b> — "Unit Economics" bold navy with underline. Segment slicer present and visually identical to other pages. Old Period slicer removed.</div>
+
+<h2 id="s3">Section 3 — KPI Cards</h2>
+<div class="callout stop">
+<div class="eyebrow">Search before building any delta measure</div>
+Before creating a single delta measure, open the Fields pane and search for existing equivalents (e.g. <code>_CAC Delta</code>, <code>_LTV Delta</code>). Pages 1–3 established the triplet pattern and may already contain reusable measures. Build only what is genuinely absent. Do not assume all four cards need three new measures each.
+</div>
+<p>Construction pattern: three overlaid visuals per card — base value, colored delta value, neutral caption. Confirmed current: Card (new)'s reference-label conditional formatting remains unreliable, and separate measures are the documented workaround. Do not attempt a single-card reference-label approach.</p>
+
+<h3>3.1 — Build the CAC card (reference card)</h3>
+<ol>
+<li>Insert → <b>Card (new)</b>. Data value <code>[Blended Marketing CAC]</code>. Title off.</li>
+<li>Properties: X=<b>16</b>, Y=<b>102</b>, Width=<b>296</b>, Height=<b>66</b>.</li>
+<li>Callout value: Segoe UI Semibold, 17px, <code>#0F172A</code>. Category label: 9px <code>#64748B</code>.</li>
+<li>Delta measures — <b>only if no equivalent exists</b>:
+<pre>_CAC Delta Value = 
+VAR Current = [Blended Marketing CAC]
+VAR Prior = CALCULATE ( [Blended Marketing CAC], DATEADD ( DimDate[Date], -12, MONTH ) )
+VAR pct = DIVIDE ( Current - Prior, Prior )
+RETURN IF ( pct >= 0, "▲ +", "▼ " ) & FORMAT ( ABS ( pct ), "0.0%" )</pre>
+<pre>_CAC Delta Caption = "vs prior 12 mo"</pre>
+<pre>_CAC Delta Color = 
+VAR Current = [Blended Marketing CAC]
+VAR Prior = CALCULATE ( [Blended Marketing CAC], DATEADD ( DimDate[Date], -12, MONTH ) )
+RETURN IF ( Current <= Prior, "#16A34A", IF ( Current > Prior, "#DC2626", "#94A3B8" ) )</pre>
+Lower CAC is the improvement — inverted polarity, same category as Logo Churn Rate on earlier pages.</li>
+<li>Delta overlay Card (new): X=<b>132</b>, Y=<b>108</b>, W=<b>90</b>, H=<b>18</b>. Callout 10px Semibold, right-aligned. Title off, Category label off, Effects off. Conditional formatting → Font color → Field value → <code>_CAC Delta Color</code>.</li>
+<li>Caption overlay Card (new): X=<b>132</b>, Y=<b>126</b>, W=<b>90</b>, H=<b>16</b>. Callout 9px Regular <code>#94A3B8</code>, right-aligned. Title off, Category label off, Effects off, no conditional formatting.</li>
+<li>Group all three → <code>KPI_CAC</code>.</li>
+</ol>
+
+<h3>3.2 — Remaining three cards</h3>
+<table>
+<tr><th>Card</th><th>Group</th><th>X</th><th>Base measure</th><th>Polarity</th></tr>
+<tr><td>Estimated LTV</td><td><code>KPI_LTV</code></td><td>320</td><td><code>[Estimated LTV]</code></td><td>Normal (up = green)</td></tr>
+<tr><td>Estimated LTV:CAC</td><td><code>KPI_Ratio</code></td><td>624</td><td><code>[Estimated LTV to CAC Ratio]</code></td><td>Normal</td></tr>
+<tr><td>Marketing CAC Payback</td><td><code>KPI_Payback</code></td><td>928</td><td><code>[Marketing CAC Payback (Months)]</code></td><td>Inverted (up = red)</td></tr>
+</table>
+<p>Y=102, Width=296, Height=66 for all four. The LTV:CAC delta needs <b>two decimals</b> — the approved screenshot shows −0.02×, which one decimal would render as "−0.0×".</p>
+<div class="checkpoint"><b>Checkpoint 3</b> — Four cards in order, no ARPA among them. Colors inverted only on CAC and Payback. LTV:CAC delta shows two decimals. No duplicate delta measure was created where one already existed.</div>
+
+<h2 id="s4">Section 4 — Input Card (Gross Margin + ARPA)</h2>
+<ol>
+<li>Container rectangle immediately right of the four KPI cards, 12px gutter, Height=<b>66</b>, aligned to Y=102. <i>Set X after the KPI row renders — exact width depends on final text widths.</i> Theme shadow, no manual border.</li>
+<li>3px navy accent bar at its left edge (<code>#0F1B3D</code>), bring to front.</li>
+<li>Label text box: "Assumed Gross Margin % · adjustable", 9px <code>#64748B</code>.</li>
+<li>Value: Card (new) → <code>[Assumed Gross Margin % Value]</code>, format 0%, 12px Semibold <code>#0F172A</code>. Title off, Category label off, Effects off.</li>
+<li>Slider: the existing <code>Assumed Gross Margin %</code> parameter slicer. Style Single value, header off, slider on, <code>#0F1B3D</code>.</li>
+<li>Caption: "Drives every LTV, LTV:CAC and payback figure", 8px <code>#64748B</code>.</li>
+<li>Vertical divider <code>#E2E8F0</code>.</li>
+<li>ARPA label: "ARPA · input", 9px <code>#64748B</code>.</li>
+<li>ARPA value: Card (new) → <code>[ARPA]</code> unchanged. Title off, Category label off, <b>no reference label, no delta</b> — the approved screenshot shows none, and ARPA is a snapshot measure that does not respond to Period Options.</li>
+<li>ARPA caption: "Blended; by channel on hover", 8px <code>#64748B</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 4</b> — Moving the margin slider changes LTV, LTV:CAC and Payback but not CAC. ARPA shows a plain value with no delta and no border of its own.</div>
+
+<h2 id="s5">Section 5 — Period Slicer and Filters Flyout</h2>
+<h3>5.1 — Period slicer</h3>
+<ol>
+<li>Insert → Slicer → <code>'Period Options'[Period]</code>.</li>
+<li>Style <b>Dropdown</b>, Single select, header off.</li>
+<li>Transparent background, no border, 9.5px <code>#0F172A</code>.</li>
+<li>Position in the header band where the deleted Page 3 Period slicer sat.</li>
+<li>Select "Last 12 complete months" and save.</li>
+</ol>
+
+<h3>5.2 — Filters flyout <span class="tag reuse">REUSE PAGE 3 SHELL</span></h3>
+<ol>
+<li>Copy Page 3's filter panel group (container, Close button, structure). Do not rebuild it.</li>
+<li>Replace its internal slicers with two parameter slicers: <code>LTV CAC Target Value</code> and <code>Min Volume Value</code>. Style Single value, header on with plain-language labels, slider on, values input on.</li>
+<li><b>Rebuild the Filters Open / Filters Closed bookmarks fresh on this page</b> — bookmarks are page-scoped and do not copy with the group. Data unchecked, Display checked, Current page checked.</li>
+<li>Reset mechanism: set both sliders to defaults (3.0, 30), then create a bookmark <b>P4 Reset Defaults</b> scoped via Selected Visuals to those two sliders only, Data checked. Wire a Reset button to it. The native Clear-slicer action is not used here because a single-value numeric parameter slider has no reliably-defined cleared state.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 5</b> — Reopening the file shows "Last 12 complete months". Filters opens/closes without resetting Target or Min Volume. Reset restores exactly 3.0 and 30.</div>
+
+<h2 id="s6">Section 6 — Channel Economics Scatter</h2>
+<ol>
+<li>Build visual → <b>Scatter chart</b>. X=<b>16</b>, Y=<b>178</b>, Width=<b>770</b>, Height=<b>248</b>.</li>
+<li>Values: <code>DimAcquisitionChannel[Channel Group]</code>. X-axis: <code>[Blended Marketing CAC]</code>. Y-axis: <code>[Estimated LTV to CAC Ratio]</code>. Size: <code>[Marketing Spend]</code>. <b>Legend: leave empty</b> — a legend field blocks conditional marker color.</li>
+<li>Apply the Top N filter from 0.9.</li>
+<li>Markers → Color → <b>fx</b> → Field value → <code>P4 Marker Color</code>.</li>
+<li>X-axis: Min 0, Max Auto, Title "Marketing CAC (channel) →". Y-axis: Min 0, Max Auto, Title "LTV:CAC".</li>
+<li>Category labels on, 8.5px Semibold <code>#0F172A</code>.</li>
+<li><b>Analytics pane</b> (magnifying-glass icon; confirmed current and supported on scatter charts) → <b>Y-Axis Constant Line</b> → + Add line → Value → <b>fx</b> → Field value → <code>[LTV CAC Target Value]</code>. Color <code>#0F1B3D</code>, Dashed.</li>
+<li>Analytics pane → <b>X-Axis Constant Line</b> → + Add line → Value → fx → <code>[P4 Blended CAC (All Channels)]</code>. Color <code>#94A3B8</code>, Dotted.</li>
+<li>Title "Channel economics" 14px Semibold; subtitle "CAC vs LTV:CAC · bubble = spend" 10px <code>#64748B</code>.</li>
+<li>Effects: theme background and shadow, no manual border.</li>
+<li>Legend overlay text box: "● At or above target  ● Below target  ● Not judged (low volume · Other)" using <code>#0F1B3D</code> / <code>#DC2626</code> / <code>#94A3B8</code>.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 6</b> — One bubble per Top-N channel plus Other. Moving the Target parameter moves the dashed line and recolors bubbles. The dotted line matches the CAC KPI card exactly. Other and any channel below Min Volume render grey.</div>
+
+<h2 id="s7">Section 7 — Where Spend Sits</h2>
+<ol>
+<li>Container rectangle X=<b>800</b>, Y=<b>178</b>, Width=<b>460</b>, Height=<b>248</b>. Theme shadow, no border.</li>
+<li>Headline: Card (new) → <code>[P4 Spend Share Below Target]</code>, 24px Semibold <code>#DC2626</code>.</li>
+<li>Sentence: text bound to <code>[P4 Headline Sentence]</code>.</li>
+<li>Two small tables — Above target and Below target. Each: <code>DimAcquisitionChannel[Channel Group]</code>, <code>[P4 Spend Share]</code>, <code>[Estimated LTV to CAC Ratio]</code>; filtered by <code>P4 Flag Above</code> / <code>P4 Flag Below</code> = 1; sorted by LTV:CAC descending; column headers off, gridlines off.</li>
+<li>Footnote naming the not-judged channels and the Min Volume definition, built from text plus measure values.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 7</b> — Above + Below + Not-judged shares sum to 100%. Neither list contains Other or a low-volume channel. Changing Target or Min Volume updates headline, both lists, and footnote together.</div>
+
+<h2 id="s8">Section 8 — Channel Detail Table</h2>
+<ol>
+<li>Container rectangle X=<b>20</b>, Y=<b>432</b>, Width=<b>1240</b>, Height=<b>270</b>. Theme shadow, no border.</li>
+<li>Table columns in order: <code>DimAcquisitionChannel[Channel Group]</code>, <code>[_New Customers by Channel]</code>, <code>[Marketing Spend]</code>, <code>[Cost per Lead]</code>, <code>[Lead to Customer Conversion Rate]</code>, <code>[Blended Marketing CAC]</code>, <code>[Estimated LTV]</code>, <code>[Estimated LTV to CAC Ratio]</code>, <code>[Marketing CAC Payback (Months)]</code>.
+<br><i>If <code>[Cost per Lead]</code> does not exist in the model, it is genuinely new: <code>Cost per Lead = DIVIDE ( [Marketing Spend], [Leads] )</code>. Check the Fields pane before creating it.</i></li>
+<li>Sort by a judgement-aware sort key descending, Other always last.</li>
+<li>Conditional formatting on the LTV:CAC column → Font color → fx → Field value → <code>P4 Text Color</code>.</li>
+<li>Conditional icon on the Channel column for not-judged rows via <code>P4 Judgement Code</code>.</li>
+<li>No data bars. Totals row labelled "All channels".</li>
+<li>Apply the same Top N filter as the scatter and finding panel.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 8</b> — 6 channels + Other + All channels, no scrollbar at 1280×720. The All-channels row matches the KPI cards exactly. LTV:CAC colored correctly; grey icon only on not-judged rows.</div>
+
+<h2 id="s9">Section 9 — Tooltips</h2>
+<ol>
+<li>New page, Tooltip type, 320×240.</li>
+<li>Show channel name, judgement status, and per-channel <code>[ARPA]</code>, <code>[Estimated LTV]</code>, <code>[Estimated LTV to CAC Ratio]</code>, <code>[Marketing CAC Payback (Months)]</code>.</li>
+<li><b>No churn or segment fields</b> — those belong to Pages 5 and 6 per the frozen architecture.</li>
+<li>Attach to the scatter and the table.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 9</b> — Tooltip ARPA differs by channel. The All-channels row's tooltip shows blended values with no judgement status.</div>
+
+<h2 id="s10">Section 10 — Interactions</h2>
+<ol>
+<li><b>Segment slicer → every visual on this page → None.</b> This is the correct handling of the <code>FactMarketing</code> segment gap.</li>
+<li>Scatter → Table: <b>Filter</b>. Scatter → finding panel, KPI cards, input card: <b>None</b>.</li>
+<li>Table → Scatter: <b>Highlight</b>. Table → everything else: <b>None</b>.</li>
+<li>Finding-panel lists → Scatter: <b>Highlight</b>; → Table: <b>Filter</b>; everything else: <b>None</b>.</li>
+<li>Period slicer, Gross Margin slider, Target, Min Volume → every visual: <b>Filter</b> (default). Confirm none was accidentally set to None.</li>
+</ol>
+<div class="checkpoint"><b>Checkpoint 10</b> — Clicking a bubble filters the table but leaves KPI cards and finding panel at page totals. Clicking a table row highlights its bubble. Clearing restores everything.</div>
+
+<h2 id="s11">Section 11 — Formatting and Final QA</h2>
+<h3>Measure architecture</h3>
+<ul>
+<li>No measure on this page named with a <code>(P4)</code> suffix that shadows an existing business metric.</li>
+<li>No duplicate of any Page 1–3 measure: MRR, ARR, Active/Total/Churned/New Customers, Customer Growth %, Logo Churn Rate, ARPA, MRR movement family, existing delta triplets, <code>Assumed Gross Margin %</code>, <code>_Data Through Label</code>.</li>
+<li><code>[New Customers]</code> is untouched and still returns Page 3's validated value.</li>
+<li>Every new measure is either a page-specific helper (<code>_P4 Period*</code>), page-specific presentation logic (<code>P4 Judgement/Marker/Text/Spend Share</code>), or a genuinely new business concept (<code>_New Customers by Channel</code>).</li>
+</ul>
+<h3>Model integrity</h3>
+<ul>
+<li>One date table only. <code>Period Options</code> has no relationship to anything.</li>
+<li>One channel dimension only.</li>
+<li>No bidirectional relationships added.</li>
+<li>No hardcoded channel names anywhere — Top N handles Other.</li>
+</ul>
+<h3>Visual</h3>
+<ul>
+<li>Palette limited to <code>#0F1B3D</code>, <code>#0F172A</code>, <code>#64748B</code>, <code>#3E5C8A</code>, <code>#94A3B8</code>, <code>#16A34A</code>, <code>#DC2626</code>, <code>#F4F5F7</code>, <code>#FFFFFF</code>.</li>
+<li>No manual border or shadow on any content card — theme-inherited only. Header/nav band flat.</li>
+<li>Number formats via Modeling ribbon → Format → type the code directly into the box (no separate "Custom" list item): currency for CAC/LTV/Payback, <code>0.0"×"</code> for the ratio, <code>0.0%</code> for shares.</li>
+<li>Tab order: header → Period → Segment → Filters → KPI cards → input card → scatter → finding panel → table.</li>
+<li>Alt text on the scatter, table, and finding-panel headline.</li>
+</ul>
+<h3>Numeric reconciliation</h3>
+<ul>
+<li>In a scratch table, confirm <code>CAC = Cost per Lead ÷ Conversion Rate</code> and <code>LTV = LTV:CAC × CAC</code> on every row within rounding.</li>
+<li>The All-channels row matches all four KPI cards.</li>
+<li>Changing the Period selector changes Spend, Leads, channel counts, CAC, conversion, LTV:CAC and Payback — but <b>not</b> ARPA, Logo Churn Rate or Estimated LTV. If a snapshot measure moves with the Period selector, the window was applied too broadly; revisit 0.2.</li>
+</ul>
+<h3>Cross-page consistency</h3>
+<ul>
+<li>Header, nav, fonts, card treatment identical to Pages 1–3.</li>
+<li>No churn, segment, cohort or customer-trend content anywhere on this page.</li>
+</ul>
+<div class="checkpoint"><b>Final Checkpoint</b> — Page 4 is complete when every check above passes, and the model contains one canonical measure per genuine business concept with new measures only where Page 4 introduced genuinely new logic.</div>
+
+</div>

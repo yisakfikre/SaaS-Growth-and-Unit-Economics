@@ -1,0 +1,107 @@
+{
+  "name": "SaaS Growth & Unit Economics",
+  "dataColors": [
+    "#0F1B3D",
+    "#64748B",
+    "#3E5C8A",
+    "#94A3B8",
+    "#1E3A5F",
+    "#B4BEC9",
+    "#2D4A73",
+    "#7C8CA3"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#0F172A",
+  "tableAccent": "#0F1B3D",
+  "good": "#16A34A",
+  "bad": "#DC2626",
+  "neutral": "#94A3B8",
+  "maximum": "#0F1B3D",
+  "center": "#94A3B8",
+  "minimum": "#F4F5F7",
+  "null": "#CBD5E1",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 24,
+      "color": "#0F172A"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 14,
+      "color": "#0F172A"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#64748B"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 30,
+      "color": "#0F172A"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#FFFFFF" } },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#000000" } },
+            "transparency": 94,
+            "position": "Outside",
+            "shadowDistance": 1,
+            "shadowBlur": 3,
+            "shadowAngle": 90
+          }
+        ],
+        "visualHeader": [
+          {
+            "background": { "solid": { "color": "#FFFFFF" } },
+            "foreground": { "solid": { "color": "#64748B" } }
+          }
+        ]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "color": { "solid": { "color": "#0F172A" } },
+            "fontSize": 30,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ],
+        "categoryLabels": [
+          {
+            "color": { "solid": { "color": "#64748B" } },
+            "fontSize": 11,
+            "fontFamily": "Segoe UI"
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#F4F5F7" } },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

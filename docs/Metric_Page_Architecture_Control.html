@@ -1,0 +1,495 @@
+<style>
+:root{
+  --bg:#F4F5F7; --card:#FFFFFF; --navy:#0F1B3D; --slate:#64748B;
+  --amber:#F59E0B; --green:#16A34A; --red:#DC2626; --neutral:#94A3B8;
+  --text1:#0F172A; --text2:#64748B; --border:#E2E8F0; --code-bg:#0F172A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F172A; --card:#1B2536; --text1:#F1F5F9; --text2:#94A3B8; --border:#334155; --code-bg:#0B1220;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--text1); font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:0 0 64px;}
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+header.doc{background:var(--navy); color:#fff; padding:28px 24px;}
+header.doc .wrap{padding:0 24px;}
+header.doc h1{font-size:22px; margin:0 0 6px; font-weight:600;}
+header.doc p{margin:0; color:#B9C2D9; font-size:13px;}
+nav.toc{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:24px 0; font-size:13px;}
+nav.toc a{color:var(--navy); text-decoration:none; display:inline-block; margin:2px 10px 2px 0;}
+[data-theme="dark"] nav.toc a, :root:not([data-theme="light"]) nav.toc a{color:#93C5FD;}
+h2{font-size:18px; font-weight:600; margin:40px 0 6px; padding-top:10px; border-top:2px solid var(--navy);}
+h3{font-size:14px; font-weight:600; margin:22px 0 8px;}
+h4{font-size:13px; font-weight:600; margin:16px 0 6px; color:var(--slate);}
+p{font-size:13px; line-height:1.65;}
+.callout{border-left:3px solid var(--navy); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:13px;}
+.callout.warn{border-left-color:var(--amber);}
+.callout.ok{border-left-color:var(--green);}
+.callout.stop{border-left-color:var(--red);}
+.callout .eyebrow{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate); margin-bottom:6px; font-weight:600;}
+table{width:100%; border-collapse:collapse; font-size:11.5px; margin:12px 0 20px; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+th{background:var(--bg); text-align:left; padding:7px 8px; font-weight:600; border-bottom:1px solid var(--border); font-size:11px;}
+td{padding:7px 8px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.c{text-align:center;}
+code{font-family:'Consolas','SF Mono',monospace; font-size:11px; background:var(--bg); padding:1px 4px; border-radius:3px;}
+ol,ul{font-size:13px; line-height:1.7;}
+.tag{display:inline-block; font-size:9.5px; padding:1px 6px; border-radius:9px; background:var(--bg); color:var(--slate); border:1px solid var(--border); white-space:nowrap;}
+.tag.p{background:#DBEAFE; color:#1E40AF; border-color:#93C5FD;}
+.tag.e{background:#F3E8FF; color:#6B21A8; border-color:#D8B4FE;}
+.tag.c{background:#DCFCE7; color:#166534; border-color:#86EFAC;}
+.tag.n{background:#F1F5F9; color:#475569; border-color:#CBD5E1;}
+.tag.x{background:#FEE2E2; color:#991B1B; border-color:#FCA5A5;}
+[data-theme="dark"] .tag.p, :root:not([data-theme="light"]) .tag.p{background:#1E3A8A; color:#BFDBFE; border-color:#1E40AF;}
+[data-theme="dark"] .tag.e, :root:not([data-theme="light"]) .tag.e{background:#581C87; color:#E9D5FF; border-color:#6B21A8;}
+[data-theme="dark"] .tag.c, :root:not([data-theme="light"]) .tag.c{background:#14532D; color:#BBF7D0; border-color:#166534;}
+[data-theme="dark"] .tag.n, :root:not([data-theme="light"]) .tag.n{background:#334155; color:#CBD5E1; border-color:#475569;}
+[data-theme="dark"] .tag.x, :root:not([data-theme="light"]) .tag.x{background:#7F1D1D; color:#FECACA; border-color:#991B1B;}
+.verdict{background:var(--navy); color:#fff; border-radius:8px; padding:18px 22px; margin:20px 0; font-size:14px;}
+.verdict b{color:#FDE68A;}
+.pagecard{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin:14px 0;}
+.pagecard h4{margin-top:0; color:var(--text1); font-size:14px;}
+.q{font-style:italic; color:var(--slate); font-size:12.5px; margin:4px 0 10px;}
+</style>
+
+<header class="doc">
+<div class="wrap">
+<h1>Six-Page Metric &amp; Page Architecture Control</h1>
+<p>SaaS Growth &amp; Unit Economics Power BI Template · Governance layer established before Page 3 design · Built against the validated Phase 3 measure catalog</p>
+</div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+<a href="#o1">1. Executive conclusion</a>
+<a href="#o2">2. Measure ownership matrix</a>
+<a href="#o3">3. Story ownership matrix</a>
+<a href="#o4">4. Redundancy audit</a>
+<a href="#o5">5. Page boundary rules</a>
+<a href="#o6">6. Target layer</a>
+<a href="#o7">7. Final architecture</a>
+<a href="#o8">8. Constitution</a>
+<a href="#o9">9. Reusable SOP</a>
+<a href="#o10">10. GO / NO-GO</a>
+</nav>
+
+<h2 id="o1">Output 1 — Executive Conclusion</h2>
+
+<p><b>Three things must be settled before Page 3 design continues. None requires touching Pages 1 or 2.</b></p>
+
+<h3>Decision 1 — Rename Pages 3 and 6 (the root cause of the collision)</h3>
+<p>"Customer &amp; Retention" and "Churn &amp; Retention" both claim retention in their titles. That is not a labelling nuisance — it is why the Page 3 draft put "Logo churn by segment" as its largest visual, which is Page 6's core content. A boundary that has to be remembered will be forgotten; a boundary encoded in the page name enforces itself.</p>
+<table>
+<tr><th>Page</th><th>Current name</th><th>New name</th><th>Why</th></tr>
+<tr><td>3</td><td>Customer &amp; Retention</td><td><b>Customer Growth</b></td><td>Removes "Retention" entirely. The page's job is the customer base's size and direction, not retention quality.</td></tr>
+<tr><td>6</td><td>Churn &amp; Retention</td><td><b>Retention &amp; Churn</b></td><td>Retention leads because cohort analysis is the page's most valuable content, not an afterthought to churn.</td></tr>
+</table>
+<p>After renaming, the rule is mechanical: <b>if a metric describes retention <i>quality</i> or churn <i>causes</i>, it is Page 6. If it describes customer <i>counts</i> and their direction, it is Page 3.</b></p>
+
+<h3>Decision 2 — Cohort retention is Page 6's primary object, and it is currently homeless</h3>
+<p><code>Cohort Retention %</code> and <code>Cohort Revenue Retention %</code> — with the <code>CohortAge</code> table, the <code>SignupMonth</code> column, and a Python-validated curve (100% → 87.09% at 3mo → 82.95% at 6mo → 73.45% at 24mo → 69.37% at 30mo) — are the most sophisticated validated assets in Phase 3 and appear on no page in any design produced so far. This architecture assigns them as <b>Page 6's hero visual</b>, not a supporting one.</p>
+
+<h3>Decision 3 — Customer health has no home and must get one</h3>
+<p><code>FactCustomerHealth</code> (25,283 rows: HealthScore, NPS, ProductUsage, SupportTickets) plus <code>Avg Health Score at Churn</code> (60.02) and <code>Avg NPS at Churn</code> (19.62) are unused. Health is the leading indicator of churn, so it belongs with churn diagnosis: <b>Page 6</b>. This also resolves the HealthScore banding question left open on Page 1 — if Page 6 needs categorical health tiers, that calculated column gets built once, for Page 6, deliberately.</p>
+
+<div class="callout ok">
+<div class="eyebrow">What does NOT need to change</div>
+Pages 1 and 2 stay exactly as built. The redundancy audit below identifies two real issues on Page 1 (Output 4), but both are classified <b>accept and document</b> rather than fix — reopening finished, validated pages for a non-blocking structural point is how templates fail to ship. One optional improvement is recorded for Phase 5 QA, not now.
+</div>
+
+<h2 id="o2">Output 2 — Master Measure Ownership Matrix</h2>
+<p>Built from the actual validated Phase 3 catalog plus measures added during Page 1 and Page 2 builds. Legend: <span class="tag p">Primary</span> <span class="tag e">Executive Repeat</span> <span class="tag c">Contextual Repeat</span> <span class="tag n">Do Not Repeat</span></p>
+
+<h3>2.1 Revenue &amp; MRR movement</h3>
+<table>
+<tr><th>Measure</th><th>Definition</th><th>Home</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th class="c">P6</th><th>Type</th><th>Justification / Action</th></tr>
+<tr><td><code>MRR</code></td><td>Normalised monthly recurring revenue</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td>The single most-referenced number in the business. P1 for scale, P5 for composition. <b>Keep</b></td></tr>
+<tr><td><code>ARR</code></td><td>MRR × 12</td><td>P1</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag p">Primary</span></td><td>P1 is its home — ARR is an external/board framing, not an analytical input. See Issue A. <b>Keep</b></td></tr>
+<tr><td><code>New MRR</code></td><td>MRR from new customers, current month</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>P1 only inside the waterfall, never as its own card. <b>Keep</b></td></tr>
+<tr><td><code>Expansion MRR</code></td><td>MRR from upgrades</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>P6 needs it to compute/explain NRR vs GRR. <b>Keep</b></td></tr>
+<tr><td><code>Contraction MRR</code></td><td>MRR lost to downgrades</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>Downgrade is partial churn — P6 context. <b>Keep</b></td></tr>
+<tr><td><code>Churned MRR</code></td><td>MRR lost to cancellations</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>P2 owns it as a movement component; P6 as a churn outcome. <b>Keep</b></td></tr>
+<tr><td><code>Net MRR Change</code></td><td>Sum of all movement, current month</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td>P1 Executive Insight card only. <b>Keep</b></td></tr>
+<tr><td><code>Gross New MRR</code></td><td>New + Expansion</td><td>P2</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag n">No repeat</span></td><td>Composition fact only meaningful beside the movement charts. <b>Keep on P2 only</b></td></tr>
+<tr><td><code>MRR Growth %</code></td><td>MoM change in MRR</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td>P1 card (rate) + P2 combo chart (trajectory) are different questions. <b>Keep</b></td></tr>
+<tr><td><code>MRR YoY %</code></td><td>Growth vs same month last year</td><td>P2</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>Currently only surfaces as the ARR card's delta. <b>Keep; review for a P2 visual role</b></td></tr>
+<tr><td><code>Net New MRR YTD</code></td><td>Cumulative net new, year to date</td><td>P2</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag x">Homeless</span></td><td><b>Currently unused.</b> Assign to P2 or retire. <b>Review during P2 revisit or Phase 5</b></td></tr>
+<tr><td><code>Rolling 12M Net New MRR</code></td><td>Trailing-year net new</td><td>P2</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag x">Homeless</span></td><td><b>Currently unused.</b> Same decision as above. <b>Review</b></td></tr>
+<tr><td><code>MRR Bridge Variance</code></td><td>QA tripwire: bridge must reconcile to 0</td><td>—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag n">No page</span></td><td>Deliberately page-less. QA-only measure for Phase 5 validation. <b>Keep out of all pages</b></td></tr>
+<tr><td><code>_MRR by Plan</code> / <code>_MRR Share of Total</code></td><td>MRR projected by plan or segment</td><td>P5</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>P5 owns dimensional composition; P1/P2 show a summary cut. <b>Keep</b></td></tr>
+<tr><td colspan="11" style="background:var(--bg); font-size:11px; color:var(--slate);"><i>Scaffolding measures</i> — <code>_MRR Change (Current Month)</code>, <code>_MRR at Period Start</code>, <code>_MRR by Plan MoM Delta</code> (+ Color/Text), <code>_Gross New MRR Split Text</code>, <code>_Expansion to Churned MRR Ratio</code>, <code>_Expansion Coverage Text</code> — exist to serve specific visuals. Not independently owned; they follow their visual.</td></tr>
+</table>
+
+<h3>2.2 Customer counts</h3>
+<table>
+<tr><th>Measure</th><th>Definition</th><th>Home</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th class="c">P6</th><th>Type</th><th>Justification / Action</th></tr>
+<tr><td><code>Active Customers</code></td><td>Customers with a live subscription</td><td>P3</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td>P3 owns the trajectory; P1 the headline; P5 the breakdown. <b>Keep</b></td></tr>
+<tr><td><code>New Customers</code></td><td>First-time signups, current month</td><td>P3</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>P1 only as the Active Customers delta component. <b>Keep</b></td></tr>
+<tr><td><code>Churned Customers</code></td><td>Cancellations, current month</td><td>P3</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>P3 owns the count as the other half of net change; P6 dissects who and why. <b>Keep</b></td></tr>
+<tr><td><code>Customer Growth %</code></td><td>MoM change in active customers</td><td>P3</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td><b>See Issue B</b> — duplicates the Active Customers card's own delta on P1. <b>Accept &amp; document; optional Phase 5 swap</b></td></tr>
+<tr><td><code>Total Customers</code></td><td>All customers ever acquired</td><td>P3</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag n">No repeat</span></td><td>Cumulative-base context for P3 only. <b>Keep on P3</b></td></tr>
+<tr><td><code>ARPA</code></td><td>MRR ÷ active customers</td><td>P4</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag e">Exec</span></td><td><b>Moved:</b> ARPA is a unit-economics metric, not a customer-count one. P4 owns it; P5 compares it by segment (Enterprise ~$541 vs SMB ~$123). <b>Remove from P3 scope</b></td></tr>
+<tr><td colspan="11" style="background:var(--bg); font-size:11px; color:var(--slate);"><i>Scaffolding</i> — <code>Cumulative Churned Customers</code>, <code>_Active Customers at Period Start</code>, <code>_Active Customers Net Change</code>. Follow their parent measures.</td></tr>
+</table>
+
+<h3>2.3 Retention &amp; churn</h3>
+<table>
+<tr><th>Measure</th><th>Definition</th><th>Home</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th class="c">P6</th><th>Type</th><th>Justification / Action</th></tr>
+<tr><td><code>Cohort Retention %</code></td><td>% of a signup cohort still active at age N</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td><b>P6 hero visual.</b> Currently homeless — the most important assignment in this document. <b>Assign to P6</b></td></tr>
+<tr><td><code>Cohort Revenue Retention %</code></td><td>Same, weighted by MRR</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td>Pairs with the above — shows whether surviving customers grow. <b>Assign to P6</b></td></tr>
+<tr><td><code>Logo Churn Rate</code></td><td>Churned ÷ active at period start</td><td>P6</td><td class="c">✓</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag e">Exec</span></td><td>P3 shows the <i>rate</i> as a KPI; P6 owns the breakdown by dimension. <b>Keep; P3 gets the card only, never the segment chart</b></td></tr>
+<tr><td><code>Revenue Churn Rate</code></td><td>Churned MRR ÷ MRR at period start</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td>Currently unused. Pairs with logo churn to expose whether high-value customers churn disproportionately. <b>Assign to P6</b></td></tr>
+<tr><td><code>Customer Retention %</code></td><td>100% − logo churn</td><td>P3</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td><span class="tag x">Type 2</span></td><td><b>Exact inverse of Logo Churn Rate.</b> Never place both on the same page. <b>Choose one per page — do not use on P3 if Logo Churn Rate is present</b></td></tr>
+<tr><td><code>GRR</code></td><td>Retention excluding expansion</td><td>P6</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>P1 shows it only inside the Executive Insight card. <b>Keep</b></td></tr>
+<tr><td><code>NRR</code></td><td>Retention including expansion</td><td>P6</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag e">Exec</span></td><td>The headline SaaS health metric — earns P1 placement and P2 context. P6 owns the GRR/NRR gap analysis. <b>Keep</b></td></tr>
+<tr><td><code>Churned Customers by Plan</code></td><td>Churn counts via PreviousPlanID</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>Currently unused. P6 owns churn-by-plan; P5 may reuse in a composition view. <b>Assign to P6</b></td></tr>
+<tr><td><code>Churned MRR by Plan</code></td><td>Churned MRR via PreviousPlanID</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td><span class="tag c">Contextual</span></td><td>Reveals Enterprise churn costs ~$62K vs Starter ~$25K despite far fewer logos. <b>Assign to P6</b></td></tr>
+<tr><td><code>Avg Health Score at Churn</code></td><td>Latest health snapshot on/before churn date</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td>Currently homeless. Leading-indicator evidence. <b>Assign to P6</b></td></tr>
+<tr><td><code>Avg NPS at Churn</code></td><td>Latest NPS on/before churn date</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td>Currently homeless. Pairs with health score. <b>Assign to P6</b></td></tr>
+<tr><td><code>ChurnReason</code> (field)</td><td>Reason recorded on churn events</td><td>P6</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td><span class="tag p">Primary</span></td><td>Currently unused anywhere. The most direct answer to "why do they leave". <b>Assign to P6</b></td></tr>
+<tr><td colspan="11" style="background:var(--bg); font-size:11px; color:var(--slate);"><i>Scaffolding</i> — <code>_Trailing 3M Revenue Churn Rate (Cumulative)</code>, <code>_Smoothed Monthly Revenue Churn Rate</code>. Feed <code>Estimated LTV</code> on P4; not independently displayed.</td></tr>
+</table>
+
+<h3>2.4 Unit economics &amp; acquisition</h3>
+<table>
+<tr><th>Measure</th><th>Definition</th><th>Home</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th class="c">P6</th><th>Type</th><th>Justification / Action</th></tr>
+<tr><td><code>Blended Marketing CAC</code></td><td>Marketing spend ÷ new customers</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>P4 owns efficiency; P5 compares channels (Direct $75 → Events $1,583). <b>Assign to P4</b></td></tr>
+<tr><td><code>Estimated LTV</code></td><td>Margin-adjusted lifetime value</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td><b>Assign to P4</b></td></tr>
+<tr><td><code>Estimated LTV to CAC Ratio</code></td><td>LTV ÷ CAC</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>The headline efficiency verdict. <b>Assign to P4; candidate for P1 (see Issue B)</b></td></tr>
+<tr><td><code>Marketing CAC Payback (Months)</code></td><td>Months to recover CAC</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td><b>Assign to P4</b></td></tr>
+<tr><td><code>Assumed Gross Margin %</code></td><td>What-if parameter, default 80%</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td><span class="tag n">No repeat</span></td><td>The slicer belongs only where its outputs live. <b>Assign to P4 only</b></td></tr>
+<tr><td><code>Marketing Spend</code></td><td>Spend by channel and month</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td><b>Assign to P4</b></td></tr>
+<tr><td><code>Leads</code></td><td>Marketing leads by channel/month</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">—</td><td class="c">—</td><td><span class="tag n">No repeat</span></td><td>Currently unused. Top of the acquisition funnel. <b>Assign to P4</b></td></tr>
+<tr><td><code>Lead to Customer Conversion Rate</code></td><td>New customers ÷ leads</td><td>P4</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c">✓</td><td class="c">✓</td><td class="c">—</td><td><span class="tag c">Contextual</span></td><td>Currently unused. Explains <i>why</i> a channel's CAC is what it is. <b>Assign to P4</b></td></tr>
+</table>
+
+<div class="callout warn">
+<div class="eyebrow">Measures with no home after this exercise</div>
+<b>Resolved by this document:</b> Cohort Retention %, Cohort Revenue Retention %, Revenue Churn Rate, Churned Customers/MRR by Plan, Avg Health Score at Churn, Avg NPS at Churn, ChurnReason, Leads, Lead to Customer Conversion Rate — all now assigned.<br><br>
+<b>Still unresolved (2):</b> <code>Net New MRR YTD</code> and <code>Rolling 12M Net New MRR</code>. Both were built and validated in Phase 3, neither appears on P1 or P2, and P2 is complete. They are not blocking — decide during Phase 5 whether to give them a P2 visual role or formally retire them as QA-only measures.
+</div>
+
+<h2 id="o3">Output 3 — Visual / Analytical Story Ownership Matrix</h2>
+<p>Two pages can use different measures and still answer the same question. This matrix governs stories, not measures.</p>
+<table>
+<tr><th>Analytical story</th><th>Where it is / was proposed</th><th>Primary home</th><th>Repeated?</th><th>Justification</th><th>Action</th></tr>
+<tr><td>MRR trend over time</td><td>P1, P2</td><td><b>P2</b></td><td>Yes — P1</td><td>P1 shows shape only (is it rising?); P2 pairs it with growth rate to show trajectory quality. Different questions.</td><td>Keep both</td></tr>
+<tr><td>MRR movement waterfall</td><td>P1, P2</td><td><b>P2</b></td><td>Yes — P1</td><td><b>Type 3 duplication.</b> Identical visual, identical measures, identical month. Accepted: on P1 it is the only "why" for the headline; on P2 it anchors the 12-month composition chart beside it.</td><td>Accept &amp; document</td></tr>
+<tr><td>12-month movement composition</td><td>P2</td><td><b>P2</b></td><td>No</td><td>Shows growth <i>quality</i> over time — unique to P2.</td><td>Keep</td></tr>
+<tr><td>Revenue composition by plan/segment</td><td>P2, P5</td><td><b>P5</b></td><td>Yes — P2</td><td>P2 shows a single summary cut; P5 compares across segment, industry, country and channel together.</td><td>Keep both; P5 must go deeper</td></tr>
+<tr><td>Active customer base trend</td><td>P1, P3</td><td><b>P3</b></td><td>Yes — P1</td><td>Same reasoning as MRR trend. P1 glance, P3 analysis.</td><td>Keep both</td></tr>
+<tr><td>New vs churned customers</td><td>P3</td><td><b>P3</b></td><td>No</td><td>The acquisition-vs-loss balance <i>is</i> P3's core question.</td><td>Assign to P3</td></tr>
+<tr><td>Cohort retention curve / heatmap</td><td>Nowhere</td><td><b>P6</b></td><td>No</td><td>Homeless. The single most valuable unused asset in the model.</td><td><b>Assign to P6 as hero</b></td></tr>
+<tr><td>Churn by segment / plan / channel</td><td>P3 draft, P6</td><td><b>P6</b></td><td>No</td><td><b>The Page 3/6 collision.</b> Dimensional churn breakdown is churn diagnosis, not customer-base growth.</td><td><b>Remove from P3; P6 owns it</b></td></tr>
+<tr><td>Churn reasons</td><td>Nowhere</td><td><b>P6</b></td><td>No</td><td>Homeless. Directly answers "why".</td><td>Assign to P6</td></tr>
+<tr><td>Health / NPS at churn</td><td>Nowhere</td><td><b>P6</b></td><td>No</td><td>Homeless. Leading indicator.</td><td>Assign to P6</td></tr>
+<tr><td>CAC by channel</td><td>Nowhere</td><td><b>P4</b></td><td>Yes — P5</td><td>P4 asks "is acquisition efficient?"; P5 asks "which channels bring which customers?"</td><td>Assign to P4</td></tr>
+<tr><td>LTV:CAC and payback</td><td>Nowhere</td><td><b>P4</b></td><td>No</td><td>The core unit-economics verdict.</td><td>Assign to P4</td></tr>
+<tr><td>Acquisition funnel (leads → customers)</td><td>Nowhere</td><td><b>P4</b></td><td>No</td><td>Explains CAC differences between channels.</td><td>Assign to P4</td></tr>
+<tr><td>Segment / industry / country composition</td><td>Nowhere</td><td><b>P5</b></td><td>No</td><td>P5's reason to exist.</td><td>Assign to P5</td></tr>
+<tr><td>Executive insight narrative card</td><td>P1</td><td><b>P1</b></td><td>No</td><td>Only P1 has a "tell me the answer" mandate.</td><td>Keep on P1 only</td></tr>
+</table>
+
+<h2 id="o4">Output 4 — Redundancy Audit</h2>
+
+<h3>Type 1 — Exact metric duplication</h3>
+<div class="callout warn">
+<div class="eyebrow">Issue B — Customer Growth % on Page 1</div>
+<b>Finding:</b> the Active Customers Tier 1 card already displays <b>3,587</b>, <b>▲ +2.7%</b>, and <b>+93 net vs prior month</b>. The Tier 2 Customer Growth % card displays <b>2.7%</b> — the identical number, already visible 100 px above it. This is genuine Type 1 duplication: 1 of 8 P1 cards carries no independent information.<br><br>
+<b>Verdict: accept and document, do not fix now.</b> P1 is complete and validated; reopening it for a non-blocking point risks the regressions already seen twice in this build.<br><br>
+<b>Optional Phase 5 improvement (recorded, not scheduled):</b> Page 1 currently has <b>zero representation of Page 4's entire domain</b> — an executive overview with no unit-economics signal. Swapping Customer Growth % for <code>Estimated LTV to CAC Ratio</code> would remove a duplicate and close a domain gap in one move, without adding a card. Decide at Phase 5 QA.
+</div>
+
+<h3>Type 2 — Derived / repackaged duplication</h3>
+<div class="callout">
+<div class="eyebrow">Issue A — MRR and ARR both in Page 1 Tier 1</div>
+<b>Finding:</b> ARR = MRR × 12. Mathematically the same fact in two units, occupying 2 of 4 premium Tier 1 slots.<br><br>
+<b>Verdict: keep both.</b> The audiences differ in a way that matters: operators run the business in MRR (movement, churn, and expansion are all monthly), while boards, investors and valuation conversations happen in ARR. On a page whose stated job is serving a CEO, CFO and board simultaneously, showing only one forces half the audience to do mental arithmetic on the most important number in the company. The redundancy is real but justified — this is Type 4, not a defect.<br><br>
+<b>Rule going forward:</b> ARR appears on P1 and as P2 context only. It never gets its own trend chart anywhere — a second line with an identical shape to MRR adds nothing (the approved P2 spec already made this call).
+</div>
+<div class="callout stop">
+<div class="eyebrow">Customer Retention % vs Logo Churn Rate</div>
+<b>Finding:</b> the Page 3 v1 draft placed <b>Logo Churn Rate 2.4%</b> and <b>Customer Retention Rate 97.6%</b> adjacent. These are the same number (100% − 2.4%).<br><br>
+<b>Verdict: never place both on the same page.</b> Page 3 uses Logo Churn Rate. <code>Customer Retention %</code> remains in the model for client deployments that prefer the positive framing — a documented template option, not a second KPI.
+</div>
+
+<h3>Type 3 — Analytical-story duplication</h3>
+<div class="callout warn">
+<div class="eyebrow">MRR Movement waterfall on both Page 1 and Page 2</div>
+<b>Finding:</b> the same visual, same measures, same month, built twice (P2's was literally copy-pasted from P1).<br><br>
+<b>Verdict: accept.</b> On P1 it is the only explanation available for the headline MRR number. On P2 it provides the single-month anchor that the 12-month composition chart beside it expands into a pattern. Removing it from either page would leave a real gap. Both pages are complete — this is documented, not actioned.
+</div>
+<div class="callout stop">
+<div class="eyebrow">Logo churn by segment — the Page 3 / Page 6 collision</div>
+<b>Finding:</b> the Page 3 draft's largest bottom-right visual is a dimensional churn breakdown with a Segment/Plan/Channel/Health toggle — which is precisely Page 6's defined purpose.<br><br>
+<b>Verdict: remove from Page 3 before design continues.</b> This is the one redundancy in this audit that is both unbuilt and actionable. Page 3 keeps the <i>Logo Churn Rate KPI card</i> (a headline number belongs on the customer page); Page 6 owns every dimensional breakdown of churn.
+</div>
+
+<h3>Type 4 — Necessary contextual repetition (accepted)</h3>
+<table>
+<tr><th>Repeat</th><th>Pages</th><th>Why it is justified</th></tr>
+<tr><td>MRR</td><td>P1, P2, P5</td><td>Scale, trajectory, and composition are three different questions about one number</td></tr>
+<tr><td>MRR trend chart</td><td>P1, P2</td><td>P1 shows shape; P2 shows shape + rate together</td></tr>
+<tr><td>Active customer trend</td><td>P1, P3</td><td>Same reasoning</td></tr>
+<tr><td>NRR</td><td>P1, P2, P6</td><td>Headline health metric; P6 owns the GRR/NRR gap diagnosis</td></tr>
+<tr><td>Logo Churn Rate</td><td>P1, P3, P6</td><td>Card on P1/P3; dimensional analysis only on P6</td></tr>
+<tr><td>ARPA</td><td>P1, P4, P5</td><td>P4 owns the economics; P5 the segment comparison; P1 the glance</td></tr>
+<tr><td>Movement measures (New/Exp/Contr/Churn)</td><td>P1, P2, P6</td><td>Waterfall components on P1/P2; retention inputs on P6</td></tr>
+</table>
+
+<h2 id="o5">Output 5 — Page Boundary Rules</h2>
+
+<h3>Page 1 vs Pages 2–6</h3>
+<ul>
+<li>P1 may repeat any metric, but <b>only as a KPI card or a shape-only trend</b> — never as a dimensional breakdown, never with a toggle, never as a matrix.</li>
+<li>If a P1 visual requires the user to interact to understand it, it belongs on another page.</li>
+<li>P1 owns exactly one thing exclusively: the <b>Executive Insight narrative card</b>.</li>
+<li>Tier 1 cards are never cross-filter targets (already implemented).</li>
+</ul>
+
+<h3>Page 2 vs Page 5</h3>
+<ul>
+<li>P2 asks <i>how</i> revenue moves over time. P5 asks <i>who</i> the revenue comes from.</li>
+<li>P2 may show one dimensional cut (the Plan/Segment matrix). P5 compares <b>multiple dimensions</b> — segment, plan, industry, country, channel.</li>
+<li>If a visual has a time axis, it is P2's. If it compares categories at a point in time, it is P5's.</li>
+</ul>
+
+<h3>Page 3 vs Page 6 — the critical boundary</h3>
+<table>
+<tr><th></th><th>Page 3 — Customer Growth</th><th>Page 6 — Retention &amp; Churn</th></tr>
+<tr><td><b>Question</b></td><td>Is the customer base growing?</td><td>Why do customers leave, and how does retention behave over time?</td></tr>
+<tr><td><b>Unit</b></td><td>Counts and rates at company level</td><td>Cohorts, dimensions, reasons, health</td></tr>
+<tr><td><b>Time</b></td><td>Calendar time (months)</td><td>Cohort age (months since signup)</td></tr>
+<tr><td><b>Owns</b></td><td>Active / New / Churned customer counts, Customer Growth %, Total Customers, Logo Churn Rate <i>as a KPI</i></td><td>Cohort retention (both), Revenue Churn Rate, GRR/NRR analysis, churn by any dimension, ChurnReason, health/NPS at churn, churned customers/MRR by plan</td></tr>
+<tr><td><b>Never contains</b></td><td>Any dimensional churn breakdown; any cohort visual; any health data</td><td>The plain active-customer trend (that is P3's)</td></tr>
+</table>
+<p><b>Test:</b> does the visual explain <i>why</i> customers left, or compare retention <i>between groups or over customer lifetime</i>? → Page 6. Does it count customers over calendar time? → Page 3.</p>
+
+<h3>Page 4 vs Page 5</h3>
+<table>
+<tr><th></th><th>Page 4 — Unit Economics</th><th>Page 5 — Segment Analysis</th></tr>
+<tr><td><b>Question</b></td><td>Is growth economically efficient?</td><td>Which customer groups drive the business?</td></tr>
+<tr><td><b>Dimension</b></td><td><b>Acquisition channel</b> — intrinsic to CAC</td><td><b>Customer attributes</b> — segment, industry, country, plan, company size</td></tr>
+<tr><td><b>Owns</b></td><td>CAC, LTV, LTV:CAC, payback, gross-margin parameter, marketing spend, leads, conversion rate</td><td>Composition and comparison across customer attributes; ARPA and CAC/LTV <i>sliced by those attributes</i></td></tr>
+</table>
+<p><b>Rule:</b> P4 owns each unit-economics metric's definition and company-level verdict. P5 may reuse any of them, but only broken out by a <i>customer</i> dimension. If the breakout is by channel, it stays on P4.</p>
+
+<h2 id="o6">Output 6 — Target / Benchmark Architecture (design only, not implemented)</h2>
+
+<h3>A · The table</h3>
+<p>The proposed schema is close but needs three changes. Evaluated version:</p>
+<table>
+<tr><th>Column</th><th>Type</th><th>Purpose</th></tr>
+<tr><td><code>MetricKey</code></td><td>Text</td><td>Stable identifier matching a measure name exactly. <b>Added</b> — joining on a display label breaks when a label is reworded.</td></tr>
+<tr><td><code>MetricDisplayName</code></td><td>Text</td><td>What the user sees</td></tr>
+<tr><td><code>TargetValue</code></td><td>Decimal</td><td>The number to compare against</td></tr>
+<tr><td><code>Direction</code></td><td>Text</td><td><b>Added, and essential.</b> "Higher is better" / "Lower is better". Without it, variance logic cannot colour churn and growth correctly — the same trap already hit on the Logo Churn card.</td></tr>
+<tr><td><code>ToleranceBand</code></td><td>Decimal</td><td><b>Added.</b> Enables a three-state verdict (on target / at risk / off target) rather than a binary hit-or-miss, which is how management actually reads targets.</td></tr>
+<tr><td><code>BenchmarkType</code></td><td>Text</td><td>"Client target" / "Board commitment" / "External benchmark"</td></tr>
+<tr><td><code>EffectiveFrom</code> / <code>EffectiveTo</code></td><td>Date</td><td>Targets change annually. A single <code>EffectiveDate</code> cannot express a closed period.</td></tr>
+<tr><td><code>SourceNote</code></td><td>Text</td><td>Provenance — mandatory for external benchmarks</td></tr>
+</table>
+<p><b>Grain:</b> one row per metric per effective period. Loaded from an editable source (Excel/CSV) so a client replaces values without touching the model.</p>
+
+<h3>B · Which metrics genuinely benefit</h3>
+<table>
+<tr><th>Metric</th><th>Target?</th><th>Reasoning</th></tr>
+<tr><td>MRR Growth %</td><td><b>Yes</b></td><td>Every SaaS company plans against a growth rate</td></tr>
+<tr><td>Logo Churn Rate</td><td><b>Yes</b></td><td>The canonical managed target; needs Direction = lower is better</td></tr>
+<tr><td>NRR</td><td><b>Yes</b></td><td>Board-level metric with a well-understood 100% threshold</td></tr>
+<tr><td>GRR</td><td><b>Yes</b></td><td>Pairs with NRR</td></tr>
+<tr><td>LTV:CAC</td><td><b>Yes</b></td><td>The 3:1 convention is widely used as a planning target</td></tr>
+<tr><td>CAC Payback</td><td><b>Yes</b></td><td>Cash-planning target; lower is better</td></tr>
+<tr><td>MRR / ARR</td><td><b>Yes</b></td><td>Absolute plan numbers — the most common management target of all</td></tr>
+<tr><td>ARPA</td><td>Optional</td><td>Usually an outcome of pricing/mix, not a managed target</td></tr>
+<tr><td>Active Customers</td><td>Optional</td><td>Sometimes planned, often derived</td></tr>
+<tr><td>Cohort retention</td><td><b>No</b></td><td>A curve, not a point; a single target value would misrepresent it</td></tr>
+<tr><td>Movement components</td><td><b>No</b></td><td>Components of a total, not independently managed</td></tr>
+</table>
+
+<h3>C · How targets are used — three measures total, not one per metric</h3>
+<p>Build a generic pattern, not 8 × 4 = 32 measures:</p>
+<ul>
+<li><code>Target Value</code> — looks up the active target for the metric in context</li>
+<li><code>Variance to Target</code> — actual − target, sign-corrected by <code>Direction</code></li>
+<li><code>Target Status</code> — returns a status string/colour using <code>ToleranceBand</code></li>
+</ul>
+<p>Rendered as a reference line on trend charts and a small status indicator on KPI cards — reusing the existing glyph + sign + colour pattern already built, so no new visual language is introduced.</p>
+
+<h3>D · Reusability &amp; E · Sources</h3>
+<ul>
+<li>Ships with the table <b>present but empty</b>, plus a documented sample row. An empty table must degrade gracefully: every target measure returns blank and every KPI renders exactly as it does today.</li>
+<li><b>No invented industry benchmarks.</b> The template supplies the mechanism; the client supplies the numbers. Where an external benchmark is used, <code>SourceNote</code> must name it.</li>
+<li>Phase 5 packaging includes a one-page "how to set your targets" note.</li>
+</ul>
+<p><b>Implementation phase: Phase 5.</b> Not now.</p>
+
+<h2 id="o7">Output 7 — Final Six-Page Architecture</h2>
+
+<div class="pagecard">
+<h4>Page 1 — Executive Overview <span class="tag c">COMPLETE, FROZEN</span></h4>
+<p class="q">How is the SaaS business performing overall?</p>
+<p><b>KPIs:</b> MRR · ARR · MRR Growth % · Active Customers (Tier 1) | ARPA · Customer Growth % · Logo Churn Rate · NRR (Tier 2)<br>
+<b>Visuals:</b> MRR trend · MRR movement waterfall · Active customer trend · MRR by plan · Executive Insight card<br>
+<b>Exclusive:</b> the Executive Insight narrative<br>
+<b>Documented debts:</b> Customer Growth % duplicates the Active Customers delta (Issue B); waterfall duplicates P2 (accepted); no unit-economics representation (optional Phase 5 swap)</p>
+</div>
+
+<div class="pagecard">
+<h4>Page 2 — Revenue &amp; Growth <span class="tag c">COMPLETE, FROZEN</span></h4>
+<p class="q">How is revenue growing, and what is driving MRR movement?</p>
+<p><b>KPIs:</b> MRR · ARR · Net MRR Change · Gross New MRR<br>
+<b>Visuals:</b> MRR trajectory &amp; growth combo · MRR movement waterfall · 12-month movement composition · Revenue composition matrix (Plan/Segment toggle)<br>
+<b>Owns:</b> all MRR movement analysis, growth trajectory, growth composition<br>
+<b>Known limitation:</b> Plan cross-filtering is structurally unavailable (DimPlan → FactSubscriptionEvent has no active path)</p>
+</div>
+
+<div class="pagecard">
+<h4>Page 3 — Customer Growth <span class="tag p">RENAMED · READY TO DESIGN</span></h4>
+<p class="q">How is the customer base growing, and how does acquisition compare to loss?</p>
+<p><b>KPIs (5):</b> Active Customers · New Customers · Churned Customers · Customer Growth % · Logo Churn Rate<br>
+<b>Visuals:</b> Active customer base trend (36 months) · New vs churned customers (12 months, diverging) · Customer Insight card · one composition or acquisition-mix visual<br>
+<b>Owns:</b> customer-count trajectory, acquisition-vs-loss balance<br>
+<b>Must NOT contain:</b> any dimensional churn breakdown · any cohort visual · any health data · ARPA · NRR · Customer Retention % alongside Logo Churn Rate</p>
+</div>
+
+<div class="pagecard">
+<h4>Page 4 — Unit Economics <span class="tag n">TO DESIGN</span></h4>
+<p class="q">Is the company's growth economically efficient?</p>
+<p><b>KPIs:</b> Blended Marketing CAC · Estimated LTV · Estimated LTV:CAC · CAC Payback (Months) · ARPA<br>
+<b>Visuals:</b> CAC by channel · LTV:CAC by channel · payback comparison · acquisition funnel (Leads → conversion rate → customers) · Assumed Gross Margin % what-if slicer<br>
+<b>Owns:</b> every unit-economics metric definition; channel as the analytical dimension<br>
+<b>Must NOT contain:</b> customer-attribute breakdowns (P5) · any churn analysis (P6)</p>
+</div>
+
+<div class="pagecard">
+<h4>Page 5 — Segment Analysis <span class="tag n">TO DESIGN</span></h4>
+<p class="q">Which customer groups drive the business?</p>
+<p><b>Visuals:</b> MRR and customer composition across segment, plan, industry, country · ARPA by segment (Enterprise ~$541 / Mid-Market ~$306 / SMB ~$123) · CAC and LTV:CAC by customer attribute · segment contribution matrix<br>
+<b>Owns:</b> multi-dimensional comparison of customer attributes<br>
+<b>Must NOT contain:</b> time-series revenue movement (P2) · channel-level CAC as the primary cut (P4) · cohort or churn-reason analysis (P6)<br>
+<b>Drill-through target:</b> from P1 and P2 plan/segment selections</p>
+</div>
+
+<div class="pagecard">
+<h4>Page 6 — Retention &amp; Churn <span class="tag p">RENAMED · TO DESIGN</span></h4>
+<p class="q">Where, when and among whom is churn happening, and how does retention behave over customer lifetime?</p>
+<p><b>Hero visual:</b> cohort retention heatmap or curve (<code>Cohort Retention %</code> × <code>CohortAge</code>)<br>
+<b>Supporting:</b> cohort revenue retention · GRR vs NRR gap · churn by segment/plan/channel · ChurnReason breakdown · health &amp; NPS at churn · churned customers and churned MRR by plan · Revenue Churn Rate<br>
+<b>Owns:</b> all retention quality, all churn diagnosis, all customer-health analysis<br>
+<b>Must NOT contain:</b> the plain active-customer trend (P3)<br>
+<b>Drill-through target:</b> from P1 and P2 month selections<br>
+<b>May require:</b> one HealthScore banding calculated column — built here, deliberately, if the design calls for categorical health tiers</p>
+</div>
+
+<h2 id="o8">Output 8 — Architecture Constitution</h2>
+
+<h3>1 · Page purposes</h3>
+<table>
+<tr><th>Page</th><th>Name</th><th>Question</th><th>Owns</th></tr>
+<tr><td>1</td><td>Executive Overview</td><td>How are we performing overall?</td><td>The 15-second read; the narrative insight</td></tr>
+<tr><td>2</td><td>Revenue &amp; Growth</td><td>How is revenue growing and what moves it?</td><td>MRR movement, trajectory, growth composition</td></tr>
+<tr><td>3</td><td>Customer Growth</td><td>Is the customer base growing?</td><td>Customer counts over calendar time; acquisition vs loss</td></tr>
+<tr><td>4</td><td>Unit Economics</td><td>Is growth efficient?</td><td>CAC, LTV, payback; channel as dimension</td></tr>
+<tr><td>5</td><td>Segment Analysis</td><td>Which groups drive the business?</td><td>Customer-attribute comparison</td></tr>
+<tr><td>6</td><td>Retention &amp; Churn</td><td>Why do customers leave and how does retention behave?</td><td>Cohorts, churn diagnosis, customer health</td></tr>
+</table>
+
+<h3>2 · Repetition rules</h3>
+<ol>
+<li>A metric appears on its home page in full analytical context.</li>
+<li>A metric may appear on <b>Page 1</b> as a KPI card or shape-only trend — never as a breakdown, toggle or matrix.</li>
+<li>A metric may appear on another page only when that page's question genuinely requires it as context.</li>
+<li><b>Two metrics that are arithmetic transforms of each other never share a page</b> (Customer Retention % / Logo Churn Rate; MRR / ARR outside P1's deliberate exception).</li>
+<li>A metric already displayed inside another card's delta line does not also get its own card on the same page.</li>
+<li>Repetition of an entire <i>visual</i> requires written justification, not just repetition of a measure.</li>
+</ol>
+
+<h3>3 · Page boundary tests</h3>
+<ul>
+<li><b>Time axis?</b> → P2 (revenue) or P3 (customers). <b>Category comparison at a point in time?</b> → P5.</li>
+<li><b>Cohort age axis rather than calendar?</b> → always P6.</li>
+<li><b>Explains why a customer left?</b> → always P6.</li>
+<li><b>Dimension is acquisition channel?</b> → P4. <b>Dimension is a customer attribute?</b> → P5.</li>
+<li><b>Needs interaction to be understood?</b> → never P1.</li>
+</ul>
+
+<h3>4 · Explicit exclusions</h3>
+<div class="callout">
+<b>Forecasting &amp; Planning — Future Project / Future Enhancement.</b> Out of scope for this template: no forecast visuals, measures, requirements or architecture. Recorded once here; not to be raised again as a current gap.
+</div>
+
+<h3>5 · Design governance rule</h3>
+<div class="verdict">
+Before designing any new page: <b>every proposed visual and measure must be assigned a home in the ownership matrix before implementation begins.</b> If a proposed visual has no home, it is either misplaced or the architecture needs an explicit amendment — decide which before building, never after.
+</div>
+
+<h3>6 · Amendment rule</h3>
+<p>This architecture is <b>FROZEN</b>. Reopen only for: correctness, a genuine analytical gap, serious redundancy, misleading communication, implementation impossibility, or an important usability problem. <b>Never for aesthetic preference.</b></p>
+
+<h2 id="o9">Output 9 — Reusable SOP: Dashboard Metric &amp; Page Architecture</h2>
+<p><i>Industry-neutral. Run before any visual design begins. Roughly half a day on a typical project.</i></p>
+
+<table>
+<tr><th>Step</th><th>Action</th><th>Output</th><th>Done when</th></tr>
+<tr><td><b>1</b></td><td>Build the approved measure catalog: every validated measure, its definition, its source table</td><td>Measure list</td><td>Every measure the model contains is listed, including QA-only ones</td></tr>
+<tr><td><b>2</b></td><td>Write each page's question as a single sentence a stakeholder would actually ask</td><td>Page question list</td><td>No two pages' questions could be answered by the same visual</td></tr>
+<tr><td><b>3</b></td><td>Assign every measure exactly one primary home page</td><td>Ownership column</td><td>Zero measures unassigned; homeless measures explicitly flagged</td></tr>
+<tr><td><b>4</b></td><td>Mark justified repeats as Executive / Contextual, with a written reason each</td><td>Repeat columns</td><td>Every ✓ outside the home page has a stated reason</td></tr>
+<tr><td><b>5</b></td><td>Map analytical <i>stories</i> (not measures) to pages</td><td>Story matrix</td><td>Every planned visual appears exactly once, or its repeat is justified</td></tr>
+<tr><td><b>6</b></td><td>Audit redundancy by type: 1 exact · 2 derived · 3 story · 4 justified</td><td>Redundancy list</td><td>Types 1–3 each have a decision: fix, accept-and-document, or move</td></tr>
+<tr><td><b>7</b></td><td>Write boundary tests for each adjacent page pair</td><td>Boundary rules</td><td>A test exists that a third party could apply without you</td></tr>
+<tr><td><b>8</b></td><td>List measures with no home — these are either missing pages or dead measures</td><td>Gap list</td><td>Each is assigned or formally retired</td></tr>
+<tr><td><b>9</b></td><td>Decide whether a target/benchmark layer is in scope; design the table if so</td><td>Target schema</td><td>Schema defined with Direction and effective dating, or explicitly deferred</td></tr>
+<tr><td><b>10</b></td><td><b>Freeze.</b> Circulate and get sign-off</td><td>Signed architecture</td><td>Client/stakeholder has agreed in writing</td></tr>
+<tr><td><b>11</b></td><td>Design pages from the frozen architecture, one at a time</td><td>Page designs</td><td>Each design references its ownership rows</td></tr>
+<tr><td><b>12</b></td><td>Cross-page QA: re-run steps 5–6 against what was actually built</td><td>QA report</td><td>Built state matches frozen architecture, or deviations are documented</td></tr>
+</table>
+
+<h3>Decision rules (portable to any project)</h3>
+<ol>
+<li><b>Arithmetic-transform rule.</b> If metric B is a fixed transform of metric A (B = 100% − A, B = A × 12), they never share a page unless a named audience genuinely needs each unit.</li>
+<li><b>Delta-line rule.</b> A number already shown inside another card's comparison line does not get its own card on that page.</li>
+<li><b>Interaction rule.</b> A visual requiring interaction to interpret never belongs on an executive summary page.</li>
+<li><b>Axis rule.</b> Time axis → trend page. Category axis → comparison page. Age/cohort axis → retention page.</li>
+<li><b>Story rule.</b> Two visuals answering the same business question are duplication even when built from different measures.</li>
+<li><b>Sparse-page rule.</b> After removing redundancy, do not backfill with low-value charts. A clean page with four meaningful visuals beats a dense page with seven.</li>
+<li><b>Homeless-measure rule.</b> A validated measure with no page is either a missing page or a measure that should be retired. Both are decisions; neither is "leave it."</li>
+</ol>
+
+<h3>One-page project template</h3>
+<table>
+<tr><th>Measure</th><th>Definition</th><th>Home</th><th>P1…Pn</th><th>Repeat type</th><th>Justification</th><th>Action</th></tr>
+<tr><td colspan="7" style="color:var(--slate); font-style:italic;">Repeat types: Primary · Executive Repeat · Contextual Repeat · Do Not Repeat &nbsp;|&nbsp; Actions: Keep · Remove from page · Move · Review at design</td></tr>
+</table>
+
+<h2 id="o10">Output 10 — Page 3 GO / NO-GO</h2>
+
+<div class="verdict">
+<b>PAGE 3 IS READY TO CONTINUE</b> — conditional on applying three decisions from Output 1 before commissioning the design.
+</div>
+
+<h3>Apply before briefing Claude Design</h3>
+<ol>
+<li><b>Rename Page 3 to "Customer Growth"</b> and Page 6 to "Retention &amp; Churn". Update the navigation group on Pages 1 and 2 (text only — no layout change, and it fits your existing space constraint since "Customer Growth" is shorter than "Customer Retention").</li>
+<li><b>Remove "Logo churn by segment" from the Page 3 brief.</b> It moves to Page 6. Page 3 keeps the Logo Churn Rate KPI card only.</li>
+<li><b>Constrain the brief to real data:</b> three segments (SMB, Mid-Market, Enterprise) — not four, no "Self-serve"; no Health toggle (HealthScore is continuous, 10.50–98.00, with no banding column); toggle options limited to Segment / Plan / Channel.</li>
+</ol>
+
+<h3>Page 3 brief, derived from this architecture</h3>
+<p><b>KPIs (5):</b> Active Customers · New Customers · Churned Customers · Customer Growth % · Logo Churn Rate<br>
+<b>Visuals (4):</b> Active customer base trend (36 months) · New vs churned customers (12 months, diverging column — matches the P2 composition pattern) · Customer Insight narrative card · one acquisition-mix or customer-composition visual<br>
+<b>Explicitly excluded:</b> ARPA (→P4) · NRR (→P6) · Customer Retention % (arithmetic inverse of a KPI already present) · any dimensional churn breakdown (→P6) · any cohort visual (→P6) · any health data (→P6)</p>
+
+<h3>Two items genuinely unresolved — neither blocks Page 3</h3>
+<ol>
+<li><code>Net New MRR YTD</code> and <code>Rolling 12M Net New MRR</code> have no home. P2 is complete, so this is a Phase 5 decision: give them a visual role or formally retire them as QA measures.</li>
+<li>Page 3's fourth visual is intentionally left open. The architecture reserves the slot but does not prescribe content — per the sparse-page rule, if nothing of genuine value fits, <b>ship Page 3 with three visuals</b> rather than filling the space.</li>
+</ol>
+
+</div>

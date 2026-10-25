@@ -208,6 +208,9 @@ Full report: **[docs/VALIDATION.md](docs/VALIDATION.md)**
 [![Email](https://img.shields.io/badge/Email-Contact-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:yisakfikre@outlook.com)
 
 **More Projects:** 
-· [Gross Margin Bridge](https://github.com/yisakfikre/Gross-Margin-Bridge-Report) 
+
+· [Gross Margin Bridge](https://github.com/yisakfikre/Gross-Margin-Bridge-Dashboard) 
+
 · [Sales Analysis Report](https://github.com/yisakfikre/Sales-Analytics-Report) 
+
 · [Marketing Campaign Performance](https://github.com/yisakfikre/Marketing-Campaign-Performance-Report)
